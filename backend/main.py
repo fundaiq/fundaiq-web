@@ -11,9 +11,9 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "http://localhost:3000",
-        "https://www.thinkinvestval.com",   # ✅ Production
-        "https://thinkinvestval.com",       # ✅ Without www
-        "https://paisedepange-3a49tf83b-paisedepanges-projects.vercel.app"
+        "https://www.fundaiq.com",   # ✅ Production
+        "https://fundaiq.com",       # ✅ Without www
+        "https://fundaiq-web.vercel.app"
     ],
     allow_credentials=True,
     allow_methods=["*"],
