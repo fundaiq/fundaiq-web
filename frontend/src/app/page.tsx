@@ -7,6 +7,7 @@ import CompanyInfoSection from '@/components/report/CompanyInfo';
 import FinancialHealthSection from '@/components/report/FinancialHealthSection';
 import DCFValuationSection from '@/components/report/DCFValuationSection';
 import EPSValuationSection from '@/components/report/EPSValuationSection';
+import Disclaimer from '@/components/Disclaimer';
 
 export default function CompanyReportPage() {
   const [mounted, setMounted] = useState(false);
@@ -43,6 +44,7 @@ export default function CompanyReportPage() {
     <div>
       {/* Top nav */}
       <div className="sticky top-14 bg-white dark:bg-zinc-900 z-40 border-b shadow-sm">
+        <Disclaimer />
         <nav className="flex flex-wrap gap-4 text-sm px-6 py-3 underline text-blue-600 cursor-pointer max-w-6xl mx-auto">
           <span onClick={() => scrollTo('import')}>📥 Data Import</span>
           {showSections && (
