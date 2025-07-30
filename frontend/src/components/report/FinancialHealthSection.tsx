@@ -28,7 +28,6 @@ export default function FinancialHealthSection() {
   return (
     <section className="mb-10" id="financial-health">
       <CollapsibleCard title="📥 Financial Analysis">
-        <h2 className="text-xl font-semibold mb-4">💊 Financial Health Check</h2>
         <GrowthSection metrics={metrics} years={years} />
         <GrowthRateSection metrics={metrics} years={years} />
         <ProfitabilitySection metrics={metrics} years={years} />

@@ -39,7 +39,8 @@ export const MetricBarChart = ({ label, data, labels, percent = false }: Props) 
         borderRadius: 4,
         datalabels: {
           anchor: 'end',
-          align: 'top',
+          align: (ctx) => (ctx.dataset.data[ctx.dataIndex] < 0 ? 'bottom' : 'top'),
+          offset: 4,
           font: {
             size: 10,
             weight: 'bold',
@@ -67,7 +68,9 @@ export const MetricBarChart = ({ label, data, labels, percent = false }: Props) 
             percent ? `${Number(value).toFixed(1)}%` : Number(value).toFixed(1),
         },
         grid: { color: '#E5E7EB' },
-      },
+        beginAtZero: true,
+        suggestedMax: Math.max(...data) * 1.15, // 👈 give 15% headroom for labels
+      }
     },
     plugins: {
       legend: { display: false },
@@ -77,7 +80,7 @@ export const MetricBarChart = ({ label, data, labels, percent = false }: Props) 
 
   return (
     <div className="w-full">
-      <h4 className="text-sm font-medium mb-1 text-muted-foreground">{label}</h4>
+      <h5 className="text-xs font-medium mb-1 text-muted-foreground">{label}</h5>
       <div className="h-[200px]">
         <Bar data={chartData} options={options} />
       </div>

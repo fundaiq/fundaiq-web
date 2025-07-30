@@ -6,7 +6,7 @@ type Props = {
   visible: boolean;
   setVisible: (v: boolean) => void;
   valuationResult: any;
-  currentPrice: string;
+  current_price: string;
   form: any;
   setSensitivityData: (data: any) => void;
   sensitivityData: any;
@@ -16,7 +16,7 @@ export default function SensitivityTable({
   visible,
   setVisible,
   valuationResult,
-  currentPrice,
+  current_price,
   form,
   setSensitivityData,
   sensitivityData
@@ -31,7 +31,7 @@ export default function SensitivityTable({
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         base_revenue: parseFloat(form.base_revenue),
-        net_debt: parseFloat(form.net_debt),
+        net_debt: parseFloat(form.latest_net_debt),
         shares_outstanding: parseFloat(form.shares_outstanding),
         depreciation_pct: parseFloat(form.depreciation_pct),
         capex_pct: parseFloat(form.capex_pct),
@@ -96,7 +96,7 @@ export default function SensitivityTable({
                       {Array.isArray(sensitivityData?.fair_values?.[rowIdx]) &&
                         sensitivityData.fair_values[rowIdx].map((val: number, colIdx: number) => {
                           const fv = val;
-                          const cp = parseFloat(currentPrice || '0');
+                          const cp = parseFloat(current_price || '0');
                           const isCloseToMarket = Math.abs(fv - cp) / cp < 0.15;
                           const isUserInputs =
                             ebit === parseFloat(form.ebit_margin) &&

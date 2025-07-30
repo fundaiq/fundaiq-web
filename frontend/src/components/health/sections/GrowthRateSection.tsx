@@ -17,7 +17,7 @@ export const GrowthRateSection = ({ metrics, years }: Props) => {
 
   return (
     <div className="space-y-2">
-      <h2 className="text-xl font-semibold">📈 Growth Rates</h2>
+      <h2 className="text-sm font-semibold">📈 Growth Rates</h2>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {items.map(({ key, label }) => {
@@ -40,7 +40,6 @@ export const GrowthRateSection = ({ metrics, years }: Props) => {
           const trend = getTrendSummaryLine(alignedData);
           return (
             <div key={key} className="bg-white rounded-md p-4 shadow-sm">
-              <h3 className="text-sm font-medium text-gray-700 mb-2">{label}</h3>
               <MetricLineChart label={label} data={alignedData} labels={alignedYears} percent />
               <p className={`text-xs mt-1 ${trend.color}`}>
                 • {trend.text}

@@ -77,6 +77,8 @@ export const MetricLineChart = ({ label, data, labels, percent = false }: Props)
             percent ? `${Number(value).toFixed(1)}%` : Number(value).toFixed(1),
         },
         grid: { color: '#E5E7EB' },
+        beginAtZero: true,
+        suggestedMax: Math.max(...data) * 1.15, // 👈 15% headroom for top label
       },
     },
     plugins: {
@@ -88,8 +90,13 @@ export const MetricLineChart = ({ label, data, labels, percent = false }: Props)
   };
 
   return (
-    <div className="relative w-full h-[200px]">
-      <Line data={chartData} options={options} />
+    <div className="w-full">
+
+      <h5 className="text-xs font-medium mb-1 text-muted-foreground">{label}</h5>
+      <div className="relative w-full h-[200px]">
+        <Line data={chartData} options={options} />
+      </div>
     </div>
+
   );
 };

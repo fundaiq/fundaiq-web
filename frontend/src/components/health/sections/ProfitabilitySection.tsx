@@ -17,7 +17,7 @@ export const ProfitabilitySection = ({ metrics, years }: Props) => {
 
   return (
     <div className="space-y-2">
-      <h2 className="text-xl font-semibold">💰 Profitability & Returns</h2>
+      <h2 className="text-sm font-semibold">💰 Profitability & Returns</h2>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
 
@@ -35,7 +35,6 @@ export const ProfitabilitySection = ({ metrics, years }: Props) => {
 
           return (
             <div key={key} className="bg-white rounded-md p-4 shadow-sm">
-              <h3 className="text-sm font-medium text-gray-700 mb-2">{label}</h3>
               <MetricLineChart label={label} data={alignedData} labels={alignedYears} percent />
             </div>
           );

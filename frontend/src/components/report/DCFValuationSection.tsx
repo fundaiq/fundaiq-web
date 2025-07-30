@@ -22,7 +22,10 @@ export default function DCFValuationSection() {
       body: JSON.stringify(form)
     });
     const data = await res.json();
-    setValuationResult(data);
+    setValuationResult({
+      ...data,
+      current_price: assumptions.current_price // ✅ inject here
+    });
   };
 
   useEffect(() => {
@@ -57,10 +60,11 @@ export default function DCFValuationSection() {
     <section className="mb-10" id="dcf-valuation">
       <CollapsibleCard title="📥 DCF Value Projection">
 
-        <div className="bg-white dark:bg-zinc-800 rounded-lg p-4 border dark:border-zinc-700 shadow mb-6">
-          <h3 className="text-lg font-small mb-2">📥 Inputs &  Assumptions</h3>
+        <div className="bg-white dark:bg-zinc-800 rounded-sm p-4 border dark:border-zinc-700 shadow mb-6">
+          <h3 className="text-sm font-medium mb-2">📥 Inputs &  Assumptions</h3>
           <div className="grid md:grid-cols-3 gap-2">
             {Object.entries({
+              current_price:'Current Market Price',
               base_revenue: 'Base Revenue (₹ Cr)',
               latest_net_debt: 'Net Debt (₹ Cr)',
               shares_outstanding: 'Shares Outstanding (Cr)',
@@ -70,14 +74,15 @@ export default function DCFValuationSection() {
               depreciation_pct: 'Depreciation (% of Revenue)',
               wc_change_pct: 'Change in WC (%)',
               interest_pct: 'WACC (%)',
-              x_years: 'High Growth Period (Years)',
-              y_years: 'Total Projection Period (Years)',
-              growth_x: 'Growth Rate (X years)',
-              growth_y: 'Growth Rate (X to Y years)',
-              growth_terminal: 'Terminal Growth Rate'
+              x_years: 'High Growth Period (Phase 1)',
+              growth_x: 'High Growth Rate (Phase 1)',
+              y_years: 'Total Projection Period (Phase 2)',
+              growth_y: 'Growth Rate - (Phase 2)',
+              growth_terminal: 'Terminal Growth Rate (Phase 3)'
+              
             }).map(([key, label]) => (
               <div key={key}>
-                <label className="block text-sm font-medium mb-1">{label}</label>
+                <label className="block text-sm font-normal mb-1">{label}</label>
                 <input
                   type="number"
                   value={form[key] || ''}
@@ -98,7 +103,7 @@ export default function DCFValuationSection() {
               visible={showSensitivity}
               setVisible={setShowSensitivity}
               valuationResult={valuationResult}
-              currentPrice={assumptions?.current_price || ''}
+              current_price={assumptions?.current_price || ''}
               form={form}
               setSensitivityData={setSensitivityData}
               sensitivityData={sensitivityData}
