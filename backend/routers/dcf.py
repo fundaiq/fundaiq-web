@@ -45,6 +45,8 @@ def calculate_dcf(input: DCFInput):
         fcf = nopat + depreciation - capex - wc_change
         discount_factor = (1 + input.interest_pct / 100) ** year
         pv_fcf = fcf / discount_factor
+        pv_fcf_pershare =  pv_fcf / input.shares_outstanding
+        
         fcf_results.append(pv_fcf)
 
         fcf_table.append({
@@ -57,7 +59,8 @@ def calculate_dcf(input: DCFInput):
             "CapEx": round(capex, 2),
             "WC Change": round(wc_change, 2),
             "FCF": round(fcf, 2),
-            "PV of FCF": round(pv_fcf, 2)
+            "PV of FCF": round(pv_fcf, 2),
+            "PV of FCF per Share" : round(pv_fcf_pershare,2)
         })
 
     terminal_value = (fcf * (1 + input.growth_terminal / 100)) / ((input.interest_pct - input.growth_terminal) / 100)
@@ -72,15 +75,18 @@ def calculate_dcf(input: DCFInput):
     phase2_pv = sum(fcf_results[input.x_years:])
 
     return {
-        "fcf_table": fcf_table,
-        "fair_value_per_share": round(fair_value_per_share, 2),
-        "enterprise_value": round(enterprise_value, 2),
-        "equity_value": round(equity_value, 2),
-        "latest_net_debt": round(input.latest_net_debt, 2),
-        "shares_outstanding": round(input.shares_outstanding, 2),
-        "terminal_value_pv": round(pv_terminal, 2),
-        "terminal_weight": round(terminal_weight, 2),
-        "phase1_pv": round(phase1_pv, 2),
-        "phase2_pv": round(phase2_pv, 2)
-    }
+    "fcf_table": fcf_table,
+    "fair_value_per_share": round(fair_value_per_share, 2),
+    "enterprise_value": round(enterprise_value, 2),
+    "equity_value": round(equity_value, 2),
+    "latest_net_debt": round(input.latest_net_debt, 2),
+    "shares_outstanding": round(input.shares_outstanding, 2),
+    "terminal_value_pv": round(pv_terminal, 2),
+    "terminal_weight": round(terminal_weight, 2),
+    "phase1_pv": round(phase1_pv, 2),
+    "phase2_pv": round(phase2_pv, 2),
+    "fv_phase1_per_share": round(phase1_pv / input.shares_outstanding, 2),
+    "fv_phase2_per_share": round(phase2_pv / input.shares_outstanding, 2),
+    "terminal_value_per_share": round(pv_terminal / input.shares_outstanding, 2)
+}
 

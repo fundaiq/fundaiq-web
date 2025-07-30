@@ -32,7 +32,7 @@ def calculate_metrics(pnl, bs, cf, years, source="excel"):
     investments = get_values(bs, "Investments")
     capex = get_values(bs, "Capital Work in Progress")
     net_block = get_values(bs, "Net Block")[:len(revenue)]
-
+    tax_values = get_values(pnl, "Tax")
     
         
     cash_and_investments = [(c or 0) + (i or 0) for c, i in zip(cash, investments)]
@@ -73,7 +73,7 @@ def calculate_metrics(pnl, bs, cf, years, source="excel"):
     ebitda_growth = calculate_growth(ebitda)
     net_profit_growth = calculate_growth(net_profit)
 
-    tax_values = get_values(pnl, "Tax")
+    
     tax_rate = safe_divide(safe_last(tax_values), safe_last(ebit)) * 100 if ebit else 0
     capex_pct = safe_divide(safe_last(capex), safe_last(revenue)) * 100 if capex and revenue else 2.0
     revenue_cagr_3y = calculate_cagr(revenue)
@@ -118,11 +118,11 @@ def calculate_metrics(pnl, bs, cf, years, source="excel"):
         "interest_exp": safe_last(interest),
         "base_year": safe_last(years),
         "wacc": 11,
-        "growth_x": 20,
-        "growth_y": 12,
+        "growth_x": 15,
+        "growth_y": 10,
         "period_x": 5,
         "period_y": 15,
-        "growth_terminal": 4
+        "growth_terminal": 2
     }
 
     return calculated_metrics, assumptions

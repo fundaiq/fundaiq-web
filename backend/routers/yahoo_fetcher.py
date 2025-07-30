@@ -81,7 +81,9 @@ def fetch_yahoo_financials(ticker: str):
         "EBITDA": "EBITDA",
         "EBIT": "EBIT",
         "Interest": "Interest Expense",
-        "Net profit": "Net Income"
+        "Net profit": "Net Income",
+        "Tax":"Tax Provision",
+        "Depreciation":"Reconciled Depreciation"
     }
     pnl_row_order = list(pnl_row_map.keys())
 
@@ -91,7 +93,9 @@ def fetch_yahoo_financials(ticker: str):
         #"Reserves": "Other Equity Interest",
         "Borrowings": "Total Debt",
         "Investments": "Other Short Term Investments",
-        "Cash & Bank": "Cash And Cash Equivalents"
+        "Cash & Bank": "Cash And Cash Equivalents",
+        "Net Block" : "Net PPE",
+        "Capital Work in Progress":"Construction In Progress" 
     }
     bs_row_order = list(bs_row_map.keys())
 
