@@ -3,29 +3,36 @@ import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { useGlobalStore } from '@/store/globalStore';
 import CollapsibleCard from '@/components/ui/CollapsibleCard';
+
 type Props = {
-  resetKey: number; // 👈 Add this line
+  resetKey: number;
 };
+
+type TickerEntry = {
+  name: string;
+  ticker: string;
+};
+
 export default function DataImportSection({ resetKey }: Props) {
   const ticker = useGlobalStore((s) => s.tickerInput);
   const setTicker = useGlobalStore((s) => s.setTickerInput);
   const [file, setFile] = useState<File | null>(null);
   const status = useGlobalStore((s) => s.status);
   const setStatus = useGlobalStore((s) => s.setStatus);
-  const [tickersList, setTickersList] = useState<string[]>([]);
-  const [filteredTickers, setFilteredTickers] = useState<string[]>([]);
+  const [tickersList, setTickersList] = useState<TickerEntry[]>([]);
+  const [filteredTickers, setFilteredTickers] = useState<TickerEntry[]>([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
 
   const setAssumptions = useGlobalStore((s) => s.setAssumptions);
   const setMetrics = useGlobalStore((s) => s.setMetrics);
   const setCompanyInfo = useGlobalStore((s) => s.setCompanyInfo);
   const setRawYahooData = useGlobalStore((s) => s.setRawYahooData);
-  
+
   useEffect(() => {
-    setFile(null);           // clear uploaded file
-    setTicker('');           // clear input box
-    setStatus('');           // clear "✅ XYZ loaded" message
-    setShowSuggestions(false); // hide dropdown
+    setFile(null);
+    setTicker('');
+    setStatus('');
+    setShowSuggestions(false);
   }, [resetKey]);
 
   useEffect(() => {
@@ -37,12 +44,26 @@ export default function DataImportSection({ resetKey }: Props) {
     fetchTickers();
   }, []);
 
+  const resolveTicker = (input: string): TickerEntry | null => {
+    const inputLower = input.toLowerCase().trim();
+    return (
+      tickersList.find(
+        (entry) =>
+          entry.name.toLowerCase() === inputLower ||
+          entry.ticker.toLowerCase() === inputLower
+      ) || null
+    );
+  };
+
   const handleFetch = async () => {
-    if (!ticker) return;
+    const entry = resolveTicker(ticker);
+    const finalTicker = entry?.ticker || ticker;
+
+    if (!finalTicker) return;
     setStatus('🔄 Fetching from Yahoo...');
 
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE}/yahoo-profile/${ticker}`);
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE}/yahoo-profile/${finalTicker}`);
       const data = await res.json();
       setAssumptions(data.assumptions || {});
       setMetrics(data.calculated_metrics || {});
@@ -105,8 +126,10 @@ export default function DataImportSection({ resetKey }: Props) {
   const handleTickerInput = (value: string) => {
     setTicker(value);
     if (value.length >= 2) {
-      const matches = tickersList.filter((t) =>
-        t.toLowerCase().includes(value.toLowerCase())
+      const matches = tickersList.filter(
+        (entry) =>
+          entry.name.toLowerCase().includes(value.toLowerCase()) ||
+          entry.ticker.toLowerCase().includes(value.toLowerCase())
       );
       setFilteredTickers(matches.slice(0, 10));
       setShowSuggestions(true);
@@ -118,7 +141,8 @@ export default function DataImportSection({ resetKey }: Props) {
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if ((e.key === 'Enter' || e.key === 'Tab') && filteredTickers.length > 0) {
       e.preventDefault();
-      setTicker(filteredTickers[0]);
+      const selected = filteredTickers[0];
+      setTicker(selected.name); // Display name
       setShowSuggestions(false);
       handleFetch();
     }
@@ -134,22 +158,24 @@ export default function DataImportSection({ resetKey }: Props) {
               value={ticker}
               onChange={(e) => handleTickerInput(e.target.value)}
               onKeyDown={handleKeyDown}
-              placeholder="e.g. INFY.NS"
+              placeholder="e.g. 3M India or 3MINDIA.NS"
               className="border px-3 py-1 rounded w-full"
             />
             {showSuggestions && filteredTickers.length > 0 && (
-              <ul className="absolute bg-white border w-full shadow mt-1 rounded max-h-60 overflow-auto z-20">
+              <ul className="absolute w-full mt-1 rounded max-h-60 overflow-auto z-20 border 
+                bg-white text-black dark:bg-zinc-800 dark:text-white 
+                shadow dark:shadow-md">
                 {filteredTickers.map((item) => (
                   <li
-                    key={item}
-                    className="px-3 py-2 hover:bg-gray-100 cursor-pointer"
+                    key={item.ticker}
+                    className="px-3 py-2 hover:bg-gray-100 dark:hover:bg-zinc-700 cursor-pointer"
                     onClick={() => {
-                      setTicker(item);
+                      setTicker(item.name);
                       setShowSuggestions(false);
                       handleFetch();
                     }}
                   >
-                    {item}
+                    📈 {item.name} — <span className="text-gray-500 dark:text-gray-300">{item.ticker}</span>
                   </li>
                 ))}
               </ul>
@@ -175,5 +201,4 @@ export default function DataImportSection({ resetKey }: Props) {
       </CollapsibleCard>
     </section>
   );
-
 }
