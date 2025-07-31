@@ -52,8 +52,8 @@ def dcf_sensitivity(input: SensitivityInput):
         return round(fair_value, 2)
 
     # Generate ranges centered on user's EBIT and Growth inputs
-    ebit_values = [input.ebit_margin + i * 2 for i in range(-5, 6)]
-    growth_values = [input.growth_y + i * 2 for i in range(-5, 6)]
+    ebit_values = [input.ebit_margin + i * 4 for i in range(-2, 3)]
+    growth_values = [input.growth_y + i * 4 for i in range(-2, 3)]
 
     fair_values = []
     for ebit in ebit_values:
