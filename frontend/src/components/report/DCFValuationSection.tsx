@@ -31,6 +31,7 @@ export default function DCFValuationSection() {
   useEffect(() => {
     if (assumptions && assumptions.latest_revenue) {
       const mapped = {
+        current_price: assumptions.current_price,
         base_revenue: assumptions.latest_revenue,
         latest_net_debt: assumptions.latest_net_debt,
         shares_outstanding: assumptions.shares_outstanding,
