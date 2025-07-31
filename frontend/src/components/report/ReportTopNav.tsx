@@ -53,19 +53,7 @@ export default function ReportTopNav({ scrollTo, showSections, onReset }) {
 
   return (
     <div className="sticky top-[40px] z-40 bg-white dark:bg-zinc-900 border-b shadow-sm px-4 py-3">
-      {/* Disclaimer */}
-      {showDisclaimer && (
-        <div className="relative mb-2">
-          <Disclaimer />
-          <button
-            onClick={dismissDisclaimer}
-            className="absolute top-1 right-2 text-xs text-yellow-700 underline"
-          >
-            Hide
-          </button>
-        </div>
-      )}
-
+      
       {/* Scrollable nav with fade + snap */}
       <div className="relative max-w-6xl mx-auto">
         <div className="flex gap-2 overflow-x-auto scroll-snap-x scroll-smooth whitespace-nowrap scrollbar-hide pr-4">
