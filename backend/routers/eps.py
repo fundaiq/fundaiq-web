@@ -12,7 +12,7 @@ class EPSProjectionRequest(BaseModel):
     projection_years: int
     revenue_growth: float
     ebit_margin: float
-    interest_exp: float
+    interest_exp_pct: float
     tax_rate: float
     shares_outstanding: float
     current_price: float
@@ -26,7 +26,7 @@ def calculate_eps_projection(data: EPSProjectionRequest):
             projection_years=data.projection_years,
             revenue_growth=data.revenue_growth,
             ebit_margin=data.ebit_margin,
-            interest_exp=data.interest_exp,
+            interest_exp_pct=data.interest_exp_pct,
             tax_rate=data.tax_rate,
             shares_outstanding=data.shares_outstanding,
             current_price=data.current_price,

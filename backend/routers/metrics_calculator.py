@@ -50,7 +50,7 @@ def calculate_metrics(pnl, bs, cf, years, source="excel"):
         ebit = get_values(pnl, "EBIT") 
         equity = equity_capital
 
-    
+
     ebitda_margin = [safe_divide(e, r) * 100 for e, r in zip(ebitda, revenue[:min_len])]
 
     net_profit_margin = [safe_divide(n, r) * 100 for n, r in zip(net_profit[:min_len], revenue[:min_len])]
@@ -77,6 +77,7 @@ def calculate_metrics(pnl, bs, cf, years, source="excel"):
     tax_rate = safe_divide(safe_last(tax_values), safe_last(ebit)) * 100 if ebit else 0
     capex_pct = safe_divide(safe_last(capex), safe_last(revenue)) * 100 if capex and revenue else 2.0
     revenue_cagr_3y = calculate_cagr(revenue)
+    interest_exp_pct = safe_last(interest)/safe_last(ebit)*100 if ebit else 0
 
     calculated_metrics = {
         "revenue": revenue,
@@ -116,6 +117,7 @@ def calculate_metrics(pnl, bs, cf, years, source="excel"):
         "interest_pct": 11.0,
         "revenue_growth": revenue_cagr_3y,
         "interest_exp": safe_last(interest),
+        "interest_exp_pct": round(interest_exp_pct,2),
         "base_year": safe_last(years),
         "wacc": 11,
         "growth_x": 15,
