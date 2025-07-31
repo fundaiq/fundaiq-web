@@ -62,7 +62,7 @@ export default function EPSValuationSection() {
   };
 
   return (
-    <section className="mb-10" id="eps-projection">
+    <section className="mb-2" id="eps-projection">
       <CollapsibleCard title="📈 EPS Projection">
         <div className="bg-white dark:bg-zinc-800 rounded-lg p-4 border dark:border-zinc-700 shadow mb-6">
           <h3 className="text-lg font-medium mb-4">📥 EPS Assumptions & Inputs</h3>

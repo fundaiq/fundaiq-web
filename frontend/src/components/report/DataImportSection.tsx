@@ -149,7 +149,7 @@ export default function DataImportSection({ resetKey }: Props) {
   };
 
   return (
-    <section className="mb-10" id="import">
+    <section className="mb-2" id="import">
       <CollapsibleCard title="📥 Data Import">
         <div className="flex flex-col md:flex-row gap-4 relative z-10">
           <div className="relative w-full md:w-64">

@@ -6,7 +6,7 @@ export default function Disclaimer() {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <div className="bg-yellow-50 border-l-4 border-yellow-500 text-sm text-gray-800 mb-4 rounded py-1 px-3">
+    <div className="bg-yellow-50 border-l-1 border-yellow-400 text-xs text-gray-800 mb-0 rounded-sm py-1 px-2 leading-tight">
       <div className="flex justify-between items-center">
         <h2 className="font-bold text-yellow-800">📢 Results can be incorrect - please read Disclaimer</h2>
         <button

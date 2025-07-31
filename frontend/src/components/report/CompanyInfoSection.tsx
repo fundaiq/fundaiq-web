@@ -6,7 +6,7 @@ export default function CompanyInfoSection() {
   const CompanyInfo = useGlobalStore((s) => s.company_info);
 
   return (
-    <section className="mb-10" id="company-info">
+    <section className="mb-2" id="company-info">
       <CollapsibleCard title="📥 Company Information">
         <h2 className="text-xl font-semibold mb-2">🏢 Company Info</h2>
         <p><strong>Name:</strong> {CompanyInfo?.name}</p>

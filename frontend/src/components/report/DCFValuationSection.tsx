@@ -58,7 +58,7 @@ export default function DCFValuationSection() {
   }, [form]);
 
   return (
-    <section className="mb-10" id="dcf-valuation">
+    <section className="mb-2" id="dcf-valuation">
       <CollapsibleCard title="📥 DCF Value Projection">
 
         <div className="bg-white dark:bg-zinc-800 rounded-sm p-4 border dark:border-zinc-700 shadow mb-6">
