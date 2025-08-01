@@ -7,6 +7,8 @@ html {
   box-sizing: border-box;
   scroll-behavior: smooth;
   font-size: 16px; /* or adjust for scaling if needed */
+  scroll-padding-top: 6.5rem; /* Account for TopNav + ReportTopNav */
+  
 }
 
 *, *::before, *::after {

@@ -59,12 +59,31 @@ export default function DataImportSection({ resetKey }: Props) {
     const entry = resolveTicker(ticker);
     const finalTicker = entry?.ticker || ticker;
 
-    if (!finalTicker) return;
-    setStatus('🔄 Fetching from Yahoo...');
+    if (!finalTicker) {
+      setStatus('❌ No ticker entered.');
+      return;
+    }
+
+    setStatus(`🔄 Fetching: ${finalTicker}...`);
 
     try {
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE}/yahoo-profile/${finalTicker}`);
-      const data = await res.json();
+      const rawText = await res.text();
+      let data: any;
+
+      try {
+        data = JSON.parse(rawText);
+      } catch (jsonErr) {
+        setStatus(`❌ Invalid JSON: ${rawText.slice(0, 200)}...`);
+        console.error('❌ JSON parse error', jsonErr);
+        return;
+      }
+
+      if (!res.ok) {
+        setStatus(`❌ ${res.status}: ${data?.error || 'Unknown backend error'}`);
+        return;
+      }
+
       setAssumptions(data.assumptions || {});
       setMetrics(data.calculated_metrics || {});
       setCompanyInfo({
@@ -80,10 +99,11 @@ export default function DataImportSection({ resetKey }: Props) {
         cashflow: data.cashflow,
         years: data.years
       });
-      setStatus(`✅ ${data.company_name} loaded`);
-    } catch (err) {
-      console.error(err);
-      setStatus('❌ Fetch failed');
+
+      setStatus(`✅ ${data.company_name || 'Company'} loaded`);
+    } catch (err: any) {
+      console.error('❌ Network error', err);
+      setStatus(`❌ Network error: ${err.message}`);
     }
   };
 
@@ -142,7 +162,7 @@ export default function DataImportSection({ resetKey }: Props) {
     if ((e.key === 'Enter' || e.key === 'Tab') && filteredTickers.length > 0) {
       e.preventDefault();
       const selected = filteredTickers[0];
-      setTicker(selected.name); // Display name
+      setTicker(selected.name);
       setShowSuggestions(false);
       handleFetch();
     }

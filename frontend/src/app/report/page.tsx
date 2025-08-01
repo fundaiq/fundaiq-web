@@ -15,13 +15,6 @@ export default function CompanyReportPage() {
   const companyInfo = useGlobalStore((state) => state.company_info);
   const resetAll = useGlobalStore((state) => state.resetAll);
   const [resetKey, setResetKey] = useState(0);
-  const disclaimerRef = useRef(null);
-
-  const handleReset = () => {
-    resetAll();
-    setResetKey((k) => k + 1);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
 
   const showSections = !!companyInfo?.name?.trim();
 
@@ -42,6 +35,12 @@ export default function CompanyReportPage() {
     sections[section]?.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
+  const handleReset = () => {
+    resetAll();
+    setResetKey((k) => k + 1);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   return (
     <div className="relative bg-white dark:bg-zinc-900 text-black dark:text-white">
       <ReportTopNav
@@ -56,35 +55,38 @@ export default function CompanyReportPage() {
           <span className="text-[#0073E6]">IQ</span> Report Builder
         </h1>
 
-        <div id="import" ref={sections.import} className="scroll-mt-32">
+        <div id="import" ref={sections.import}>
           <DataImportSection resetKey={resetKey} />
         </div>
 
         {showSections && (
           <>
-            <div id="dislaimer" ref={sections.disclaimer} className="scroll-mt-32">
+            <div id="disclaimer" ref={sections.disclaimer}>
               <Disclaimer />
             </div>
-            <div id="overview" ref={sections.overview} className="scroll-mt-32">
+
+            <div id="overview" ref={sections.overview}>
               <CompanyInfoSection />
             </div>
-            <div id="health" ref={sections.health} className="scroll-mt-32">
+
+            <div id="health" ref={sections.health}>
               <FinancialHealthSection />
             </div>
-            <div id="valuation" ref={sections.valuation} className="scroll-mt-32">
+
+            <div id="valuation" ref={sections.valuation}>
               <DCFValuationSection />
             </div>
-            <div id="eps" ref={sections.eps} className="scroll-mt-32">
+
+            <div id="eps" ref={sections.eps}>
               <EPSValuationSection />
             </div>
-            <div id="conclusion" ref={sections.conclusion} className="scroll-mt-32">
-              {/* Add ConclusionSection here if you have one */}
+
+            <div id="conclusion" ref={sections.conclusion}>
+              {/* Optional: Add ConclusionSection */}
             </div>
           </>
         )}
       </main>
-      
     </div>
-    
   );
 }

@@ -27,15 +27,12 @@ export default function ReportTopNav({ scrollTo, showSections, onReset }) {
       const scrollPos = window.scrollY;
       for (let i = sections.length - 1; i >= 0; i--) {
         const el = document.getElementById(sections[i].id);
-        if (el && el.offsetTop - 120 <= scrollPos) {
+        if (el && el.offsetTop - 100 <= scrollPos) {
           setActive(sections[i].id);
           const btn = buttonRefs.current[sections[i].id];
           if (btn) {
-            btn.scrollIntoView({
-              behavior: 'smooth',
-              inline: 'center',
-              block: 'nearest'
-            });
+            // Only horizontal scroll inside nav bar
+            setActive(sections[i].id);
           }
           break;
         }
@@ -52,9 +49,7 @@ export default function ReportTopNav({ scrollTo, showSections, onReset }) {
   };
 
   return (
-    <div className="sticky top-[40px] z-40 bg-white dark:bg-zinc-900 border-b shadow-sm px-4 py-3">
-      
-      {/* Scrollable nav with fade + snap */}
+    <div className="sticky top-[3.25rem] sm:top-[3.25rem] z-40 bg-white dark:bg-zinc-900 border-b shadow-sm px-4 py-3">
       <div className="relative max-w-6xl mx-auto">
         <div className="flex gap-2 overflow-x-auto scroll-snap-x scroll-smooth whitespace-nowrap scrollbar-hide pr-4">
           {sections.map(
@@ -83,7 +78,7 @@ export default function ReportTopNav({ scrollTo, showSections, onReset }) {
           </button>
         </div>
 
-        {/* Right gradient fade */}
+        {/* Right fade */}
         <div className="absolute right-0 top-0 h-full w-6 bg-gradient-to-l from-white dark:from-zinc-900 pointer-events-none" />
       </div>
     </div>
