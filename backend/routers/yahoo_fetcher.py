@@ -1,163 +1,103 @@
-from fastapi import APIRouter, HTTPException
-from fastapi.responses import JSONResponse
-from .metrics_calculator import calculate_metrics, make_json_safe
-import yfinance as yf
-import pandas as pd
-from collections import OrderedDict
-import numpy as np
+from fastapi import APIRouter, Body
+from services.yahoo_financials import fetch_yahoo_financials
+from services.yahoo_utils import make_json_safe
+from metrics.metrics_input_mapper import extract_inputs
+from metrics.metrics_calculator import calculate_metrics
+from routers.dcf import calculate_dcf as run_dcf
+from routers.sensitivity import dcf_sensitivity as run_dcf_sensitivity
+from calculators.eps_calculator import project_eps as run_eps
+from routers.dcf import DCFInput  # import your model
+from routers.sensitivity import SensitivityInput
+from routers.eps import EPSProjectionRequest
+
+import math
 
 router = APIRouter()
 
-
-@router.get("/yahoo-profile/{ticker}")
-def fetch_yahoo_profile(ticker: str):
+@router.post("/yahoo-profile")
+def get_yahoo_profile(data: dict = Body(...)):
     try:
-        stock = yf.Ticker(ticker)
-        info = stock.info
-
-        company_name = info.get("longName") or info.get("shortName")
-        sector = info.get("sector")
-        industry = info.get("industry")
-        description = info.get("longBusinessSummary")
-
-        #revenue = info.get("totalRevenue", 0)
-        #net_income = info.get("netIncomeToCommon", 0)
-        #equity = info.get("totalStockholderEquity", 1)
-        #debt = info.get("totalDebt", 0)
-        shares = info.get("sharesOutstanding", 0)
-        try:
-            shares_out = round(shares[0] / 1e7, 2) if isinstance(shares, list) else round(shares / 1e7, 2)
-        except Exception:
-            shares_out = 0
         
+        ticker = data.get("ticker")
+        print("Received ticker:", ticker)
+        result = fetch_yahoo_financials(ticker)
+
+        pnl = result.get("pnl", {})
+        bs = result.get("balance_sheet", {})
+        cf = result.get("cashflow", {})
+        years = result.get("years", [])
+        yahoo_info = result.get("info", {})
+        company_info = result.get("company_info", {})
+
+        source = "yahoo"
+        metrics = calculate_metrics(pnl, bs, cf, years, source=source, yahoo_info=yahoo_info)[0]
+
+        # Derive assumptions from metrics
+        assumptions = {
+            "current_price": metrics["current_price"],
+            "base_revenue": metrics["latest_revenue"],
+            "latest_net_debt": metrics["latest_net_debt"],
+            "shares_outstanding": metrics["shares_outstanding"],
+            "ebit_margin": metrics["ebit_margin"],
+            "depreciation_pct": metrics["depreciation_pct"],
+            "capex_pct": metrics["capex_pct"],
+            "wc_change_pct": metrics["wc_change_pct"],
+            "tax_rate": metrics["tax_rate"],
+            "interest_pct": metrics["interest_pct"],
+            "x_years": 3,
+            "growth_x": metrics["growth_x"],
+            "y_years": 10,
+            "growth_y": metrics["growth_y"],
+            "growth_terminal": metrics["growth_terminal"],
+            "base_year": metrics["base_year"],
+            "interest_exp_pct": metrics["interest_exp_pct"]
+        }
+        print("✅ Assumptions :", metrics)
+        print("✅ Assumptions :", assumptions)
+        # Run DCF and Sensitivity
         
 
-        # ✅ Fetch 4Y financials
-        financials = fetch_yahoo_financials(ticker)
-        pnl = financials["pnl"]
-        bs = financials["balance_sheet"]
-        cf = financials["cashflow"]
-        years = financials["years"] or ["Mar-2024"]
+        dcf_result = run_dcf(DCFInput(**assumptions))
+        
+        dcf_sens_result = run_dcf_sensitivity(SensitivityInput(**assumptions))
 
-       
-        calculated_metrics, assumptions = calculate_metrics(pnl, bs, cf, years, source="yahoo")
+        # Run EPS projection
+        eps_input = {
+            "base_revenue": assumptions["base_revenue"],
+            "projection_years": 3,
+            "revenue_growth": assumptions["growth_x"],
+            "ebit_margin": assumptions["ebit_margin"],
+            "interest_exp_pct": assumptions["interest_exp_pct"],
+            "tax_rate": assumptions["tax_rate"],
+            "shares_outstanding": assumptions["shares_outstanding"],
+            "current_price": assumptions["current_price"],
+            "base_year": assumptions["base_year"],
+        }
+        eps_result = run_eps(
+            eps_input["base_revenue"],
+            eps_input["projection_years"],
+            eps_input["revenue_growth"],
+            eps_input["ebit_margin"],
+            eps_input["interest_exp_pct"],
+            eps_input["tax_rate"],
+            eps_input["shares_outstanding"],
+            eps_input["current_price"],
+            eps_input["base_year"],
+            
+        )
 
-        assumptions.update({
-            "current_price":info.get("currentPrice", 0),
-            "company_name": company_name,
-            "shares_outstanding": shares_out
+        return make_json_safe({
+            "company_info": company_info,
+            "metrics": metrics,
+            "assumptions": assumptions,
+            "valuationResults": {
+                "dcf": dcf_result,
+                "dcf_sensitivity": dcf_sens_result,
+                "eps": eps_result
+            }
         })
 
-        response = {
-            "company_name": company_name,
-            "ticker": ticker,
-            "sector": sector,
-            "industry": industry,
-            "description": description,
-            "pnl": pnl,
-            "balance_sheet": bs,
-            "cashflow": cf,
-            "quarters": {},
-            "metadata": {
-                "Current Price": info.get("currentPrice", 0)
-            },
-            "years": years,
-            "calculated_metrics": calculated_metrics,
-            "assumptions": assumptions
-        }
-
-        return JSONResponse(content=make_json_safe(response))
-
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
-
-
-def fetch_yahoo_financials(ticker: str):
-    t = yf.Ticker(ticker)
-
-    # P&L mapping and order
-    pnl_row_map = {
-        "Sales": "Total Revenue",
-        "EBITDA": "EBITDA",
-        "EBIT": "EBIT",
-        "Interest": "Interest Expense",
-        "Net profit": "Net Income",
-        "Tax":"Tax Provision",
-        "Depreciation":"Reconciled Depreciation"
-    }
-    pnl_row_order = list(pnl_row_map.keys())
-
-    # Balance Sheet mapping and order
-    bs_row_map = {
-        "Equity Share Capital": "Common Stock Equity",
-        #"Reserves": "Other Equity Interest",
-        "Borrowings": "Total Debt",
-        "Investments": "Other Short Term Investments",
-        "Cash & Bank": "Cash And Cash Equivalents",
-        "Net Block" : "Net PPE",
-        "Capital Work in Progress":"Construction In Progress" 
-    }
-    bs_row_order = list(bs_row_map.keys())
-
-    # Cash Flow mapping and order
-    cf_row_map = {
-        "Cash from Operating Activity": "Operating Cash Flow",
-        "Cash from Investing Activity": "Investing Cash Flow",
-        "Cash from Financing Activity": "Financing Cash Flow",
-        "Net Cash Flow": "Changes In Cash"
-    }
-    cf_row_order = list(cf_row_map.keys())
-
-    def clean_and_parse_df(df: pd.DataFrame, row_map: dict, row_order: list) -> (OrderedDict, list):
-        from collections import OrderedDict
-
-        parsed = OrderedDict()
-        if df.empty:
-            return parsed, []
-
-        df = df.fillna(0).astype(float)
-        df = df[df.columns[::-1]]  # reverse column order (oldest → newest)
-
-        # Remove columns where all rows are 0 or NaN
-        df = df.loc[:, df.apply(lambda col: not all(v == 0 or pd.isna(v) for v in col))]
-
-        # ✅ Limit to last 4 columns
-        df = df.iloc[:, -4:]
-
-        if df.empty:
-            return parsed, []
-
-        df.columns = df.columns.strftime("Mar-%Y")
-        years = df.columns.tolist()
-
-        for label in row_order:
-            yahoo_label = row_map.get(label)
-            if yahoo_label and yahoo_label in df.index:
-                values = df.loc[yahoo_label].values
-                safe_values = []
-                for v in values:
-                    try:
-                        if isinstance(v, (list, tuple, np.ndarray)):
-                            # Handle nested list/array
-                            v = v[0] if len(v) > 0 else 0
-                        safe_values.append(round(float(v) / 1e7, 2))
-                    except Exception as e:
-                        print(f"⚠️ Error processing value '{v}' for label '{label}': {e}")
-                        safe_values.append(0)
-                parsed[label] = safe_values
-        return parsed, years
-
-
-    pnl, pnl_years = clean_and_parse_df(t.financials, pnl_row_map, pnl_row_order)
-    bs, bs_years = clean_and_parse_df(t.balance_sheet, bs_row_map, bs_row_order)
-    cf, cf_years = clean_and_parse_df(t.cashflow, cf_row_map, cf_row_order)
-
-    # Choose years from the first non-empty set
-    years = pnl_years or bs_years or cf_years or ["Mar-2024"]
-
-    return {
-        "pnl": pnl,
-        "balance_sheet": bs,
-        "cashflow": cf,
-        "years": years
-    }
+        import traceback
+        traceback.print_exc()
+        return {"error": str(e)}

@@ -27,14 +27,25 @@ def project_eps(
     net_profit_list = []
 
     # ✅ Time 0 Row
+    print("✅ base_revenue :", base_revenue)
+    print("✅ ebit_margin :", ebit_margin)
+    print("✅ interest_exp_pct :", interest_exp_pct)
+    print("✅ tax_rate :", tax_rate)
+    
+
     ebit_0 = base_revenue * ebit_margin / 100
     interest_0 = ebit_0*interest_exp_pct/100 
     ebt_0 = ebit_0 - interest_0 
     tax_0 = ebt_0 * tax_rate / 100
     net_profit_0 = ebt_0 - tax_0
     eps_0 = net_profit_0 / shares_outstanding if shares_outstanding else 0
+    print("✅ ebit_0 :", ebit_0)
+    print("✅ ebt_0 :", ebt_0)
+    print("✅ tax_0 :", tax_0)
+    print("✅ net_profit_0 :", net_profit_0)
+    print("✅ eps_0 :", eps_0)
     pe_0 = current_price / eps_0 if eps_0 else None
-
+    print("✅ pe_0 :", pe_0)
     results.append({
         "year": f"FY{base_year_int + 1}"  ,
         "revenue": round(base_revenue, 2),
@@ -56,7 +67,11 @@ def project_eps(
         net_profit = ebt - tax
         eps = net_profit / shares_outstanding if shares_outstanding else 0
         pe = current_price / eps if eps > 0 else None
-
+        if i == 3 :
+            eps_fair_value = round(max(eps,0) * 20,2)
+        else:
+            eps_fair_value = 0
+        
         year_label = f"FY{base_year_int + i + 1}"
         results.append({
             "year": year_label,
@@ -111,6 +126,7 @@ def project_eps(
         price_sensitivity.append(row)
 
     return {
+        "eps_fair_value" : eps_fair_value,
         "projection_table": results,
         "eps_cagr": round(eps_cagr, 2),
         "eps_chart": {

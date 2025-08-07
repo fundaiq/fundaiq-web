@@ -44,8 +44,8 @@ def calculate_dcf(input: DCFInput):
         wc_change = revenue * (input.wc_change_pct / 100)
         fcf = nopat + depreciation - capex - wc_change
         discount_factor = (1 + input.interest_pct / 100) ** year
-        pv_fcf = fcf / discount_factor
-        pv_fcf_pershare =  pv_fcf / input.shares_outstanding
+        pv_fcf = round(fcf / discount_factor,2)
+        pv_fcf_pershare =  round(pv_fcf / input.shares_outstanding,2)
         
         fcf_results.append(pv_fcf)
 
@@ -76,7 +76,7 @@ def calculate_dcf(input: DCFInput):
 
     return {
     "fcf_table": fcf_table,
-    "fair_value_per_share": round(fair_value_per_share, 2),
+    "dcf_fair_value": round(fair_value_per_share, 2),
     "enterprise_value": round(enterprise_value, 2),
     "equity_value": round(equity_value, 2),
     "latest_net_debt": round(input.latest_net_debt, 2),

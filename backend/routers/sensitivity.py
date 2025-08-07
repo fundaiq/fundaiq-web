@@ -6,7 +6,7 @@ router = APIRouter()
 
 class SensitivityInput(BaseModel):
     base_revenue: float
-    net_debt: float
+    latest_net_debt: float
     shares_outstanding: float
     depreciation_pct: float
     capex_pct: float
@@ -47,7 +47,7 @@ def dcf_sensitivity(input: SensitivityInput):
         terminal_value = (fcf * (1 + input.growth_terminal / 100)) / ((input.interest_pct - input.growth_terminal) / 100)
         pv_terminal = terminal_value / ((1 + input.interest_pct / 100) ** input.y_years)
         enterprise_value = sum(fcf_results) + pv_terminal
-        equity_value = enterprise_value - input.net_debt
+        equity_value = enterprise_value - input.latest_net_debt
         fair_value = equity_value / input.shares_outstanding
         return round(fair_value, 2)
 

@@ -11,6 +11,8 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "http://localhost:3000",
+        "http://192.168.0.17:3000",
+        "http://192.168.0.17:8000",
         "https://www.fundaiq.com",   # ✅ Production
         "https://fundaiq.com",       # ✅ Without www
         "https://fundaiq-web.vercel.app"

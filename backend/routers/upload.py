@@ -3,7 +3,9 @@
 from fastapi import APIRouter, UploadFile, File
 from fastapi.responses import JSONResponse
 from .upload_parser import parse_excel
-from .metrics_calculator import calculate_metrics, make_json_safe
+from metrics.metrics_calculator import calculate_metrics
+from metrics.metrics_input_mapper import extract_inputs
+from metrics.utils import make_json_safe
 import pandas as pd
 
 router = APIRouter()
@@ -39,8 +41,10 @@ async def upload_excel(file: UploadFile = File(...)):
         cf = parsed["cashflow"]
         quarters = parsed["quarters"]
         years = parsed["years"]
-
-        calculated_metrics, assumptions = calculate_metrics(pnl, bs, cf, years)
+        
+        #inputs = extract_inputs(pnl, bs, cf, years, source="excel")
+        calculated_metrics, assumptions = calculate_metrics(pnl, bs, cf, years, source="excel")
+        
         calculated_metrics["years"] = years
         # Additional assumptions
         revenue_row = pnl.get("Sales", [])
