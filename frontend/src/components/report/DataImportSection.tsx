@@ -1,224 +1,82 @@
 'use client';
+
 import { useEffect, useState } from 'react';
-import { Button } from '@/components/ui/button';
 import { useGlobalStore } from '@/store/globalStore';
-import CollapsibleCard from '@/components/ui/CollapsibleCard';
+import TickerInput from './TickerInput';
+import ExcelUpload from './ExcelUpload';
+import Spinner from '@/components/ui/Spinner';
+import { useFetchTicker } from './hooks/useFetchTicker';
+import { useUploadExcel } from './hooks/useUploadExcel';
 
 type Props = {
   resetKey: number;
 };
 
-type TickerEntry = {
-  name: string;
-  ticker: string;
-};
-
 export default function DataImportSection({ resetKey }: Props) {
-  const ticker = useGlobalStore((s) => s.tickerInput);
-  const setTicker = useGlobalStore((s) => s.setTickerInput);
-  const [file, setFile] = useState<File | null>(null);
-  const status = useGlobalStore((s) => s.status);
   const setStatus = useGlobalStore((s) => s.setStatus);
-  const [tickersList, setTickersList] = useState<TickerEntry[]>([]);
-  const [filteredTickers, setFilteredTickers] = useState<TickerEntry[]>([]);
-  const [showSuggestions, setShowSuggestions] = useState(false);
+  const setTicker = useGlobalStore((s) => s.setTickerInput);
+  const status = useGlobalStore((s) => s.status);
+  const resetAll = useGlobalStore((s) => s.resetAll);           // ⬅️ add this
+  const [loading, setLoading] = useState(false);
 
-  const setAssumptions = useGlobalStore((s) => s.setAssumptions);
-  const setMetrics = useGlobalStore((s) => s.setMetrics);
-  const setCompanyInfo = useGlobalStore((s) => s.setCompanyInfo);
-  const setRawYahooData = useGlobalStore((s) => s.setRawYahooData);
+  const fetchTickerData = useFetchTicker(setLoading);
+  const uploadExcel = useUploadExcel(setLoading);
 
   useEffect(() => {
-    setFile(null);
     setTicker('');
     setStatus('');
-    setShowSuggestions(false);
-  }, [resetKey]);
+  }, [resetKey, setTicker, setStatus]);
 
-  useEffect(() => {
-    const fetchTickers = async () => {
-      const res = await fetch('/tickers.json');
-      const data = await res.json();
-      setTickersList(data);
-    };
-    fetchTickers();
-  }, []);
-
-  const resolveTicker = (input: string): TickerEntry | null => {
-    const inputLower = input.toLowerCase().trim();
-    return (
-      tickersList.find(
-        (entry) =>
-          entry.name.toLowerCase() === inputLower ||
-          entry.ticker.toLowerCase() === inputLower
-      ) || null
-    );
-  };
-
-  const handleFetch = async () => {
-    const entry = resolveTicker(ticker);
-    const finalTicker = entry?.ticker || ticker;
-
-    if (!finalTicker) {
-      setStatus('❌ No ticker entered.');
-      return;
-    }
-
-    setStatus(`🔄 Fetching: ${finalTicker}...`);
-
-    try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE}/yahoo-profile/${finalTicker}`);
-      const rawText = await res.text();
-      let data: any;
-
-      try {
-        data = JSON.parse(rawText);
-      } catch (jsonErr) {
-        setStatus(`❌ Invalid JSON: ${rawText.slice(0, 200)}...`);
-        console.error('❌ JSON parse error', jsonErr);
-        return;
-      }
-
-      if (!res.ok) {
-        setStatus(`❌ ${res.status}: ${data?.error || 'Unknown backend error'}`);
-        return;
-      }
-
-      setAssumptions(data.assumptions || {});
-      setMetrics(data.calculated_metrics || {});
-      setCompanyInfo({
-        name: data.company_name,
-        ticker: data.ticker,
-        sector: data.sector || '',
-        industry: data.industry || '',
-        description: data.description || ''
-      });
-      setRawYahooData({
-        pnl: data.pnl,
-        balance_sheet: data.balance_sheet,
-        cashflow: data.cashflow,
-        years: data.years
-      });
-
-      setStatus(`✅ ${data.company_name || 'Company'} loaded`);
-    } catch (err: any) {
-      console.error('❌ Network error', err);
-      setStatus(`❌ Network error: ${err.message}`);
-    }
-  };
-
-  const handleUpload = async () => {
-    if (!file) return;
-    setStatus('📤 Uploading Excel...');
-
-    try {
-      const formData = new FormData();
-      formData.append('file', file);
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE}/upload-excel`, {
-        method: 'POST',
-        body: formData
-      });
-      const data = await res.json();
-      setAssumptions(data.assumptions || {});
-      setMetrics(data.calculated_metrics || {});
-      if (data.assumptions?.company_name) {
-        setCompanyInfo({
-          name: data.assumptions.company_name,
-          ticker: data.assumptions.ticker || '',
-          sector: '',
-          industry: '',
-          description: 'Uploaded via Excel file.'
-        });
-      }
-      setRawYahooData({
-        pnl: data.pnl,
-        balance_sheet: data.balance_sheet,
-        cashflow: data.cashflow,
-        years: data.years
-      });
-      setStatus('✅ Excel uploaded');
-    } catch (err) {
-      console.error(err);
-      setStatus('❌ Upload failed');
-    }
-  };
-
-  const handleTickerInput = (value: string) => {
-    setTicker(value);
-    if (value.length >= 2) {
-      const matches = tickersList.filter(
-        (entry) =>
-          entry.name.toLowerCase().includes(value.toLowerCase()) ||
-          entry.ticker.toLowerCase().includes(value.toLowerCase())
-      );
-      setFilteredTickers(matches.slice(0, 10));
-      setShowSuggestions(true);
-    } else {
-      setShowSuggestions(false);
-    }
-  };
-
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if ((e.key === 'Enter' || e.key === 'Tab') && filteredTickers.length > 0) {
-      e.preventDefault();
-      const selected = filteredTickers[0];
-      setTicker(selected.name);
-      setShowSuggestions(false);
-      handleFetch();
-    }
+  const handleReset = () => {
+    if (loading) return;
+    resetAll();            // ⬅️ wipe global state
+    setTicker('');         // ⬅️ tidy local UI bits
+    setStatus('');
   };
 
   return (
-    <section className="mb-2" id="import">
-      <CollapsibleCard title="📥 Data Import">
-        <div className="flex flex-col md:flex-row gap-4 relative z-10">
-          <div className="relative w-full md:w-64">
-            <input
-              type="text"
-              value={ticker}
-              onChange={(e) => handleTickerInput(e.target.value)}
-              onKeyDown={handleKeyDown}
-              placeholder="e.g. 3M India or 3MINDIA.NS"
-              className="border px-3 py-1 rounded w-full"
-            />
-            {showSuggestions && filteredTickers.length > 0 && (
-              <ul className="absolute w-full mt-1 rounded max-h-60 overflow-auto z-20 border 
-                bg-white text-black dark:bg-zinc-800 dark:text-white 
-                shadow dark:shadow-md">
-                {filteredTickers.map((item) => (
-                  <li
-                    key={item.ticker}
-                    className="px-3 py-2 hover:bg-gray-100 dark:hover:bg-zinc-700 cursor-pointer"
-                    onClick={() => {
-                      setTicker(item.name);
-                      setShowSuggestions(false);
-                      handleFetch();
-                    }}
-                  >
-                    📈 {item.name} — <span className="text-gray-500 dark:text-gray-300">{item.ticker}</span>
-                  </li>
-                ))}
-              </ul>
-            )}
+    <section className="w-full mb-1" id="import">
+      <div className="rounded-md border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 px-4 py-1 shadow-sm">
+        {/* Row */}
+        <div className="flex flex-wrap md:flex-nowrap items-center gap-3 w-full min-w-0 md:overflow-visible">
+          {/* Instruction */}
+          <p className="text-sm text-zinc-600 dark:text-zinc-300 shrink-0 font-medium whitespace-nowrap">
+            📥 Enter Ticker or Upload Excel →
+          </p>
+
+          {/* Ticker Input */}
+          <div className="shrink-0">
+            <TickerInput onFetch={fetchTickerData} loading={loading} />
           </div>
 
-          <Button onClick={handleFetch}>Fetch</Button>
+          {/* Excel Upload */}
+          <div className="shrink-0">
+            <ExcelUpload onUpload={uploadExcel} loading={loading} />
+          </div>
 
-          <input
-            key={resetKey}
-            type="file"
-            accept=".xlsx"
-            onChange={(e) => setFile(e.target.files?.[0] || null)}
-          />
-          <Button onClick={handleUpload} disabled={!file}>Upload Excel</Button>
+          {/* Spacer */}
+          <div className="flex-1" />
 
-          {file?.name && (
-            <span className="text-sm text-gray-500 mt-1">📄 {file.name}</span>
-          )}
+          {/* Reset Button */}
+          <button
+            onClick={handleReset}
+            disabled={loading}
+            className="shrink-0 text-xs sm:text-sm px-3 py-1.5 rounded border border-red-300 text-red-700 hover:bg-red-50 disabled:opacity-50 disabled:cursor-not-allowed"
+            title="Reset all imported data and calculated results"
+          >
+            Reset All
+          </button>
         </div>
 
-        <p className="text-sm text-gray-600 mt-2">{status}</p>
-      </CollapsibleCard>
+        {/* Status / Loading */}
+        <div className="shrink-0 min-w-[120px] mt-1">
+          {loading ? (
+            <span className="text-blue-600 text-sm">Loading...</span>
+          ) : (
+            status && <span className="text-green-700 text-sm">{status}</span>
+          )}
+        </div>
+      </div>
     </section>
   );
 }

@@ -1,12 +1,5 @@
-import { create } from "zustand";
-
-interface Assumptions {
-  [key: string]: any;
-}
-
-interface Metrics {
-  [key: string]: any;
-}
+import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
 
 interface CompanyInfo {
   name?: string;
@@ -17,85 +10,174 @@ interface CompanyInfo {
 }
 
 interface GlobalState {
-  assumptions: Assumptions;
-  calculated_metrics: Metrics;
+  metrics: Metrics;
   company_info: CompanyInfo;
   raw_yahoo_data: any;
-  setAssumptions: (a: Assumptions) => void;
-  setMetrics: (m: Metrics) => void;
-  setCompanyInfo: (c: CompanyInfo) => void;
-  setRawYahooData: (d: any) => void;
+
   tickerInput: string;
-  setTickerInput: (t: string) => void;
   status: string;
+  
+  calculationTriggered: boolean;
+
+  setMetrics: (m: Metrics) => void;
+  updateMetrics: (updater: (prev: Metrics) => Metrics) => void;
+  setCompanyInfo: (c: CompanyInfo) => void;
+  
+  setRawYahooData: (d: any) => void;
+  setTickerInput: (t: string) => void;
   setStatus: (s: string) => void;
+  triggerCalculation: () => void;
+  resetCalculation: () => void;
+  resetAll: () => void;
+  assumptions: {},
+  valuationResults: {},
+  setAssumptions: (a) => void,
+  setValuationResults: (r) => void,
 }
 
-// ✅ Safe getter
-const load = (key: string) => {
-  if (typeof window === 'undefined') return {};
-  try {
-    const stored = localStorage.getItem(key);
-    return stored ? JSON.parse(stored) : {};
-  } catch {
-    return {};
+
+// ✅ Safe localStorage wrapper
+const safeStorage = {
+  getItem: (name) => {
+    if (typeof window === 'undefined') return null;
+    try {
+      return window.localStorage.getItem(name);
+    } catch (err) {
+      console.error('Storage getItem failed', err);
+      return null;
+    }
+  },
+  setItem: (name, value) => {
+    if (typeof window === 'undefined') return;
+    try {
+      window.localStorage.setItem(name, value);
+    } catch (err) {
+      console.error('Storage setItem failed', err);
+    }
+  },
+  removeItem: (name) => {
+    if (typeof window === 'undefined') return;
+    try {
+      window.localStorage.removeItem(name);
+    } catch (err) {
+      console.error('Storage removeItem failed', err);
+    }
   }
 };
 
-export const useGlobalStore = create<GlobalState>((set) => ({
-  assumptions: load('dcf-assumptions'),
-  calculated_metrics: load('dcf-metrics'),
-  company_info: load('dcf-company'),
-  raw_yahoo_data: load('dcf-raw'),
-  
-  tickerInput: '',
-  setTickerInput: (t) => set({ tickerInput: t }),
-  
-  status: '',
-  setStatus: (s) => set({ status: s }),
-
-  setAssumptions: (a) => {
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('dcf-assumptions', JSON.stringify(a));
-    }
-    set({ assumptions: a });
-  },
-
-  setMetrics: (m) => {
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('dcf-metrics', JSON.stringify(m));
-    }
-    set({ calculated_metrics: m });
-  },
-
-  setCompanyInfo: (c) => {
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('dcf-company', JSON.stringify(c));
-    }
-    set({ company_info: c });
-  },
-
-  setRawYahooData: (d) => {
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('dcf-raw', JSON.stringify(d));
-    }
-    set({ raw_yahoo_data: d });
-  },
-  // ✅ Add this reset function
-  resetAll: () => {
-    if (typeof window !== 'undefined') {
-      localStorage.removeItem('dcf-assumptions');
-      localStorage.removeItem('dcf-metrics');
-      localStorage.removeItem('dcf-company');
-      localStorage.removeItem('dcf-raw');
-    }
-    set({
-      assumptions: {},
-      calculated_metrics: {},
-      company_info: {},
-      raw_yahoo_data: {},
+export const useGlobalStore = create(
+  persist(
+    (set, get) => ({
       tickerInput: '',
-      status: ''
-    });
-  }
-}));
+      setTickerInput: (value) => set({ tickerInput: value }),
+
+      metrics: {},
+      setMetrics: (fnOrValue) => {
+        if (typeof fnOrValue === 'function') {
+          set((state) => ({ metrics: fnOrValue(state.metrics) }));
+        } else {
+          set({ metrics: fnOrValue });
+        }
+      },
+
+      valuationResults: {},
+      setValuationResults: (fnOrValue) => {
+        if (typeof fnOrValue === 'function') {
+          set((state) => ({ valuationResults: fnOrValue(state.valuationResults) }));
+        } else {
+          set({ valuationResults: fnOrValue });
+        }
+      },
+
+      assumptions: {},
+      defaultAssumptions: {},
+      setAssumptions: (fnOrValue) => {
+        if (typeof fnOrValue === 'function') {
+          set((state) => ({ assumptions: fnOrValue(state.assumptions) }));
+        } else {
+          set({ assumptions: fnOrValue });
+        }
+      },
+
+      setDefaultAssumptions: (defaults) => {
+        set({ defaultAssumptions: { ...defaults } });
+      },
+
+      resetAssumptions: () => {
+        const defaults = get().defaultAssumptions;
+        set({ assumptions: { ...defaults } });
+
+        try {
+          const storageKey = 'assumptions-storage';
+          if (typeof window !== 'undefined') {
+            window.localStorage.removeItem(storageKey);
+          }
+        } catch (err) {
+          console.warn('Failed to clear localStorage:', err);
+        }
+
+        get().triggerCalculation(defaults);
+      },
+
+      companyInfo: {},
+      setCompanyInfo: (fnOrValue) => {
+        if (typeof fnOrValue === 'function') {
+          set((state) => ({ companyInfo: fnOrValue(state.companyInfo) }));
+        } else {
+          set({ companyInfo: fnOrValue });
+        }
+      },
+
+      rawYahooData: {},
+      setRawYahooData: (fnOrValue) => {
+        if (typeof fnOrValue === 'function') {
+          set((state) => ({ rawYahooData: fnOrValue(state.rawYahooData) }));
+        } else {
+          set({ rawYahooData: fnOrValue });
+        }
+      },
+
+      triggerCalculation: () => {
+        set({ calculationTriggered: true });
+      },
+
+      status: '',
+      setStatus: (fnOrValue) => {
+        if (typeof fnOrValue === 'function') {
+          set((state) => ({ status: fnOrValue(state.status) }));
+        } else {
+          set({ status: fnOrValue });
+        }
+      },
+      
+      resetCalculation: () => set({ calculationTriggered: false }),
+
+      resetAll: () => {
+        set({
+          tickerInput: '',
+          metrics: {},
+          valuationResults: {},
+          assumptions: {},
+          defaultAssumptions: {},
+          companyInfo: {},
+          rawYahooData: {},
+          status: '',
+        });
+
+        try {
+          localStorage.removeItem('assumptions-storage');
+        } catch (err) {
+          console.warn('Failed to clear persisted state:', err);
+        }
+      },
+    }),
+    {
+      name: 'assumptions-storage',
+      storage: safeStorage,
+      partialize: (state) => ({
+        assumptions: state.assumptions,
+        defaultAssumptions: state.defaultAssumptions,
+      }),
+    }
+  )
+);

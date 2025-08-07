@@ -5,11 +5,13 @@ import Disclaimer from '@/components/Disclaimer';
 
 const sections = [
   { id: 'import', label: 'Import' },
-  { id: 'overview', label: 'Company Info' },
-  { id: 'health', label: 'Financial Analysis' },
+  { id: 'disclaimer', label: 'Disclaimer' },
+  { id: 'executive', label: 'Executive Summary' },
+  { id: 'assumptions', label: 'Valuation Assumptions' },
+  { id: 'info', label: 'Company Info' },
+  { id: 'health', label: 'Financial Health' },
   { id: 'valuation', label: 'DCF Projection' },
-  { id: 'eps', label: 'EPS Projection' },
-  { id: 'conclusion', label: 'Report Summary' }
+  { id: 'eps', label: 'EPS Projection' }
 ];
 
 export default function ReportTopNav({ scrollTo, showSections, onReset }) {
@@ -49,37 +51,40 @@ export default function ReportTopNav({ scrollTo, showSections, onReset }) {
   };
 
   return (
-    <div className="sticky top-[3.25rem] sm:top-[3.25rem] z-40 bg-white dark:bg-zinc-900 border-b shadow-sm px-4 py-3">
-      <div className="relative max-w-6xl mx-auto">
-        <div className="flex gap-2 overflow-x-auto scroll-snap-x scroll-smooth whitespace-nowrap scrollbar-hide pr-4">
-          {sections.map(
-            (s) =>
-              (s.id === 'import' || showSections) && (
-                <button
-                  key={s.id}
-                  ref={(el) => (buttonRefs.current[s.id] = el)}
-                  onClick={() => scrollTo(s.id)}
-                  className={`px-3 py-1 rounded-md border text-sm transition whitespace-nowrap shrink-0 scroll-snap-align-center ${
-                    active === s.id
-                      ? 'bg-[#1DB954] text-white border-[#1DB954] animate-highlight'
-                      : 'text-[#0073E6] border-[#0073E6] hover:bg-[#0073E6]/10'
-                  }`}
-                >
-                  {s.label}
-                </button>
-              )
-          )}
+    <div className="sticky top-[3.25rem] sm:top-[3.25rem] z-40 bg-white dark:bg-zinc-900 border-b shadow-sm px-4 py-2">
+      <div className="relative w-full">
+        {/* Scrollable Button Row */}
+        <div className="flex gap-2 overflow-x-auto scroll-smooth whitespace-nowrap w-full px-1">
+          <div className="flex gap-2 min-w-max">
+            {sections.map(
+              (s) =>
+                (s.id === 'import' || showSections) && (
+                  <button
+                    key={s.id}
+                    ref={(el) => (buttonRefs.current[s.id] = el)}
+                    onClick={() => scrollTo(s.id)}
+                    className={`px-3 py-1 rounded-md border text-sm transition whitespace-nowrap shrink-0 scroll-snap-align-center ${
+                      active === s.id
+                        ? 'bg-[#1DB954] text-white border-[#1DB954] animate-highlight'
+                        : 'text-[#0073E6] border-[#0073E6] hover:bg-[#0073E6]/10'
+                    }`}
+                  >
+                    {s.label}
+                  </button>
+                )
+            )}
 
-          <button
-            onClick={onReset}
-            className="shrink-0 text-sm bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 transition"
-          >
-            Reset Report
-          </button>
+            <button
+              onClick={onReset}
+              className="shrink-0 text-sm bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 transition"
+            >
+              Reset Report
+            </button>
+          </div>
         </div>
 
-        {/* Right fade */}
-        <div className="absolute right-0 top-0 h-full w-6 bg-gradient-to-l from-white dark:from-zinc-900 pointer-events-none" />
+        {/* Right Fade */}
+        <div className="absolute right-0 top-0 h-full w-6 bg-gradient-to-l from-white dark:from-zinc-900 pointer-events-none z-10" />
       </div>
     </div>
   );

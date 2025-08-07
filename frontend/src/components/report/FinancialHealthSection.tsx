@@ -11,8 +11,10 @@ import { SummaryBox } from '@/components/health/SummaryBox';
 import CollapsibleCard from '@/components/ui/CollapsibleCard';
 
 export default function FinancialHealthSection() {
-  const metrics = useGlobalStore((state) => state.calculated_metrics);
+  const metrics = useGlobalStore((state) => state.metrics);
   const [hydrated, setHydrated] = useState(false);
+  
+  console.log("📌 metrics:", metrics || {});
 
   useEffect(() => {
     setHydrated(true);
@@ -27,14 +29,14 @@ export default function FinancialHealthSection() {
 
   return (
     <section className="mb-2" id="financial-health">
-      <CollapsibleCard title="📥 Financial Analysis">
+      
         <GrowthSection metrics={metrics} years={years} />
         <GrowthRateSection metrics={metrics} years={years} />
         <ProfitabilitySection metrics={metrics} years={years} />
         <BalanceSheetSection metrics={metrics} years={years} />
         <LeverageSection metrics={metrics} years={years} />
         <SummaryBox metrics={metrics} />
-      </CollapsibleCard>
+      
     </section>
   );
 }

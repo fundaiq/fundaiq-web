@@ -3,18 +3,16 @@ import { useGlobalStore } from '@/store/globalStore';
 import CollapsibleCard from '@/components/ui/CollapsibleCard';
 
 export default function CompanyInfoSection() {
-  const CompanyInfo = useGlobalStore((s) => s.company_info);
+  const CompanyInfo = useGlobalStore((s) => s.companyInfo);
 
   return (
     <section className="mb-2" id="company-info">
-      <CollapsibleCard title="📥 Company Information">
-        <h2 className="text-xl font-semibold mb-2">🏢 Company Info</h2>
-        <p><strong>Name:</strong> {CompanyInfo?.name}</p>
-        <p><strong>Ticker:</strong> {CompanyInfo?.ticker}</p>
-        <p><strong>Sector:</strong> {CompanyInfo?.sector}</p>
-        <p><strong>Industry:</strong> {CompanyInfo?.industry}</p>
-        <p className="text-sm text-gray-600 mt-2">{CompanyInfo?.description}</p>
-      </CollapsibleCard>
+      <p><strong>Name:</strong> {CompanyInfo?.name}</p>
+      <p><strong>Ticker:</strong> {CompanyInfo?.ticker}</p>
+      <p><strong>Sector:</strong> {CompanyInfo?.sector}</p>
+      <p><strong>Industry:</strong> {CompanyInfo?.industry}</p>
+      <p className="text-sm text-gray-600 mt-2">{CompanyInfo?.description}</p>
+    
     </section>
   );
 }

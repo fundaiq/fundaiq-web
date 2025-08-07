@@ -1,39 +1,36 @@
+
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
 import { useGlobalStore } from '@/store/globalStore';
+import ReportTopNav from '@/components/report/ReportTopNav';
 import DataImportSection from '@/components/report/DataImportSection';
+import StockSummaryCard from '@/components/report/StockSummaryCard';
+import Disclaimer from '@/components/Disclaimer';
+import ExecutiveSummarySection from '@/components/report/ExecutiveSummarySection';
+import AssumptionsPanel from '@/components/report/AssumptionsPanel';
 import CompanyInfoSection from '@/components/report/CompanyInfoSection';
 import FinancialHealthSection from '@/components/report/FinancialHealthSection';
 import DCFValuationSection from '@/components/report/DCFValuationSection';
 import EPSValuationSection from '@/components/report/EPSValuationSection';
-import Disclaimer from '@/components/Disclaimer';
-import ReportTopNav from '@/components/report/ReportTopNav';
+import ValuationMeter from '@/components/ui/ValuationMeter';
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/Tabs';
+
 
 export default function CompanyReportPage() {
   const [mounted, setMounted] = useState(false);
-  const companyInfo = useGlobalStore((state) => state.company_info);
+  const companyInfo = useGlobalStore((s) => s.companyInfo);
   const resetAll = useGlobalStore((state) => state.resetAll);
   const [resetKey, setResetKey] = useState(0);
+  const [showSections, setShowSections] = useState(false);
 
-  const showSections = !!companyInfo?.name?.trim();
-
-  const sections = {
-    import: useRef(null),
-    disclaimer: useRef(null),
-    overview: useRef(null),
-    health: useRef(null),
-    valuation: useRef(null),
-    eps: useRef(null),
-    conclusion: useRef(null)
-  };
+  useEffect(() => {
+    const valid = !!companyInfo?.name?.trim();
+    setShowSections(valid);
+  }, [companyInfo]);
 
   useEffect(() => setMounted(true), []);
   if (!mounted) return null;
-
-  const scrollTo = (section) => {
-    sections[section]?.current?.scrollIntoView({ behavior: 'smooth' });
-  };
 
   const handleReset = () => {
     resetAll();
@@ -43,47 +40,80 @@ export default function CompanyReportPage() {
 
   return (
     <div className="relative bg-white dark:bg-zinc-900 text-black dark:text-white">
-      <ReportTopNav
-        scrollTo={scrollTo}
-        showSections={showSections}
-        onReset={handleReset}
-      />
+       {/* <ReportTopNav showSections={showSections} onReset={handleReset} /> */}
 
-      <main className="p-6 max-w-6xl mx-auto">
-        <h1 className="text-2xl font-bold mb-6">
-          <span className="dark:text-white text-[#1F1F1F]">Funda</span>
-          <span className="text-[#0073E6]">IQ</span> Report Builder
-        </h1>
-
-        <div id="import" ref={sections.import}>
+      <main className="px-4 sm:px-6 pb-6 max-w-7xl mx-auto space-y-6">
+        {/* Data Import */}
+        <section id="import">
           <DataImportSection resetKey={resetKey} />
-        </div>
+        </section>
 
-        {showSections && (
+        {!showSections ? (
+          <div className="text-center text-gray-500 mt-10">
+            📭 Please import data to view the full report.
+          </div>
+        ) : (
           <>
-            <div id="disclaimer" ref={sections.disclaimer}>
+            {/* Disclaimer */}
+            <section>
               <Disclaimer />
-            </div>
+            </section>
 
-            <div id="overview" ref={sections.overview}>
-              <CompanyInfoSection />
-            </div>
+            {/* Valuation Meter */}
+            <section>
+              <ValuationMeter />
+            </section>
 
-            <div id="health" ref={sections.health}>
-              <FinancialHealthSection />
-            </div>
+            {/* Tabs for all following sections */}
+            <Tabs defaultValue="assumptions" className="w-full mt-6">
+              <TabsList
+                className="
+                  flex-nowrap 
+                  overflow-x-auto 
+                  whitespace-nowrap 
+                  scrollbar-thin 
+                  scrollbar-thumb-gray-300 
+                  scrollbar-track-transparent 
+                  max-w-full
+                "
+              >
+                <TabsTrigger value="executive" className="shrink-0">Executive Summary</TabsTrigger>
+                <TabsTrigger value="stock_summary" className="shrink-0">Stock Metrics</TabsTrigger>
+                <TabsTrigger value="assumptions" className="shrink-0">Assumptions</TabsTrigger>
+                <TabsTrigger value="health" className="shrink-0">Financial Health</TabsTrigger>
+                <TabsTrigger value="dcf" className="shrink-0">DCF Valuation</TabsTrigger>
+                <TabsTrigger value="eps" className="shrink-0">EPS Valuation</TabsTrigger>
+                <TabsTrigger value="info" className="shrink-0">Company Info</TabsTrigger>
+              </TabsList>
 
-            <div id="valuation" ref={sections.valuation}>
-              <DCFValuationSection />
-            </div>
+              <TabsContent value="assumptions" forceMount>
+                <AssumptionsPanel />
+              </TabsContent>
+              
+              <TabsContent value="stock_summary" forceMount>
+                <StockSummaryCard />
+              </TabsContent>
 
-            <div id="eps" ref={sections.eps}>
-              <EPSValuationSection />
-            </div>
+              <TabsContent value="executive" forceMount>
+                <ExecutiveSummarySection />
+              </TabsContent>
 
-            <div id="conclusion" ref={sections.conclusion}>
-              {/* Optional: Add ConclusionSection */}
-            </div>
+              <TabsContent value="health" forceMount>
+                <FinancialHealthSection />
+              </TabsContent>
+
+              <TabsContent value="dcf" forceMount>
+                <DCFValuationSection />
+              </TabsContent>
+
+              <TabsContent value="eps" forceMount>
+                <EPSValuationSection />
+              </TabsContent>
+
+              <TabsContent value="info" forceMount>
+                <CompanyInfoSection />
+              </TabsContent>
+            </Tabs>
           </>
         )}
       </main>

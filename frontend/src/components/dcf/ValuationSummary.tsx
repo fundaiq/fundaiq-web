@@ -1,33 +1,33 @@
 'use client';
 
 import PhaseSplitChart from './PhaseSplitChart';
+import { useGlobalStore } from '@/store/globalStore';
 
-export default function ValuationSummary({ valuation }) {
-  if (
-    !valuation ||
-    typeof valuation.fair_value_per_share !== 'number' ||
-    typeof valuation.fv_phase1_per_share !== 'number' ||
-    typeof valuation.fv_phase2_per_share !== 'number' ||
-    typeof valuation.terminal_value_per_share !== 'number'
-  ) {
-    return <p className="text-red-500">⚠️ Incomplete valuation data.</p>;
-  }
+export default function ValuationSummary() {
+  const rawMetrics = useGlobalStore((s) => s.metrics);
+  const rawResults = useGlobalStore((s) => s.valuationResults);
 
-  const {
-    fv_phase1_per_share,
-    fv_phase2_per_share,
-    terminal_value_per_share,
-    fair_value_per_share,
-    current_price
-  } = valuation;
+  const metrics = Array.isArray(rawMetrics) ? rawMetrics[0] : rawMetrics;
+  const results = rawResults || {};
 
-  const total = fair_value_per_share;
+  const safe = (v: any) => (typeof v === 'number' && isFinite(v) ? v : 0);
+
+  const dcf_fair_value = safe(results?.dcf?.dcf_fair_value);
+  const fv_phase1_per_share = safe(results?.dcf?.fv_phase1_per_share);
+  const fv_phase2_per_share = safe(results?.dcf?.fv_phase2_per_share);
+  const terminal_value_per_share = safe(results?.dcf?.terminal_value_per_share);
+
+  
+  const current_price = safe(metrics?.current_price);
+
+
+  const total = dcf_fair_value;
   const pct1 = (fv_phase1_per_share / total) * 100;
   const pct2 = (fv_phase2_per_share / total) * 100;
   const pct3 = (terminal_value_per_share / total) * 100;
 
   const diffPct = current_price
-    ? ((fair_value_per_share - current_price) / current_price) * 100
+    ? ((dcf_fair_value - current_price) / current_price) * 100
     : NaN;
 
   let verdict = '';
@@ -57,7 +57,7 @@ export default function ValuationSummary({ valuation }) {
       {/* 📋 Summary Text */}
       <div className="space-y-1 text-sm">
         <p className="font-semibold mt-2">
-          Total Fair Value / Share: ₹{fair_value_per_share.toFixed(1)}
+          Total Fair Value / Share: ₹{dcf_fair_value.toFixed(1)}
         </p>
       </div>
 
@@ -67,7 +67,7 @@ export default function ValuationSummary({ valuation }) {
           phase1={fv_phase1_per_share}
           phase2={fv_phase2_per_share}
           phase3={terminal_value_per_share}
-          total={fair_value_per_share}
+          total={dcf_fair_value}
         />
       </div>
 
@@ -77,7 +77,7 @@ export default function ValuationSummary({ valuation }) {
         <div>
           <span className={`${verdictColor} font-semibold`}>{verdict}</span>{' '}
           <span className="text-neutral-800 dark:text-neutral-200">
-            – Fair Value is ₹{fair_value_per_share.toFixed(1)} vs Current Price of ₹{current_price.toFixed(1)},
+            – Fair Value is ₹{dcf_fair_value.toFixed(1)} vs Current Price of ₹{current_price.toFixed(1)},
             giving the room for {diffPct.toFixed(1)}% {diffPct > 0 ? 'increase' : 'decrease'}.
           </span>
         </div>

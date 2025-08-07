@@ -12,7 +12,7 @@ export default function CollapsibleCard({ title, children, defaultOpen = true })
         onClick={() => setOpen(!open)}
         className="flex items-center justify-between w-full px-3 py-2 sm:px-4 sm:py-3 font-medium sm:font-semibold text-left text-zinc-800 dark:text-zinc-100 hover:bg-zinc-100 dark:hover:bg-zinc-700 rounded-t-lg text-sm sm:text-base"
       >
-        <span>{title}</span>
+        <div className="w-full">{title}</div>
         {open ? <ChevronDown size={18} /> : <ChevronRight size={18} />}
       </button>
 
