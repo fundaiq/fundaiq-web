@@ -34,6 +34,8 @@ html {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   scroll-behavior: smooth;
+  scroll-behavior: smooth;
+  scroll-padding-top: 120px; /* ADDED: Account for fixed navigation */
 }
 
 body {
@@ -46,6 +48,21 @@ body {
   transition: background-color var(--transition-normal) var(--easing-default), 
               color var(--transition-normal) var(--easing-default);
 }
+
+:root {
+  /* Chart line colors */
+  --chart-stock-color: var(--brand-primary);
+  --chart-ma10-color: var(--warning-primary);
+  --chart-ma20-color: var(--success-primary);
+  --chart-ma50-color: #8b5cf6;
+  --chart-ma100-color: #f97316;
+  --chart-ma200-color: var(--danger-primary);
+  --chart-benchmark1-color: var(--accent-primary);
+  --chart-benchmark2-color: var(--warning-primary);
+  --chart-benchmark3-color: var(--danger-primary);
+  --gradient-brand: linear-gradient(90deg, var(--brand-primary) 0%, var(--brand-secondary, #4f46e5) 100%);
+}
+
 
 /* ==================== TYPOGRAPHY DEFAULTS ==================== */
 
@@ -370,6 +387,36 @@ button {
   .lg\:text-2xl { font-size: var(--text-2xl); }
 }
 
+@media (max-width: 768px) {
+  html {
+    scroll-padding-top: 104px; /* ADDED: Mobile navigation height */
+  }
+}
+
+/* ==================== NAVIGATION BUTTONS ==================== */
+
+:global(.nav-button) {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: var(--space-sm) var(--space-md);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-primary);
+  background: var(--surface-primary);
+  color: var(--text-secondary);
+  font-size: var(--text-sm);
+  font-weight: var(--font-medium);
+  white-space: nowrap;
+  transition: all var(--transition-fast) var(--easing-default);
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  min-height: 36px;
+}
+
+:global(.dark) .reportTopNavContainer {
+  background: rgba(24, 24, 27, 0.95);
+}
 /* ==================== ACCESSIBILITY ==================== */
 
 /* Screen reader only */

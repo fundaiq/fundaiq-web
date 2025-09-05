@@ -545,16 +545,9 @@
    ADDED: SMOOTH SCROLLING FOR FIXED NAVIGATION
    ============================================================================= */
 
-html {
-  scroll-behavior: smooth;
-  scroll-padding-top: 120px; /* ADDED: Account for fixed navigation */
-}
 
-@media (max-width: 768px) {
-  html {
-    scroll-padding-top: 104px; /* ADDED: Mobile navigation height */
-  }
-}
+
+
 
 /* =============================================================================
    ADDED: IMPROVED GRID LAYOUTS FOR MOBILE

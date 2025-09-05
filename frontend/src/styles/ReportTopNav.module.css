@@ -19,9 +19,7 @@
 }
 
 /* Dark theme support */
-:global(.dark) .reportTopNavContainer {
-  background: rgba(24, 24, 27, 0.95);
-}
+
 
 /* Add this new container class for centering */
 .reportTopNavContent {
@@ -41,26 +39,7 @@
     padding: 0 var(--space-sm); /* Match small mobile padding */
   }
 }
-/* ==================== NAVIGATION BUTTONS ==================== */
 
-:global(.nav-button) {
-  display: flex;
-  align-items: center;
-  gap: var(--space-xs);
-  padding: var(--space-sm) var(--space-md);
-  border-radius: var(--radius-lg);
-  border: 1px solid var(--border-primary);
-  background: var(--surface-primary);
-  color: var(--text-secondary);
-  font-size: var(--text-sm);
-  font-weight: var(--font-medium);
-  white-space: nowrap;
-  transition: all var(--transition-fast) var(--easing-default);
-  cursor: pointer;
-  position: relative;
-  overflow: hidden;
-  min-height: 36px;
-}
 
 :global(.nav-button:hover) {
   background: var(--surface-secondary);

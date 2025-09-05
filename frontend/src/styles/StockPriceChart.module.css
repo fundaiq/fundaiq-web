@@ -6,19 +6,7 @@
 
 /* ==================== CHART COLORS - DESIGN SYSTEM ==================== */
 
-:root {
-  /* Chart line colors */
-  --chart-stock-color: var(--brand-primary);
-  --chart-ma10-color: var(--warning-primary);
-  --chart-ma20-color: var(--success-primary);
-  --chart-ma50-color: #8b5cf6;
-  --chart-ma100-color: #f97316;
-  --chart-ma200-color: var(--danger-primary);
-  --chart-benchmark1-color: var(--accent-primary);
-  --chart-benchmark2-color: var(--warning-primary);
-  --chart-benchmark3-color: var(--danger-primary);
-  --gradient-brand: linear-gradient(90deg, var(--brand-primary) 0%, var(--brand-secondary, #4f46e5) 100%);
-}
+
 
 /* ==================== MAIN CONTAINER ==================== */
 
