@@ -1,7 +1,7 @@
 // app/layout.tsx
 import type { Metadata } from 'next';
 import { ReactNode } from 'react';
-
+import { Analytics } from "@vercel/analytics/react";
 import TopNav from '@/components/ui/TopNav';
 import MobileBottomSearch from '@/components/ui/MobileBottomSearch';
 import SessionBootstrap from '@/components/auth/SessionBootstrap';
