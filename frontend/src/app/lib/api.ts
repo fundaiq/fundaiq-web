@@ -2,16 +2,26 @@
 
 // ===== Base URL =====
 const RAW_BASE = process.env.NEXT_PUBLIC_API_BASE || "http://localhost:8000";
+
+// ADD DEBUG LINES HERE
+console.log("🔍 [API DEBUG] process.env.NEXT_PUBLIC_API_BASE:", process.env.NEXT_PUBLIC_API_BASE);
+console.log("🔍 [API DEBUG] process.env.NEXT_PUBLIC_API_BASE_URL:", process.env.NEXT_PUBLIC_API_BASE_URL);
+console.log("🔍 [API DEBUG] RAW_BASE:", RAW_BASE);
+
 // Strip trailing slashes
 const CLEAN_BASE = RAW_BASE.replace(/\/+$/, "");
+console.log("🔍 [API DEBUG] CLEAN_BASE:", CLEAN_BASE);
 
 // Ensure we have exactly one /api segment overall
 export const API_BASE = CLEAN_BASE.endsWith("/api") ? CLEAN_BASE : `${CLEAN_BASE}/api`;
+console.log("🔍 [API DEBUG] Final API_BASE:", API_BASE);
 
 // Build a URL under API_BASE without adding another /api
 function apiUrl(path: string) {
   const clean = String(path || "").replace(/^\/+/, ""); // remove leading slashes
-  return `${API_BASE}/${clean}`;
+  const fullUrl = `${API_BASE}/${clean}`;
+  console.log("🔍 [API DEBUG] apiUrl() generated:", fullUrl, "from path:", path);
+  return fullUrl;
 }
 
 // ===== Minimal debug helper =====
@@ -45,7 +55,10 @@ function parseSafe(text: string | null) {
 async function refreshAccessToken(): Promise<string | null> {
   try {
     console.log("[AUTH] Attempting refresh...");
-    const res = await fetch(apiUrl("auth/refresh"), {
+    const refreshUrl = apiUrl("auth/refresh");
+    console.log("🔍 [API DEBUG] Refresh URL:", refreshUrl);
+    
+    const res = await fetch(refreshUrl, {
       method: "POST",
       credentials: "include", // send HttpOnly refresh cookie
     });
@@ -97,7 +110,7 @@ async function doFetchWithAuth(path: string, init: RequestInit = {}) {
     headers.set("Authorization", `Bearer ${currentToken}`);
     console.log("[AUTH] Adding Authorization header to request:", path);
   } else {
-    console.log("[AUTH] ⚠️  NO TOKEN AVAILABLE for request:", path);
+    console.log("[AUTH] ⚠️ NO TOKEN AVAILABLE for request:", path);
   }
 
   const url = apiUrl(path);
@@ -170,7 +183,7 @@ export async function apiPublic(path: string, init: RequestInit = {}) {
         const t = await res.text();
         snippet = t.length > 300 ? t.slice(0, 300) + "…" : t;
       } catch { /* ignore */ }
-      const errMsg = `${res.status} ${res.statusText}${snippet ? ` – ${snippet}` : ""}`;
+      const errMsg = `${res.status} ${res.statusText}${snippet ? ` — ${snippet}` : ""}`;
       throw new Error(errMsg);
     }
 
@@ -198,7 +211,10 @@ export async function apiPublic(path: string, init: RequestInit = {}) {
 export async function login(email: string, password: string, remember = true, ts_token?: string) {
   console.log("[AUTH] Starting login process");
   
-  const res = await fetch(apiUrl("auth/login"), {
+  const loginUrl = apiUrl("auth/login");
+  console.log("🔍 [API DEBUG] Login URL:", loginUrl);
+  
+  const res = await fetch(loginUrl, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     credentials: "include",
@@ -242,6 +258,7 @@ export async function getMe() {
     return null;
   }
 }
+
 export async function updateProfile(profileData: { name: string }) {
   try {
     console.log("[AUTH] updateProfile: starting", profileData);
