@@ -1,0 +1,32 @@
+/* components/ThemeToggle.module.css */
+
+.themeToggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  padding: 8px;
+  background-color: var(--surface-secondary);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-md);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all var(--transition-fast) var(--easing-default);
+}
+
+.themeToggle:hover {
+  background-color: var(--surface-tertiary);
+  color: var(--text-primary);
+  border-color: var(--border-secondary);
+}
+
+.themeToggle:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--border-focus);
+}
+
+.icon {
+  width: 24px;
+  height: 24px;
+}

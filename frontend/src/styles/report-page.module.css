@@ -1,0 +1,702 @@
+/* =============================================================================
+   REPORT PAGE MODULE STYLES - UPDATED FOR FIXED NAVIGATION
+   =============================================================================
+   
+   Beautiful, modern styling for the report page
+   Uses existing design tokens from tokens.css
+   UPDATED: Fixed navigation layout adjustments and mobile optimization
+============================================================================= */
+
+/* =============================================================================
+   LAYOUT - UPDATED FOR FIXED NAVIGATION
+   ============================================================================= */
+
+.reportLayout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background: linear-gradient(135deg, 
+    var(--surface-secondary) 0%, 
+    var(--surface-tertiary) 30%, 
+    var(--surface-primary) 100%
+  );
+  padding-top: 20px; /* UPDATED: Space for TopNav (64px) + Navigation (56px) */
+}
+
+@media (max-width: 768px) {
+  .reportLayout {
+    padding-top: 70px; /* UPDATED: Space for mobile TopNav (56px) + Navigation (48px) */
+  }
+}
+
+.reportMain {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* =============================================================================
+   HEADER STYLES - UPDATED POSITIONING
+   ============================================================================= */
+
+.reportHeader {
+  position: relative; /* UPDATED: Changed from sticky to relative */
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border-primary);
+  box-shadow: var(--shadow-sm);
+}
+
+.headerContainer {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: var(--space-sm) var(--space-lg); /* UPDATED: Reduced padding */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-lg);
+}
+
+@media (max-width: 768px) {
+  .headerContainer {
+    padding: var(--space-xs) var(--space-md); /* UPDATED: Smaller mobile padding */
+    flex-direction: column;
+    gap: var(--space-md);
+    align-items: stretch;
+  }
+}
+
+@media (max-width: 640px) {
+  .headerContainer {
+    padding: var(--space-xs); /* UPDATED: Even smaller for very small screens */
+    gap: var(--space-sm);
+  }
+}
+
+.headerLeft {
+  display: flex;
+  align-items: center;
+  gap: var(--space-lg);
+  flex: 1;
+}
+
+.headerRight {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+}
+
+@media (max-width: 768px) {
+  .headerLeft,
+  .headerRight {
+    justify-content: center;
+  }
+}
+
+/* =============================================================================
+   COMPANY INFO - ENHANCED MOBILE DESIGN
+   ============================================================================= */
+
+.companyInfo {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  text-align: left; /* ADDED: Default alignment */
+}
+
+@media (max-width: 768px) {
+  .companyInfo {
+    text-align: center; /* UPDATED: Center on mobile */
+  }
+}
+
+.companyName {
+  font-size: var(--text-xl);
+  font-weight: var(--font-bold);
+  color: var(--text-primary);
+  margin: 0;
+}
+
+@media (max-width: 640px) {
+  .companyName {
+    font-size: var(--text-lg); /* UPDATED: Smaller on mobile */
+  }
+}
+
+.companyMeta {
+  font-size: var(--text-sm);
+  color: var(--text-tertiary);
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  flex-wrap: wrap; /* ADDED: Allow wrapping */
+}
+
+@media (max-width: 640px) {
+  .companyMeta {
+    justify-content: center; /* UPDATED: Center on mobile */
+    font-size: var(--text-xs); /* UPDATED: Smaller text on mobile */
+  }
+}
+
+.metaSeparator {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background-color: var(--text-quaternary);
+}
+
+/* =============================================================================
+   CONTENT AREA - ENHANCED MOBILE SPACING
+   ============================================================================= */
+
+.contentContainer {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 var(--space-lg); /* UPDATED: Consistent with other components */
+  width: 100%;
+}
+
+@media (max-width: 768px) {
+  .contentContainer {
+    padding: 0 var(--space-md);
+  }
+}
+
+@media (max-width: 640px) {
+  .contentContainer {
+    padding: 0 var(--space-sm); /* UPDATED: Even smaller for very small screens */
+  }
+}
+
+.contentSection {
+  padding: var(--space-lg) 0; /* UPDATED: Reduced from 4xl to 2xl */
+}
+
+@media (max-width: 768px) {
+  .contentSection {
+    padding: var(--space-md) 0; /* UPDATED: Reduced from 2xl to xl */
+  }
+}
+
+/* =============================================================================
+   VALUATION RUNNER - ENHANCED MOBILE DESIGN
+   ============================================================================= */
+
+.valuationSection {
+  background: var(--surface-primary);
+  border-radius: var(--radius-xl); /* UPDATED: Reduced from 2xl to xl */
+  padding: var(--space-2xl); /* UPDATED: Reduced from 4xl to 2xl */
+  margin-bottom: var(--space-2xl); /* UPDATED: Reduced from 3xl to 2xl */
+  box-shadow: var(--shadow-lg);
+  border: 1px solid var(--border-primary);
+  position: relative;
+  overflow: hidden;
+}
+
+.valuationSection::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: var(--gradient-brand);
+}
+
+@media (max-width: 768px) {
+  .valuationSection {
+    padding: var(--space-xl);
+    margin-bottom: var(--space-xl);
+    border-radius: var(--radius-lg);
+  }
+}
+
+@media (max-width: 640px) {
+  .valuationSection {
+    padding: var(--space-lg); /* UPDATED: Even more compact for small screens */
+    border-radius: var(--radius-md);
+  }
+}
+
+/* =============================================================================
+   TABS STYLING - ENHANCED MOBILE DESIGN
+   ============================================================================= */
+
+.tabsContainer {
+  background: var(--surface-primary);
+  border-radius: var(--radius-xl); /* UPDATED: Reduced from 2xl to xl */
+  box-shadow: var(--shadow-xl);
+  border: 1px solid var(--border-primary);
+  overflow: hidden;
+}
+
+@media (max-width: 768px) {
+  .tabsContainer {
+    border-radius: var(--radius-lg);
+  }
+}
+
+.tabsList {
+  display: flex;
+  background: var(--surface-secondary);
+  padding: var(--space-xs);
+  gap: var(--space-xs);
+  border-bottom: 1px solid var(--border-primary);
+}
+
+.tabsListScrollable {
+  overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.tabsListScrollable::-webkit-scrollbar {
+  display: none;
+}
+
+.tabsTrigger {
+  padding: var(--space-md) var(--space-lg);
+  font-size: var(--text-sm);
+  font-weight: var(--font-medium);
+  color: var(--text-secondary);
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-lg);
+  cursor: pointer;
+  transition: all var(--transition-fast) var(--easing-default);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.tabsTrigger:hover {
+  background: var(--surface-tertiary);
+  color: var(--text-primary);
+}
+
+.tabsTrigger[data-state="active"] {
+  background: var(--surface-primary);
+  color: var(--text-primary);
+  box-shadow: var(--shadow-sm);
+}
+
+.tabsContent {
+  padding: var(--space-xl);
+}
+
+@media (max-width: 768px) {
+  .tabsContent {
+    padding: var(--space-lg);
+  }
+}
+
+/* =============================================================================
+   VALUATION OVERVIEW CARDS
+   ============================================================================= */
+
+.valuationOverview {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: var(--space-xl);
+  margin-bottom: var(--space-3xl);
+}
+
+@media (max-width: 768px) {
+  .valuationOverview {
+    grid-template-columns: 1fr;
+    gap: var(--space-lg);
+    margin-bottom: var(--space-2xl);
+  }
+}
+
+.overviewCard {
+  background: var(--surface-card);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-xl);
+  padding: var(--space-xl);
+  box-shadow: var(--shadow-md);
+  transition: all var(--transition-normal) var(--easing-default);
+  position: relative;
+  overflow: hidden;
+}
+
+.overviewCard::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--gradient-brand);
+  opacity: 0;
+  transition: opacity var(--transition-normal);
+}
+
+.overviewCard:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-xl);
+  border-color: var(--border-focus);
+}
+
+.overviewCard:hover::before {
+  opacity: 1;
+}
+
+@media (max-width: 640px) {
+  .overviewCard {
+    padding: var(--space-lg);
+  }
+}
+
+/* =============================================================================
+   ASSUMPTIONS PANEL - ENHANCED DESIGN
+   ============================================================================= */
+
+.assumptionsPanel {
+  background: linear-gradient(135deg, 
+    var(--surface-primary) 0%, 
+    var(--surface-secondary) 100%
+  );
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-xl);
+  padding: var(--space-2xl);
+  margin-bottom: var(--space-2xl); /* UPDATED: Reduced from 3xl */
+  box-shadow: var(--shadow-lg);
+  position: relative;
+}
+
+.assumptionsPanel::after {
+  content: '';
+  position: absolute;
+  top: var(--space-lg);
+  right: var(--space-lg);
+  width: 60px;
+  height: 60px;
+  background: var(--gradient-brand);
+  border-radius: 50%;
+  opacity: 0.1;
+}
+
+@media (max-width: 768px) {
+  .assumptionsPanel {
+    padding: var(--space-xl);
+    margin-bottom: var(--space-xl); /* UPDATED: Reduced spacing */
+  }
+}
+
+@media (max-width: 640px) {
+  .assumptionsPanel {
+    padding: var(--space-lg);
+    border-radius: var(--radius-lg);
+  }
+}
+
+/* =============================================================================
+   SECTION HEADERS - ENHANCED MOBILE DESIGN
+   ============================================================================= */
+
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  margin-bottom: var(--space-lg);
+  padding-bottom: var(--space-lg);
+  border-bottom: 2px solid var(--border-primary);
+  position: relative;
+}
+
+.sectionHeader::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 60px;
+  height: 2px;
+  background: var(--brand-primary);
+}
+
+.sectionIcon {
+  width: 24px;
+  height: 24px;
+  color: var(--brand-primary);
+  flex-shrink: 0;
+}
+
+.sectionTitle {
+  font-size: var(--text-2xl);
+  font-weight: var(--font-bold);
+  color: var(--text-primary);
+  margin: 0;
+}
+
+@media (max-width: 640px) {
+  .sectionHeader {
+    gap: var(--space-sm);
+    margin-bottom: var(--space-md);
+  }
+  
+  .sectionIcon {
+    width: 20px;
+    height: 20px;
+  }
+  
+  .sectionTitle {
+    font-size: var(--text-xl);
+  }
+}
+
+/* =============================================================================
+   DISCLAIMER STYLING - ENHANCED MOBILE DESIGN
+   ============================================================================= */
+
+.disclaimerSection {
+  background: linear-gradient(135deg, 
+    rgba(254, 243, 199, 0.8) 0%, 
+    rgba(251, 191, 36, 0.1) 100%
+  );
+  border: 1px solid #d97706;
+  border-radius: var(--radius-xl);
+  /* padding: var(--space-xl); */
+  
+  position: relative;
+}
+
+.disclaimerSection::before {
+  content: '⚠️';
+  position: absolute;
+  /* top: var(--space-lg); */
+  right: var(--space-lg);
+  font-size: var(--text-xl);
+  opacity: 0.7;
+}
+
+@media (max-width: 768px) {
+  .disclaimerSection {
+    padding: var(--space-xl);
+    margin-top: var(--space-xl); /* UPDATED: Reduced spacing */
+    border-radius: var(--radius-lg);
+  }
+}
+
+@media (max-width: 640px) {
+  .disclaimerSection {
+    padding: var(--space-lg);
+    border-radius: var(--radius-md);
+  }
+}
+
+/* =============================================================================
+   SCROLL TO TOP BUTTON POSITIONING - UPDATED FOR BETTER MOBILE
+   ============================================================================= */
+
+.scrollToTopContainer {
+  position: fixed;
+  bottom: var(--space-2xl);
+  right: var(--space-2xl);
+  z-index: var(--z-fixed);
+}
+
+@media (max-width: 768px) {
+  .scrollToTopContainer {
+    bottom: var(--space-xl);
+    right: var(--space-xl);
+  }
+}
+
+@media (max-width: 640px) {
+  .scrollToTopContainer {
+    bottom: var(--space-lg); /* UPDATED: Even closer for mobile */
+    right: var(--space-lg);
+  }
+}
+
+/* =============================================================================
+   ANIMATION CLASSES - ENHANCED PERFORMANCE
+   ============================================================================= */
+
+.fadeInUp {
+  animation: fadeInUp var(--transition-normal) var(--easing-default);
+}
+
+.staggerChild {
+  opacity: 0;
+  animation: fadeInUp var(--transition-normal) var(--easing-default) forwards;
+}
+
+.staggerChild:nth-child(1) { animation-delay: 0ms; }
+.staggerChild:nth-child(2) { animation-delay: 100ms; }
+.staggerChild:nth-child(3) { animation-delay: 200ms; }
+.staggerChild:nth-child(4) { animation-delay: 300ms; }
+.staggerChild:nth-child(5) { animation-delay: 400ms; }
+.staggerChild:nth-child(6) { animation-delay: 500ms; }
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* =============================================================================
+   ADDED: SMOOTH SCROLLING FOR FIXED NAVIGATION
+   ============================================================================= */
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 120px; /* ADDED: Account for fixed navigation */
+}
+
+@media (max-width: 768px) {
+  html {
+    scroll-padding-top: 104px; /* ADDED: Mobile navigation height */
+  }
+}
+
+/* =============================================================================
+   ADDED: IMPROVED GRID LAYOUTS FOR MOBILE
+   ============================================================================= */
+
+.gridContainer {
+  display: grid;
+  gap: var(--space-xl);
+}
+
+.gridTwoColumns {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.gridThreeColumns {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.gridFourColumns {
+  grid-template-columns: repeat(4, 1fr);
+}
+
+@media (max-width: 1024px) {
+  .gridFourColumns {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .gridThreeColumns {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .gridContainer {
+    gap: var(--space-lg);
+  }
+  
+  .gridTwoColumns,
+  .gridThreeColumns,
+  .gridFourColumns {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* =============================================================================
+   ADDED: ENHANCED CARD DESIGNS
+   ============================================================================= */
+
+.reportCard {
+  background: var(--surface-primary);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-lg);
+  padding: var(--space-lg);
+  box-shadow: var(--shadow-sm);
+  transition: all var(--transition-normal) var(--easing-default);
+}
+
+.reportCard:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+  border-color: var(--border-secondary);
+}
+
+.reportCardHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-md);
+  margin-bottom: var(--space-md);
+  padding-bottom: var(--space-sm);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.reportCardTitle {
+  font-size: var(--text-lg);
+  font-weight: var(--font-semibold);
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.reportCardContent {
+  color: var(--text-secondary);
+  line-height: var(--leading-relaxed);
+}
+
+@media (max-width: 640px) {
+  .reportCard {
+    padding: var(--space-md);
+    border-radius: var(--radius-md);
+  }
+  
+  .reportCardTitle {
+    font-size: var(--text-base);
+  }
+}
+
+/* =============================================================================
+   ADDED: PERFORMANCE OPTIMIZATIONS
+   ============================================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  .fadeInUp,
+  .staggerChild,
+  .overviewCard,
+  .reportCard,
+  .assumptionsPanel {
+    animation: none;
+    transition: none;
+  }
+}
+
+/* =============================================================================
+   ADDED: HIGH CONTRAST MODE SUPPORT
+   ============================================================================= */
+
+@media (prefers-contrast: high) {
+  .overviewCard,
+  .reportCard,
+  .assumptionsPanel,
+  .valuationSection,
+  .tabsContainer {
+    border-width: 2px;
+  }
+  
+  .sectionHeader {
+    border-bottom-width: 3px;
+  }
+}
+
+/* =============================================================================
+   REPORT PAGE SPACING FIXES FOR STICKY NAV
+   ============================================================================= */
+
+/* Add these classes to your existing report-page.module.css */
+
+.valuationSectionWithNav {
+  padding-top: var(--space-xl); /* 128px - Space for both main nav and report nav */
+  padding-bottom: var(--space-xl);
+}
+
+.valuationSectionWithoutNav {
+  padding-top: var(--space-lg);
+  padding-bottom: var(--space-lg);
+}
+

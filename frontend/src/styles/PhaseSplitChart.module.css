@@ -1,0 +1,280 @@
+/* =============================================================================
+   Enhanced PhaseSplitChart Component Styles
+   =============================================================================
+   Beautiful, card-based design with better visual hierarchy
+============================================================================= */
+
+/* ==================== MAIN CONTAINER ==================== */
+
+.container {
+  background: var(--surface-secondary);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-lg);
+  padding: var(--space-lg);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+/* ==================== HEADER SECTION ==================== */
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: var(--space-md);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.headerIcon {
+  color: var(--brand-primary);
+  display: flex;
+  align-items: center;
+}
+
+.headerTitle {
+  font-size: var(--text-base);
+  font-weight: var(--font-semibold);
+  color: var(--text-primary);
+  margin: 0;
+  flex: 1;
+  margin-left: var(--space-sm);
+}
+
+.totalValue {
+  font-size: var(--text-lg);
+  font-weight: var(--font-bold);
+  color: #ffffff;                    /* White text for better contrast */
+  background: var(--brand-primary);  /* Solid primary color background */
+  padding: var(--space-xs) var(--space-sm);
+  border-radius: var(--radius-md);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+}
+
+/* Dark mode override - keep it clean */
+[data-theme="dark"] .totalValue {
+  background: var(--brand-primary-dark);
+  color: var(--text-inverse);
+}
+
+/* ==================== VISUAL BAR ==================== */
+
+.visualBar {
+  display: flex;
+  height: 20px;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border-default);
+}
+
+.phase1Segment {
+  background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+  transition: all var(--transition-normal) ease;
+}
+
+.phase2Segment {
+  background: linear-gradient(135deg, #a855f7, #7c3aed);
+  transition: all var(--transition-normal) ease;
+}
+
+.phase3Segment {
+  background: linear-gradient(135deg, #22c55e, #16a34a);
+  transition: all var(--transition-normal) ease;
+}
+
+.visualBar:hover .phase1Segment,
+.visualBar:hover .phase2Segment,
+.visualBar:hover .phase3Segment {
+  filter: brightness(1.1);
+}
+
+/* ==================== PHASE CARDS ==================== */
+
+.phaseCards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: var(--space-md);
+}
+
+.phaseCard {
+  background: var(--surface-elevated);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-lg);
+  padding: var(--space-md);
+  transition: all var(--transition-normal) ease;
+}
+
+.phaseCard:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.phaseCardHeader {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-sm);
+}
+
+.phaseIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: var(--radius-md);
+  flex-shrink: 0;
+}
+
+.phase1Icon {
+  background: rgba(59, 130, 246, 0.1);
+  color: #3b82f6;
+}
+
+.phase2Icon {
+  background: rgba(168, 85, 247, 0.1);
+  color: #a855f7;
+}
+
+.phase3Icon {
+  background: rgba(34, 197, 94, 0.1);
+  color: #22c55e;
+}
+
+.phaseInfo {
+  flex: 1;
+}
+
+.phaseTitle {
+  font-size: var(--text-sm);
+  font-weight: var(--font-semibold);
+  color: var(--text-primary);
+  margin-bottom: var(--space-xs);
+}
+
+.phaseSubtitle {
+  font-size: var(--text-xs);
+  color: var(--text-tertiary);
+}
+
+.phaseMetrics {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-sm);
+}
+
+.phaseValue {
+  font-size: var(--text-sm);
+  font-weight: var(--font-semibold);
+  color: var(--text-primary);
+}
+
+.phasePercent {
+  font-size: var(--text-xs);
+  font-weight: var(--font-medium);
+  padding: var(--space-xs);
+  border-radius: var(--radius-sm);
+  min-width: 45px;
+  text-align: center;
+}
+
+.phase1Percent {
+  background: rgba(59, 130, 246, 0.1);
+  color: #3b82f6;
+}
+
+.phase2Percent {
+  background: rgba(168, 85, 247, 0.1);
+  color: #a855f7;
+}
+
+.phase3Percent {
+  background: rgba(34, 197, 94, 0.1);
+  color: #22c55e;
+}
+
+/* ==================== SUMMARY STATS ==================== */
+
+.summaryStats {
+  display: flex;
+  justify-content: space-between;
+  padding-top: var(--space-md);
+  border-top: 1px solid var(--border-subtle);
+}
+
+.summaryItem {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  text-align: center;
+}
+
+.summaryLabel {
+  font-size: var(--text-xs);
+  color: var(--text-tertiary);
+  font-weight: var(--font-medium);
+}
+
+.summaryValue {
+  font-size: var(--text-sm);
+  font-weight: var(--font-semibold);
+  color: var(--text-secondary);
+}
+
+/* ==================== MOBILE RESPONSIVE ==================== */
+
+@media (max-width: 640px) {
+  .container {
+    padding: var(--space-md);
+    gap: var(--space-md);
+  }
+  
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-sm);
+  }
+  
+  .phaseCards {
+    grid-template-columns: 1fr;
+  }
+  
+  .phaseCard {
+    padding: var(--space-sm);
+  }
+  
+  .phaseMetrics {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-xs);
+  }
+  
+  .summaryStats {
+    flex-direction: column;
+    gap: var(--space-sm);
+  }
+  
+  .summaryItem {
+    flex-direction: row;
+    justify-content: space-between;
+    text-align: left;
+  }
+}
+
+/* ==================== DARK MODE OVERRIDES ==================== */
+
+[data-theme="dark"] .container {
+  background: var(--surface-elevated);
+  border-color: var(--border-primary);
+}
+
+[data-theme="dark"] .phaseCard {
+  background: var(--surface-primary);
+  border-color: var(--border-primary);
+}
+
+[data-theme="dark"] .phaseCard:hover {
+  background: var(--surface-secondary);
+}

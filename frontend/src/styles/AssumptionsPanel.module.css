@@ -1,0 +1,521 @@
+/* =============================================================================
+   ASSUMPTIONS PANEL - BEAUTIFUL MODULE CSS
+   =============================================================================
+   
+   File: src/styles/AssumptionsPanel.module.css
+   Purpose: Beautiful, mobile-first styling for AssumptionsPanel component
+   Design: Modern card-based layout with elegant animations
+============================================================================= */
+
+/* =============================================================================
+   MAIN PANEL CONTAINER
+   ============================================================================= */
+
+.panel {
+  /* Beautiful gradient background */
+  background: linear-gradient(135deg, 
+    var(--surface-primary) 0%, 
+    var(--surface-elevated) 50%,
+    var(--surface-secondary) 100%
+  );
+  
+  /* Modern card styling */
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-xl);
+  box-shadow: 
+    var(--shadow-lg),
+    0 0 0 1px rgba(102, 126, 234, 0.05);
+  
+  /* Elegant spacing */
+  padding: var(--space-2xl);
+  margin: var(--space-2xl) auto;
+  max-width: 1200px;
+  
+  /* Smooth transitions */
+  transition: all var(--transition-normal) var(--easing-default);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Decorative brand accent */
+.panel::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: var(--gradient-brand);
+  border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+}
+
+/* Removed decorative circle as requested */
+
+/* Subtle hover effect */
+.panel:hover {
+  transform: translateY(-2px);
+  box-shadow: 
+    var(--shadow-xl),
+    0 0 0 1px rgba(102, 126, 234, 0.1);
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  .panel {
+    padding: var(--space-xl);
+    margin: var(--space-xl) var(--space-sm);
+    border-radius: var(--radius-lg);
+  }
+}
+
+/* =============================================================================
+   HEADER SECTION
+   ============================================================================= */
+
+.header {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-lg);
+  margin-bottom: var(--space-2xl);
+  padding-bottom: var(--space-lg);
+  border-bottom: 2px solid var(--border-primary);
+  position: relative;
+}
+
+/* Decorative underline accent */
+.header::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 80px;
+  height: 2px;
+  background: var(--gradient-brand);
+  border-radius: 1px;
+}
+
+.headerTitle {
+  font-size: var(--text-xl);
+  font-weight: var(--font-bold);
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  margin: 0;
+  position: relative;
+  z-index: 1;
+}
+
+.headerIcon {
+  font-size: var(--text-2xl);
+  animation: bounce 2s infinite;
+}
+
+/* Mobile header adjustments */
+@media (max-width: 640px) {
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-md);
+  }
+  
+  .headerTitle {
+    font-size: var(--text-lg);
+  }
+  
+  .headerIcon {
+    font-size: var(--text-xl);
+  }
+}
+
+/* =============================================================================
+   BUTTON GROUP
+   ============================================================================= */
+
+.buttonGroup {
+  display: flex;
+  gap: var(--space-sm);
+  flex-wrap: wrap;
+}
+
+/* Base button styling */
+.button {
+  padding: var(--space-sm) var(--space-lg);
+  border-radius: var(--radius-lg);
+  font-size: var(--text-sm);
+  font-weight: var(--font-semibold);
+  border: none;
+  cursor: pointer;
+  transition: all var(--transition-fast) var(--easing-default);
+  white-space: nowrap;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Primary button (Calculate) */
+.buttonPrimary {
+  background: var(--gradient-brand);
+  color: white;
+  box-shadow: var(--shadow-sm);
+}
+
+.buttonPrimary:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.buttonPrimary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Secondary button (Reset) */
+.buttonSecondary {
+  background: var(--surface-elevated);
+  color: var(--text-primary);
+  border: 1px solid var(--border-primary);
+}
+
+.buttonSecondary:hover {
+  background: var(--surface-secondary);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
+}
+
+/* Toggle button (Show/Hide) */
+.buttonToggle {
+  background: var(--surface-primary);
+  color: var(--brand-primary);
+  border: 1px solid var(--brand-primary);
+}
+
+.buttonToggle:hover {
+  background: var(--brand-primary);
+  color: white;
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
+}
+
+/* Mobile button adjustments */
+@media (max-width: 640px) {
+  .buttonGroup {
+    width: 100%;
+    justify-content: stretch;
+  }
+  
+  .button {
+    flex: 1;
+    min-width: 0;
+    padding: var(--space-md) var(--space-sm);
+    font-size: var(--text-xs);
+  }
+}
+
+/* =============================================================================
+   CONTENT GRID CONTAINER
+   ============================================================================= */
+
+.contentContainer {
+  background: var(--surface-card);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-lg);
+  padding: var(--space-xl);
+  box-shadow: 
+    inset 0 1px 2px rgba(0, 0, 0, 0.05),
+    var(--shadow-sm);
+  position: relative;
+}
+
+/* Subtle inner glow */
+.contentContainer::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius-lg);
+  padding: 1px;
+  background: var(--gradient-brand);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: xor;
+  opacity: 0.1;
+}
+
+/* Mobile content adjustments */
+@media (max-width: 768px) {
+  .contentContainer {
+    padding: var(--space-lg);
+  }
+}
+
+/* =============================================================================
+   INPUT GRID SYSTEM
+   ============================================================================= */
+
+.inputGrid {
+  display: grid;
+  gap: var(--space-lg);
+  
+  /* Mobile-first responsive grid */
+  grid-template-columns: 1fr;
+}
+
+/* Tablet breakpoint */
+@media (min-width: 641px) {
+  .inputGrid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-lg) var(--space-xl);
+  }
+}
+
+/* Desktop breakpoint */
+@media (min-width: 1025px) {
+  .inputGrid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--space-xl);
+  }
+}
+
+/* Large desktop optimization */
+@media (min-width: 1200px) {
+  .inputGrid {
+    gap: var(--space-xl) var(--space-2xl);
+  }
+}
+
+/* =============================================================================
+   INPUT FIELD GROUPS
+   ============================================================================= */
+
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  animation: fadeInUp 0.6s ease-out;
+  animation-fill-mode: both;
+}
+
+/* Stagger animation for input groups */
+.inputGroup:nth-child(1) { animation-delay: 0ms; }
+.inputGroup:nth-child(2) { animation-delay: 50ms; }
+.inputGroup:nth-child(3) { animation-delay: 100ms; }
+.inputGroup:nth-child(4) { animation-delay: 150ms; }
+.inputGroup:nth-child(5) { animation-delay: 200ms; }
+.inputGroup:nth-child(6) { animation-delay: 250ms; }
+.inputGroup:nth-child(7) { animation-delay: 300ms; }
+.inputGroup:nth-child(8) { animation-delay: 350ms; }
+.inputGroup:nth-child(9) { animation-delay: 400ms; }
+.inputGroup:nth-child(10) { animation-delay: 450ms; }
+.inputGroup:nth-child(11) { animation-delay: 500ms; }
+.inputGroup:nth-child(12) { animation-delay: 550ms; }
+
+/* =============================================================================
+   LABELS
+   ============================================================================= */
+
+.inputLabel {
+  font-size: var(--text-sm);
+  font-weight: var(--font-medium);
+  color: var(--text-secondary);
+  margin-bottom: var(--space-xs);
+  transition: color var(--transition-fast);
+  line-height: 1.4;
+}
+
+/* Mobile label optimization */
+@media (max-width: 640px) {
+  .inputLabel {
+    font-size: var(--text-sm);
+    font-weight: var(--font-semibold);
+    margin-bottom: var(--space-sm);
+  }
+}
+
+/* =============================================================================
+   INPUT FIELDS
+   ============================================================================= */
+
+.input {
+  width: 100%;
+  padding: var(--space-md) var(--space-lg);
+  border: 2px solid var(--border-primary);
+  border-radius: var(--radius-md);
+  background: var(--surface-primary);
+  color: var(--text-primary);
+  font-size: var(--text-sm);
+  font-weight: var(--font-medium);
+  transition: all var(--transition-fast) var(--easing-default);
+  outline: none;
+  position: relative;
+}
+
+/* Focus state - beautiful brand gradient border */
+.input:focus {
+  border-color: var(--brand-primary);
+  box-shadow: 
+    0 0 0 3px rgba(102, 126, 234, 0.1),
+    0 1px 3px rgba(0, 0, 0, 0.1);
+  transform: translateY(-1px);
+}
+
+.input:focus + .inputLabel {
+  color: var(--brand-primary);
+}
+
+/* Hover state */
+.input:hover {
+  border-color: var(--brand-accent);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+/* =============================================================================
+   CHANGED VALUE STYLING
+   ============================================================================= */
+
+.inputChanged {
+  border-color: var(--warning-primary);
+  background: var(--warning-bg);
+  box-shadow: 
+    0 0 0 3px rgba(245, 158, 11, 0.1),
+    0 2px 4px rgba(245, 158, 11, 0.1);
+  position: relative;
+}
+
+/* Elegant glow effect for changed inputs */
+.inputChanged::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: var(--radius-md);
+  padding: 2px;
+  background: linear-gradient(45deg, 
+    var(--warning-primary), 
+    var(--warning-secondary)
+  );
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: xor;
+  opacity: 0.6;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+.inputChanged:focus {
+  border-color: var(--warning-primary);
+  box-shadow: 
+    0 0 0 3px rgba(245, 158, 11, 0.2),
+    0 4px 8px rgba(245, 158, 11, 0.1);
+}
+
+/* Dark theme adjustments for changed inputs */
+[data-theme="dark"] .inputChanged {
+  background: rgba(245, 158, 11, 0.1);
+  border-color: var(--warning-secondary);
+}
+
+/* =============================================================================
+   MOBILE OPTIMIZATIONS
+   ============================================================================= */
+
+@media (max-width: 640px) {
+  .input {
+    padding: var(--space-lg);
+    font-size: var(--text-base);
+    min-height: 44px; /* Touch target optimization */
+  }
+  
+  .input:focus {
+    transform: none; /* Avoid layout shifts on mobile */
+  }
+}
+
+/* =============================================================================
+   LOADING STATE
+   ============================================================================= */
+
+.loading {
+  pointer-events: none;
+  opacity: 0.7;
+}
+
+.loading .input {
+  background: var(--surface-secondary);
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+/* =============================================================================
+   ANIMATIONS
+   ============================================================================= */
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.7;
+    transform: scale(0.98);
+  }
+}
+
+@keyframes bounce {
+  0%, 20%, 53%, 80%, 100% {
+    transform: translateY(0);
+  }
+  40%, 43% {
+    transform: translateY(-8px);
+  }
+  70% {
+    transform: translateY(-4px);
+  }
+  90% {
+    transform: translateY(-2px);
+  }
+}
+
+/* =============================================================================
+   ACCESSIBILITY & REDUCED MOTION
+   ============================================================================= */
+
+/* Respect user's motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  .panel,
+  .input,
+  .button,
+  .inputGroup {
+    animation: none;
+    transition: none;
+  }
+  
+  .panel:hover,
+  .input:focus,
+  .button:hover {
+    transform: none;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .panel {
+    border-width: 2px;
+  }
+  
+  .input {
+    border-width: 3px;
+  }
+  
+  .input:focus {
+    outline: 3px solid var(--brand-primary);
+    outline-offset: 2px;
+  }
+}

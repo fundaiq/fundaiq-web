@@ -1,6 +1,8 @@
 'use client';
 
 import { MetricLineChart } from '@/components/health/MetricLineChart';
+import { Scale } from 'lucide-react';
+import styles from '@/styles/FinancialHealthSection.module.css';
 
 interface Props {
   metrics: Record<string, number[]>;
@@ -11,15 +13,17 @@ export const LeverageSection = ({ metrics, years }: Props) => {
   const items = [
     { key: 'debt_to_equity', label: 'Debt to Equity (x)' },
     { key: 'interest_coverage', label: 'Interest Coverage (x)' },
-    { key: 'cash_and_bank', label: 'Cash & Bank (₹ Cr)' }, // Optional
+    { key: 'cash_and_bank', label: 'Cash & Bank (₹ Cr)' },
   ];
 
   return (
-    <div className="space-y-2">
-      <h2 className="text-sm font-semibold">⚖️ Leverage & Liquidity</h2>
+    <div className={styles.subsection}>
+      <div className={styles.subsectionHeader}>
+        <Scale size={18} />
+        <h2 className={styles.subsectionTitle}>⚖️ Leverage & Liquidity</h2>
+      </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-
+      <div className={`${styles.cardsGrid} ${styles.cols3}`}>
         {items.map(({ key, label }) => {
           const data = metrics[key];
           const validData = Array.isArray(data)
@@ -32,9 +36,38 @@ export const LeverageSection = ({ metrics, years }: Props) => {
 
           if (!alignedData.length || !alignedYears.length) return null;
 
+          // Color coding logic based on metric type
+          const latestValue = alignedData[alignedData.length - 1];
+          let trendClass = styles.trendNeutral;
+          
+          if (key === 'debt_to_equity') {
+            // Lower debt-to-equity is better
+            trendClass = latestValue < 0.5 ? styles.trendPositive : 
+                        latestValue > 1.0 ? styles.trendNegative : styles.trendNeutral;
+          } else if (key === 'interest_coverage') {
+            // Higher interest coverage is better
+            trendClass = latestValue > 5 ? styles.trendPositive : 
+                        latestValue < 2 ? styles.trendNegative : styles.trendNeutral;
+          } else if (key === 'cash_and_bank') {
+            // More cash is generally better
+            const previousValue = alignedData[alignedData.length - 2] || 0;
+            trendClass = latestValue > previousValue ? styles.trendPositive : styles.trendNegative;
+          }
+
           return (
-            <div key={key} className="bg-white rounded-md p-4 shadow-sm">
-              <MetricLineChart label={label} data={alignedData} labels={alignedYears} />
+            <div key={key} className={styles.metricCard}>
+              <div className={styles.chartContainer}>
+                <MetricLineChart label={label} data={alignedData} labels={alignedYears} />
+              </div>
+              <div className={`${styles.trendIndicator} ${trendClass}`}>
+                <span>•</span>
+                <span>
+                  {key === 'cash_and_bank' 
+                    ? `₹${latestValue.toFixed(0)} Cr` 
+                    : `${latestValue.toFixed(2)}x`
+                  }
+                </span>
+              </div>
             </div>
           );
         })}

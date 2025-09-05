@@ -2,6 +2,9 @@
 
 import { MetricBarChart } from '@/components/health/MetricBarChart';
 import { getTrendSummaryLine } from '@/lib/TrendAnalyzer';
+import { TrendingUp } from 'lucide-react';
+import styles from '@/styles/FinancialHealthSection.module.css';
+
 interface Props {
   metrics: Record<string, number[]>;
   years: string[];
@@ -15,11 +18,13 @@ export const GrowthSection = ({ metrics, years }: Props) => {
   ];
 
   return (
-    <div className="space-y-2">
-      <h2 className="text-sm font-semibold">📊 Past Growth</h2>
+    <div className={styles.subsection}>
+      <div className={styles.subsectionHeader}>
+        <TrendingUp size={18} />
+        <h2 className={styles.subsectionTitle}>📊 Past Growth</h2>
+      </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-
+      <div className={`${styles.cardsGrid} ${styles.cols3}`}>
         {items.map(({ key, label }) => {
           const data = metrics[key];
           const validData = Array.isArray(data) ? data.map((n) => Number(n)).filter((n) => !isNaN(n)) : [];
@@ -28,13 +33,15 @@ export const GrowthSection = ({ metrics, years }: Props) => {
           if (label === 'Revenue' && (!validData.length || !years.length)) {
             console.warn(`🔍 Showing test fallback chart for ${label}`);
             return (
-              <div key="test" className="bg-white rounded-md p-4 shadow-sm">
-                <h3 className="text-sm font-medium text-gray-700 mb-2">Test Chart</h3>
-                <MetricBarChart
-                  label="Test"
-                  data={[100, 200, 300]}
-                  labels={['2021', '2022', '2023']}
-                />
+              <div key="test" className={styles.metricCard}>
+                <h3 className={styles.subsectionTitle}>Test Chart</h3>
+                <div className={styles.chartContainer}>
+                  <MetricBarChart
+                    label="Test"
+                    data={[100, 200, 300]}
+                    labels={['2021', '2022', '2023']}
+                  />
+                </div>
               </div>
             );
           }
@@ -45,14 +52,20 @@ export const GrowthSection = ({ metrics, years }: Props) => {
           const alignedData = validData.slice(-minLen);
           const alignedYears = years.slice(-minLen);
           const trend = getTrendSummaryLine(alignedData);
+          
           return (
-            <div key={key} className="bg-white rounded-md p-4 shadow-sm">
-              <MetricBarChart label={label} data={alignedData} labels={alignedYears} />
-              <p className={`text-xs mt-1 ${trend.color}`}>
-                • {trend.text}
-              </p>
+            <div key={key} className={styles.metricCard}>
+              <div className={styles.chartContainer}>
+                <MetricBarChart label={label} data={alignedData} labels={alignedYears} />
+              </div>
+              <div className={`${styles.trendIndicator} ${
+                trend.color.includes('green') ? styles.trendPositive : 
+                trend.color.includes('red') ? styles.trendNegative : styles.trendNeutral
+              }`}>
+                <span>•</span>
+                <span>{trend.text}</span>
+              </div>
             </div>
-
           );
         })}
       </div>

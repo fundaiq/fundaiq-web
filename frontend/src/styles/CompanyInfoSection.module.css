@@ -1,0 +1,183 @@
+/* =============================================================================
+   COMPANY INFO SECTION - Following Funda-IQ Design System
+   =============================================================================
+   Mobile-first design with card-based layout and color coding
+============================================================================= */
+
+.container {
+  width: 100%;
+  margin-bottom: var(--space-sm);
+}
+
+.card {
+  background: var(--surface-card);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-xl);
+  padding: var(--space-lg);
+  box-shadow: var(--shadow-sm);
+  transition: all var(--transition-normal) var(--easing-default);
+}
+
+.card:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-1px);
+}
+
+.header {
+  margin-bottom: var(--space-lg);
+  padding-bottom: var(--space-md);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.title {
+  font-size: var(--text-xl);
+  font-weight: var(--font-bold);
+  color: var(--text-primary);
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.content {
+  display: grid;
+  gap: var(--space-md);
+}
+
+/* Mobile: Single column */
+@media (max-width: 640px) {
+  .content {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Tablet and up: Two columns */
+@media (min-width: 641px) {
+  .content {
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-lg);
+  }
+}
+
+.infoGroup {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.infoItem {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  padding: var(--space-md);
+  background: var(--surface-secondary);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-subtle);
+  transition: all var(--transition-fast) var(--easing-default);
+}
+
+.infoItem:hover {
+  background: var(--surface-hover);
+  border-color: var(--border-default);
+}
+
+.label {
+  font-size: var(--text-sm);
+  font-weight: var(--font-semibold);
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin: 0;
+}
+
+.value {
+  font-size: var(--text-lg);
+  font-weight: var(--font-bold);
+  color: var(--text-primary);
+  margin: 0;
+  word-break: break-word;
+}
+
+/* Color coding for different info types */
+.primaryInfo .label {
+  color: var(--brand-primary);
+}
+
+.primaryInfo .value {
+  color: var(--brand-primary);
+}
+
+.primaryInfo .infoItem {
+  border-color: rgba(102, 126, 234, 0.2);
+  background: rgba(102, 126, 234, 0.05);
+}
+
+.secondaryInfo .label {
+  color: var(--success-primary);
+}
+
+.secondaryInfo .value {
+  color: var(--success-text);
+}
+
+.secondaryInfo .infoItem {
+  border-color: var(--success-border);
+  background: var(--success-bg);
+}
+
+.description {
+  grid-column: 1 / -1;
+  margin-top: var(--space-md);
+  padding: var(--space-lg);
+  background: var(--surface-elevated);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-default);
+}
+
+.descriptionTitle {
+  font-size: var(--text-lg);
+  font-weight: var(--font-semibold);
+  color: var(--text-primary);
+  margin: 0 0 var(--space-md) 0;
+}
+
+.descriptionText {
+  font-size: var(--text-base);
+  line-height: var(--leading-relaxed);
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+/* Dark theme adjustments */
+[data-theme="dark"] .primaryInfo .infoItem {
+  background: rgba(102, 126, 234, 0.1);
+  border-color: rgba(102, 126, 234, 0.3);
+}
+
+[data-theme="dark"] .secondaryInfo .infoItem {
+  background: var(--success-bg);
+  border-color: var(--success-border);
+}
+
+/* Mobile specific adjustments */
+@media (max-width: 640px) {
+  .card {
+    padding: var(--space-md);
+  }
+  
+  .title {
+    font-size: var(--text-lg);
+  }
+  
+  .value {
+    font-size: var(--text-base);
+  }
+  
+  .infoItem {
+    padding: var(--space-sm);
+  }
+  
+  .description {
+    padding: var(--space-md);
+  }
+}

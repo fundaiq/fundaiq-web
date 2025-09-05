@@ -1,0 +1,371 @@
+/* =============================================================================
+   DCF Cash Flow Table Styles
+   =============================================================================
+   Beautiful, mobile-friendly styling for cash flow projections table
+============================================================================= */
+
+/* ==================== MAIN CONTAINER ==================== */
+
+.container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.errorState {
+  padding: var(--space-lg);
+  background: var(--danger-bg);
+  color: var(--danger-text);
+  border: 1px solid var(--danger-border);
+  border-radius: var(--radius-lg);
+  text-align: center;
+  font-size: var(--text-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm);
+}
+
+.errorIcon {
+  font-size: var(--text-lg);
+}
+
+/* ==================== TABLE WRAPPER ==================== */
+
+.tableWrapper {
+  background: var(--surface-primary);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow var(--transition-normal) ease;
+}
+
+.tableWrapper:hover {
+  box-shadow: var(--shadow-md);
+}
+
+.scrollContainer {
+  overflow-x: auto;
+  overflow-y: visible;
+  position: relative;
+}
+
+/* Custom scrollbar styling */
+.scrollContainer::-webkit-scrollbar {
+  height: 6px;
+}
+
+.scrollContainer::-webkit-scrollbar-track {
+  background: var(--surface-secondary);
+}
+
+.scrollContainer::-webkit-scrollbar-thumb {
+  background: var(--border-secondary);
+  border-radius: var(--radius-full);
+}
+
+.scrollContainer::-webkit-scrollbar-thumb:hover {
+  background: var(--text-tertiary);
+}
+
+/* ==================== TABLE STYLES ==================== */
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--text-sm);
+  min-width: 800px; /* Ensure horizontal scroll on small screens */
+}
+
+/* ==================== HEADER STYLES ==================== */
+
+.tableHead {
+  background: var(--gradient-brand);
+  position: relative;
+}
+
+.headerRow {
+  border: none;
+}
+
+.headerCell {
+  padding: var(--space-md) var(--space-lg);
+  text-align: left;
+  font-weight: var(--font-semibold);
+  color: white; /* Force white text for visibility */
+  font-size: var(--text-sm);
+  white-space: nowrap;
+  border: none;
+  border-right: 1px solid rgba(255, 255, 255, 0.2);
+  transition: background-color var(--transition-fast) ease;
+}
+
+/* Dark mode specific override */
+[data-theme="dark"] .headerCell {
+  color: #ffffff !important; /* Ensure white text in dark mode */
+}
+
+/* Light mode can use slightly darker text if needed */
+[data-theme="light"] .headerCell {
+  color: white; /* Keep white for consistency */
+}
+
+.headerCell:last-child {
+  border-right: none;
+}
+
+.headerCell:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* First column (row headers) special styling */
+.headerCell:first-child {
+  position: sticky;
+  left: 0;
+  z-index: 2;
+  background: var(--brand-primary);
+  border-right: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+/* ==================== BODY STYLES ==================== */
+
+.tableBody {
+  background: var(--surface-primary);
+}
+
+.bodyRow {
+  border-bottom: 1px solid var(--border-subtle);
+  transition: background-color var(--transition-fast) ease;
+}
+
+.bodyRow:hover {
+  background: var(--surface-secondary);
+}
+
+.bodyRow:last-child {
+  border-bottom: none;
+}
+
+.bodyCell {
+  padding: var(--space-md) var(--space-lg);
+  text-align: right;
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+  border-right: 1px solid var(--border-subtle);
+  white-space: nowrap;
+  transition: all var(--transition-fast) ease;
+}
+
+.bodyCell:last-child {
+  border-right: none;
+}
+
+.bodyCell:hover {
+  color: var(--text-primary);
+  font-weight: var(--font-medium);
+}
+
+/* First column (row labels) special styling */
+.rowLabel {
+  text-align: left !important;
+  font-weight: var(--font-medium);
+  color: var(--text-primary) !important;
+  background: var(--surface-elevated);
+  position: sticky;
+  left: 0;
+  z-index: 1;
+  border-right: 2px solid var(--border-default);
+}
+
+.bodyRow:hover .rowLabel {
+  background: var(--surface-tertiary);
+}
+
+/* ==================== VALUE FORMATTING ==================== */
+
+.positiveValue {
+  color: var(--color-positive);
+}
+
+.negativeValue {
+  color: var(--color-negative);
+}
+
+.neutralValue {
+  color: var(--text-secondary);
+}
+
+/* ==================== LOADING STATE ==================== */
+
+.loadingContainer {
+  padding: var(--space-xl);
+  text-align: center;
+  background: var(--surface-secondary);
+  border-radius: var(--radius-lg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-md);
+}
+
+.spinner {
+  width: 32px;
+  height: 32px;
+  border: 3px solid var(--border-default);
+  border-top: 3px solid var(--brand-primary);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.loadingText {
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+}
+
+/* ==================== MOBILE RESPONSIVE ==================== */
+
+@media (max-width: 768px) {
+  .tableWrapper {
+    border-radius: var(--radius-lg);
+    margin: 0 calc(-1 * var(--space-md));
+  }
+  
+  .headerCell,
+  .bodyCell {
+    padding: var(--space-sm) var(--space-md);
+    font-size: var(--text-xs);
+  }
+  
+  .table {
+    min-width: 600px;
+  }
+  
+  .scrollContainer {
+    border-radius: var(--radius-lg);
+  }
+}
+
+@media (max-width: 480px) {
+  .tableWrapper {
+    border-radius: var(--radius-md);
+    margin: 0 calc(-1 * var(--space-sm));
+  }
+  
+  .headerCell,
+  .bodyCell {
+    padding: var(--space-xs) var(--space-sm);
+    font-size: 11px;
+  }
+  
+  .table {
+    min-width: 500px;
+  }
+}
+
+/* ==================== ACCESSIBILITY ==================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .bodyRow,
+  .bodyCell,
+  .headerCell {
+    transition: none;
+  }
+  
+  .tableWrapper {
+    transition: none;
+  }
+}
+
+/* ==================== PRINT STYLES ==================== */
+
+@media print {
+  .scrollContainer {
+    overflow: visible;
+  }
+  
+  .table {
+    min-width: auto;
+  }
+  
+  .tableWrapper {
+    box-shadow: none;
+    border: 1px solid #000;
+  }
+}
+
+/* Add these styles to your existing DCFTable.module.css file */
+
+/* ==================== TERMINAL VALUE BREAKDOWN ==================== */
+
+.terminalBreakdown {
+  background: var(--surface-secondary);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-lg);
+  padding: var(--space-md);
+  margin-top: var(--space-md);
+}
+
+.breakdownHeader {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-sm);
+  padding-bottom: var(--space-xs);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.breakdownIcon {
+  color: var(--brand-primary);
+  font-size: var(--text-base);
+}
+
+.breakdownTitle {
+  font-size: var(--text-sm);
+  font-weight: var(--font-medium);
+  color: var(--text-primary);
+}
+
+.breakdownLines {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.breakdownLine {
+  display: flex;
+  align-items: center;
+  font-size: var(--text-xs);
+  color: var(--text-secondary);
+  line-height: var(--leading-relaxed);
+}
+
+.breakdownLine span {
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* ==================== MOBILE RESPONSIVE ==================== */
+
+@media (max-width: 768px) {
+  .terminalBreakdown {
+    padding: var(--space-sm);
+    margin-top: var(--space-sm);
+  }
+  
+  .breakdownLine {
+    font-size: 11px;
+  }
+}
+
+/* ==================== DARK MODE OVERRIDES ==================== */
+
+[data-theme="dark"] .terminalBreakdown {
+  background: var(--surface-elevated);
+  border-color: var(--border-primary);
+}

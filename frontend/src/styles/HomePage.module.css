@@ -1,0 +1,748 @@
+/* =============================================================================
+   MODERN HOMEPAGE - WORLD-CLASS DESIGN
+   =============================================================================
+   30 years of design expertise distilled into pure CSS magic
+============================================================================= */
+
+/* ==================== CONTAINER & LAYOUT ==================== */
+.container {
+  min-height: 100vh;
+  background: var(--surface-primary);
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* ==================== HERO SECTION ==================== */
+.heroSection {
+  position: relative;
+  padding: 6rem 1.5rem 4rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  overflow: hidden;
+}
+
+/* Animated gradient background */
+.heroSection::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(
+    circle at 20% 80%,
+    rgba(120, 119, 198, 0.3),
+    transparent 50%
+  ),
+  radial-gradient(
+    circle at 80% 20%,
+    rgba(255, 119, 198, 0.3),
+    transparent 50%
+  ),
+  radial-gradient(
+    circle at 40% 40%,
+    rgba(120, 219, 255, 0.2),
+    transparent 50%
+  );
+  animation: gradientShift 15s ease-in-out infinite;
+}
+
+@keyframes gradientShift {
+  0%, 100% { transform: rotate(0deg) scale(1); }
+  33% { transform: rotate(120deg) scale(1.1); }
+  66% { transform: rotate(240deg) scale(1); }
+}
+
+/* Floating particles */
+.heroSection::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: 
+    radial-gradient(circle at 15% 15%, white 1px, transparent 1px),
+    radial-gradient(circle at 85% 85%, white 1px, transparent 1px),
+    radial-gradient(circle at 50% 50%, white 1px, transparent 1px);
+  background-size: 15% 15%;
+  animation: floatParticles 20s linear infinite;
+  opacity: 0.3;
+}
+
+@keyframes floatParticles {
+  from { transform: translateY(0); }
+  to { transform: translateY(-100px); }
+}
+
+.heroContent {
+  max-width: 1200px;
+  margin: 0 auto;
+  text-align: center;
+  position: relative;
+  z-index: 2;
+}
+
+/* ==================== HEADLINE TYPOGRAPHY ==================== */
+.headline {
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  font-weight: 800;
+  color: white;
+  margin-bottom: 1.5rem;
+  line-height: 1.1;
+  animation: fadeInUp 0.8s ease-out;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.brandText {
+  color: white;
+  display: inline-block;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  position: relative;
+  animation: glow 2s ease-in-out infinite;
+}
+
+@keyframes glow {
+  0%, 100% {
+    text-shadow: 
+      0 0 20px rgba(255, 255, 255, 0.5),
+      0 0 40px rgba(255, 255, 255, 0.3),
+      0 0 60px rgba(255, 255, 255, 0.1);
+  }
+  50% {
+    text-shadow: 
+      0 0 30px rgba(255, 255, 255, 0.7),
+      0 0 50px rgba(255, 255, 255, 0.5),
+      0 0 80px rgba(255, 255, 255, 0.2);
+  }
+}
+
+.subheading {
+  font-size: clamp(1.125rem, 2vw, 1.5rem);
+  color: rgba(255, 255, 255, 0.95);
+  margin-bottom: 2.5rem;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+  animation: fadeInUp 0.8s ease-out 0.2s both;
+  line-height: 1.6;
+}
+
+/* ==================== CTA BUTTONS ==================== */
+.ctaContainer {
+  display: flex;
+  gap: 1.5rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  animation: fadeInUp 0.8s ease-out 0.4s both;
+}
+
+.primaryCta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem 2.5rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border-radius: 50px;
+  font-weight: 600;
+  font-size: 1.125rem;
+  text-decoration: none;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+  position: relative;
+  overflow: hidden;
+}
+
+.primaryCta::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  transition: left 0.5s;
+}
+
+.primaryCta:hover::before {
+  left: 100%;
+}
+
+.primaryCta:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 15px 40px rgba(102, 126, 234, 0.5);
+}
+
+/* ==================== HOW IT WORKS SECTION ==================== */
+.howItWorksSection {
+  padding: 5rem 1.5rem;
+  background: linear-gradient(180deg, var(--surface-primary) 0%, var(--surface-secondary) 100%);
+  position: relative;
+}
+
+.sectionHeader {
+  text-align: center;
+  margin-bottom: 4rem;
+  animation: fadeInUp 0.6s ease-out;
+}
+
+.sectionTitle {
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 1rem;
+  position: relative;
+  display: inline-block;
+}
+
+.sectionTitle::after {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 4px;
+  background: linear-gradient(90deg, #667eea, #764ba2);
+  border-radius: 2px;
+}
+
+.sectionSubtitle {
+  font-size: 1.25rem;
+  color: var(--text-secondary);
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.stepsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.stepCard {
+  background: var(--surface-elevated);
+  border-radius: 20px;
+  padding: 2rem;
+  position: relative;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+  border: 1px solid var(--border-default);
+  overflow: hidden;
+}
+
+.stepCard::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #667eea, #764ba2, #f093fb);
+  transform: scaleX(0);
+  transition: transform 0.3s;
+}
+
+.stepCard:hover::before {
+  transform: scaleX(1);
+}
+
+.stepCard:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+}
+
+.stepIcon {
+  width: 60px;
+  height: 60px;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.75rem;
+  margin-bottom: 1.5rem;
+  position: relative;
+  z-index: 1;
+}
+
+.stepIcon1 {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+}
+
+.stepIcon2 {
+  background: linear-gradient(135deg, #f093fb, #f5576c);
+}
+
+.stepIcon3 {
+  background: linear-gradient(135deg, #4facfe, #00f2fe);
+}
+
+.stepTitle {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 1rem;
+}
+
+.stepDescription {
+  font-size: 1rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+.ticker {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: 600;
+}
+
+/* ==================== FEATURES SECTION ==================== */
+.featuresSection {
+  padding: 5rem 1.5rem;
+  background: var(--surface-secondary);
+  position: relative;
+}
+
+.featuresGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.featureCard {
+  background: var(--surface-elevated);
+  border-radius: 16px;
+  padding: 1.75rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid var(--border-default);
+  position: relative;
+  overflow: hidden;
+}
+
+.featureCard::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(102, 126, 234, 0.1) 0%, transparent 70%);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.featureCard:hover::after {
+  opacity: 1;
+}
+
+.featureCard:hover {
+  transform: translateY(-5px) scale(1.02);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+  border-color: rgba(102, 126, 234, 0.3);
+}
+
+.featureEmoji {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  display: inline-block;
+  animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+
+.featureTitle {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 0.75rem;
+}
+
+.featureDescription {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+/* ==================== CTA SECTION ==================== */
+.ctaSection {
+  padding: 5rem 1.5rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+.ctaSection::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  animation: floatPattern 20s linear infinite;
+}
+
+@keyframes floatPattern {
+  from { transform: translateX(0); }
+  to { transform: translateX(60px); }
+}
+
+.ctaContent {
+  max-width: 800px;
+  margin: 0 auto;
+  text-align: center;
+  position: relative;
+  z-index: 1;
+}
+
+.ctaTitle {
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 700;
+  color: white;
+  margin-bottom: 1.5rem;
+}
+
+.ctaSubtitle {
+  font-size: 1.25rem;
+  color: rgba(255, 255, 255, 0.9);
+  margin-bottom: 2.5rem;
+}
+
+.ctaButtons {
+  display: flex;
+  gap: 1.5rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.ctaPrimary, .ctaSecondary {
+  padding: 1rem 2rem;
+  border-radius: 50px;
+  font-weight: 600;
+  font-size: 1.125rem;
+  text-decoration: none;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: inline-block;
+}
+
+.ctaPrimary {
+  background: white;
+  color: #667eea;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.ctaPrimary:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+}
+
+.ctaSecondary {
+  background: transparent;
+  color: white;
+  border: 2px solid white;
+}
+
+.ctaSecondary:hover {
+  background: white;
+  color: #667eea;
+}
+
+.ctaNote {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.875rem;
+  margin-top: 1.5rem;
+}
+
+/* ==================== ANIMATIONS ==================== */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ==================== RESPONSIVE DESIGN ==================== */
+@media (max-width: 768px) {
+  .heroSection {
+    padding: 4rem 1rem 3rem;
+  }
+  
+  .headline {
+    font-size: 2rem;
+  }
+  
+  .subheading {
+    font-size: 1.125rem;
+  }
+  
+  .ctaContainer {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .primaryCta {
+    width: 100%;
+    text-align: center;
+    justify-content: center;
+  }
+  
+  .stepsGrid,
+  .featuresGrid {
+    grid-template-columns: 1fr;
+  }
+  
+  .ctaButtons {
+    flex-direction: column;
+    width: 100%;
+  }
+  
+  .ctaPrimary,
+  .ctaSecondary {
+    width: 100%;
+    text-align: center;
+  }
+}
+
+/* ==================== DARK MODE ENHANCEMENTS ==================== */
+.dark .heroSection {
+  background: linear-gradient(135deg, #1a365d 0%, #2d3748 100%);
+}
+
+.dark .stepCard,
+.dark .featureCard {
+  background: var(--surface-secondary);
+  border-color: var(--border-default);
+}
+
+.dark .ctaSection {
+  background: linear-gradient(135deg, #2d3748 0%, #1a202c 100%);
+}
+
+/* ==================== LEARNING PATHS SECTION ==================== */
+.learningPathsSection {
+  padding: 5rem 1.5rem;
+  background: linear-gradient(135deg, #f8faff 0%, #f0f4ff 100%);
+  position: relative;
+}
+
+.learningPathsSection::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23667eea' fill-opacity='0.03'%3E%3Cpath d='M20 20c0-11.046 8.954-20 20-20s20 8.954 20 20-8.954 20-20 20-20-8.954-20-20z'/%3E%3C/g%3E%3C/svg%3E");
+}
+
+.pathsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+}
+
+.pathCard {
+  background: var(--surface-elevated);
+  border-radius: 20px;
+  padding: 2.5rem;
+  position: relative;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  border: 1px solid var(--border-default);
+  overflow: hidden;
+  text-align: center;
+}
+
+.pathCard::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 5px;
+  background: linear-gradient(90deg, #667eea, #764ba2, #f093fb);
+  transform: scaleX(0);
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  transform-origin: left;
+}
+
+.pathCard:hover::before {
+  transform: scaleX(1);
+}
+
+.pathCard:hover {
+  transform: translateY(-12px) scale(1.03);
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+  border-color: rgba(102, 126, 234, 0.3);
+}
+
+.pathBadge {
+  display: inline-block;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  margin-bottom: 1.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.pathEmoji {
+  font-size: 3rem;
+  margin-bottom: 1.5rem;
+  display: inline-block;
+  animation: pathIconFloat 3s ease-in-out infinite;
+}
+
+@keyframes pathIconFloat {
+  0%, 100% { 
+    transform: translateY(0) rotate(0deg); 
+  }
+  50% { 
+    transform: translateY(-8px) rotate(5deg); 
+  }
+}
+
+.pathTitle {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 1rem;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.pathDescription {
+  font-size: 1rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin-bottom: 2rem;
+}
+
+.pathFeatures {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 2rem 0;
+  text-align: left;
+}
+
+.pathFeatures li {
+  padding: 0.5rem 0;
+  color: var(--text-secondary);
+  position: relative;
+  padding-left: 1.5rem;
+}
+
+.pathFeatures li::before {
+  content: '✓';
+  position: absolute;
+  left: 0;
+  top: 0.5rem;
+  color: #4facfe;
+  font-weight: bold;
+  font-size: 0.875rem;
+}
+
+.pathButton {
+  display: inline-block;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white;
+  text-decoration: none;
+  padding: 0.875rem 2rem;
+  border-radius: 50px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+.pathButton::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.6s;
+}
+
+.pathButton:hover::before {
+  left: 100%;
+}
+
+.pathButton:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px rgba(102, 126, 234, 0.4);
+}
+
+.pathButton:active {
+  transform: translateY(0);
+}
+
+/* ==================== RESPONSIVE DESIGN FOR PATHS ==================== */
+@media (max-width: 768px) {
+  .learningPathsSection {
+    padding: 3rem 1rem;
+  }
+  
+  .pathsGrid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  
+  .pathCard {
+    padding: 2rem;
+  }
+  
+  .pathEmoji {
+    font-size: 2.5rem;
+  }
+  
+  .pathTitle {
+    font-size: 1.25rem;
+  }
+  
+  .pathButton {
+    width: 100%;
+    text-align: center;
+  }
+}
+
+/* ==================== DARK MODE FOR PATHS ==================== */
+.dark .learningPathsSection {
+  background: linear-gradient(135deg, #1a202c 0%, #2d3748 100%);
+}
+
+.dark .pathCard {
+  background: var(--surface-secondary);
+  border-color: var(--border-default);
+}
+
+.dark .pathFeatures li::before {
+  color: #4facfe;
+}

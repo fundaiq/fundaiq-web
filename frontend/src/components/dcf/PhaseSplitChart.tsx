@@ -1,13 +1,6 @@
 'use client';
-import {
-  Chart as ChartJS,
-  BarElement,
-  CategoryScale,
-  LinearScale,
-} from 'chart.js';
-import { Bar } from 'react-chartjs-2';
-
-ChartJS.register(BarElement, CategoryScale, LinearScale);
+import { TrendingUp, Clock, Infinity } from 'lucide-react';
+import styles from '@/styles/PhaseSplitChart.module.css';
 
 export default function PhaseSplitChart({
   phase1 = 0,
@@ -22,63 +15,112 @@ export default function PhaseSplitChart({
 }) {
   const safeValue = (v: number) => isNaN(v) || !isFinite(v) ? 0 : v;
   const percent = (v: number) =>
-    total ? `${((safeValue(v) / total) * 100).toFixed(0)}%` : '0%';
+    total ? ((safeValue(v) / total) * 100).toFixed(1) : '0.0';
   const format = (v: number) =>
-    `₹${safeValue(v).toFixed(1)} (${percent(v)})`;
+    `₹${safeValue(v).toFixed(1)}`;
 
-  const data = {
-    labels: [''],
-    datasets: [
-      {
-        label: 'Phase 1',
-        data: [safeValue(phase1)],
-        backgroundColor: 'rgba(59, 130, 246, 0.8)' // blue-500
-      },
-      {
-        label: 'Phase 2',
-        data: [safeValue(phase2)],
-        backgroundColor: 'rgba(168, 85, 247, 0.8)' // purple-500
-      },
-      {
-        label: 'Terminal',
-        data: [safeValue(phase3)],
-        backgroundColor: 'rgba(34, 197, 94, 0.8)' // green-500
-      }
-    ]
-  };
-
-  const options = {
-    responsive: true,
-    maintainAspectRatio: false,
-    indexAxis: 'y' as const,
-    plugins: {
-      legend: { display: false },
-      tooltip: { enabled: false },
-    },
-    elements: {
-      bar: {
-        borderSkipped: false,
-        borderRadius: 4,
-      }
-    },
-    scales: {
-      x: { stacked: true, display: false },
-      y: { stacked: true, display: false }
-    }
-  };
+  // Calculate percentages for bar widths
+  const p1Percent = parseFloat(percent(phase1));
+  const p2Percent = parseFloat(percent(phase2));
+  const p3Percent = parseFloat(percent(phase3));
 
   return (
-    <div className="w-full min-w-0">
-      {/* Top label line */}
-      <div className="flex justify-between text-xs font-medium text-neutral-700 dark:text-neutral-300 mb-1">
-        <div>Phase 1 – {format(phase1)}</div>
-        <div>Phase 2 – {format(phase2)}</div>
-        <div>Terminal – {format(phase3)}</div>
+    <div className={styles.container}>
+      {/* Enhanced Header */}
+      <div className={styles.header}>
+        <div className={styles.headerIcon}>
+          <TrendingUp size={16} />
+        </div>
+        <h4 className={styles.headerTitle}>DCF Value Breakdown</h4>
+        <div className={styles.totalValue}>₹{safeValue(total).toFixed(1)}</div>
       </div>
 
-      {/* Full-width stacked bar */}
-      <div className="h-[32px] w-full">
-        <Bar data={data} options={options} />
+      {/* Enhanced Visual Bar */}
+      <div className={styles.visualBar}>
+        <div 
+          className={styles.phase1Segment}
+          style={{ width: `${p1Percent}%` }}
+        />
+        <div 
+          className={styles.phase2Segment}
+          style={{ width: `${p2Percent}%` }}
+        />
+        <div 
+          className={styles.phase3Segment}
+          style={{ width: `${p3Percent}%` }}
+        />
+      </div>
+
+      {/* Enhanced Phase Cards */}
+      <div className={styles.phaseCards}>
+        {/* Phase 1 Card */}
+        <div className={styles.phaseCard}>
+          <div className={styles.phaseCardHeader}>
+            <div className={`${styles.phaseIcon} ${styles.phase1Icon}`}>
+              <Clock size={14} />
+            </div>
+            <div className={styles.phaseInfo}>
+              <div className={styles.phaseTitle}>Phase 1</div>
+              <div className={styles.phaseSubtitle}>Years 1-3</div>
+            </div>
+          </div>
+          <div className={styles.phaseMetrics}>
+            <div className={styles.phaseValue}>{format(phase1)}</div>
+            <div className={`${styles.phasePercent} ${styles.phase1Percent}`}>
+              {percent(phase1)}%
+            </div>
+          </div>
+        </div>
+
+        {/* Phase 2 Card */}
+        <div className={styles.phaseCard}>
+          <div className={styles.phaseCardHeader}>
+            <div className={`${styles.phaseIcon} ${styles.phase2Icon}`}>
+              <TrendingUp size={14} />
+            </div>
+            <div className={styles.phaseInfo}>
+              <div className={styles.phaseTitle}>Phase 2</div>
+              <div className={styles.phaseSubtitle}>Years 4-10</div>
+            </div>
+          </div>
+          <div className={styles.phaseMetrics}>
+            <div className={styles.phaseValue}>{format(phase2)}</div>
+            <div className={`${styles.phasePercent} ${styles.phase2Percent}`}>
+              {percent(phase2)}%
+            </div>
+          </div>
+        </div>
+
+        {/* Terminal Card */}
+        <div className={styles.phaseCard}>
+          <div className={styles.phaseCardHeader}>
+            <div className={`${styles.phaseIcon} ${styles.phase3Icon}`}>
+              <Infinity size={14} />
+            </div>
+            <div className={styles.phaseInfo}>
+              <div className={styles.phaseTitle}>Terminal</div>
+              <div className={styles.phaseSubtitle}>Year 10+</div>
+            </div>
+          </div>
+          <div className={styles.phaseMetrics}>
+            <div className={styles.phaseValue}>{format(phase3)}</div>
+            <div className={`${styles.phasePercent} ${styles.phase3Percent}`}>
+              {percent(phase3)}%
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Summary Stats */}
+      <div className={styles.summaryStats}>
+        <div className={styles.summaryItem}>
+          <span className={styles.summaryLabel}>Projection Period</span>
+          <span className={styles.summaryValue}>10 Years</span>
+        </div>
+        <div className={styles.summaryItem}>
+          <span className={styles.summaryLabel}>Terminal Contribution</span>
+          <span className={styles.summaryValue}>{percent(phase3)}%</span>
+        </div>
       </div>
     </div>
   );

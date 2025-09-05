@@ -1,63 +1,277 @@
+import styles from '@/styles/HomePage.module.css';
+
 export default function HomePage() {
   return (
-    <div className="min-h-screen bg-white dark:bg-zinc-900 text-black dark:text-white">
-      <div className="max-w-5xl mx-auto text-center py-24 px-6">
-        {/* Hero Section with Motion */}
-        <div className="relative mb-16">
-          <h1 className="text-5xl font-extrabold mb-4 leading-tight animate-fade-in">
-            <span className="dark:text-white text-[#1F1F1F]">Smarter Investing</span> Starts with <span className="text-[#0073E6]">FundaIQ</span>
+    <div className={styles.container}>
+
+      {/* Hero Section with Animated Background */}
+      <section className={styles.heroSection}>
+        <div className={styles.heroContent}>
+          
+          {/* Main Headline */}
+          <h1 className={styles.headline}>
+            Learn{" "}
+            <span className={styles.brandText}>
+              Smart Investing
+            </span>
+            <br />
+            Made Simple
           </h1>
-          <p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto animate-fade-in-up">
-            Build confidence in every investment decision — with instant reports, clear valuations, and a powerful AI-driven analysis engine designed for retail investors.
+
+          {/* Subheading */}
+          <p className={styles.subheading}>
+            Master DCF models, learn valuation techniques, and build your financial knowledge with institutional-grade educational tools.
           </p>
-          <div className="absolute -top-10 left-10 w-24 h-24 bg-[#0073E6] rounded-full opacity-30 animate-ping"></div>
-          <div className="absolute -bottom-10 right-10 w-16 h-16 bg-[#1DB954] rounded-full opacity-20 animate-pulse"></div>
-          <div className="mt-8 animate-fade-in-up">
-            <a href="/report" className="inline-block bg-[#0073E6] text-white px-6 py-3 rounded-md shadow hover:bg-blue-600 transition">
-              🧠 Start Analyzing Now
+
+          {/* CTA Buttons */}
+          <div className={styles.ctaContainer}>
+            <a
+              href="/report"
+              className={styles.primaryCta}
+            >
+              🚀 Start Learning Free
+            </a>            
+          </div>
+        </div>
+      </section>
+
+      {/* How It Works */}
+      <section className={styles.howItWorksSection}>
+        <div className={styles.sectionHeader}>
+          <h2 className={styles.sectionTitle}>
+            How It Works
+          </h2>
+          <p className={styles.sectionSubtitle}>
+            Learn professional financial analysis in three simple steps
+          </p>
+        </div>
+
+        <div className={styles.stepsGrid}>
+          {/* Step 1 */}
+          <div className={styles.stepCard}>
+            <div className={`${styles.stepIcon} ${styles.stepIcon1}`}>
+              🎯
+            </div>
+            <h3 className={styles.stepTitle}>
+              1. Choose Your Path
+            </h3>
+            <p className={styles.stepDescription}>
+              Start with beginner basics or dive into advanced topics like DCF modeling and valuation methods.
+            </p>
+          </div>
+
+          {/* Step 2 */}
+          <div className={styles.stepCard}>
+            <div className={`${styles.stepIcon} ${styles.stepIcon2}`}>
+              🔍
+            </div>
+            <h3 className={styles.stepTitle}>
+              2. Practice
+            </h3>
+            <p className={styles.stepDescription}>
+              Use real company data to practice valuation techniques and build your analytical skills with hands-on examples.
+            </p>
+          </div>
+
+          {/* Step 3 */}
+          <div className={styles.stepCard}>
+            <div className={`${styles.stepIcon} ${styles.stepIcon3}`}>
+              🎓
+            </div>
+            <h3 className={styles.stepTitle}>
+              3. Master
+            </h3>
+            <p className={styles.stepDescription}>
+              Apply your knowledge to make informed investment decisions with confidence and professional-grade analysis.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* Learning Paths */}
+      <section className={styles.learningPathsSection}>
+        <div className={styles.sectionHeader}>
+          <h2 className={styles.sectionTitle}>
+            Choose Your Learning Path
+          </h2>
+          <p className={styles.sectionSubtitle}>
+            Structured courses designed for every skill level
+          </p>
+        </div>
+
+        <div className={styles.pathsGrid}>
+          {/* Beginners Path */}
+          <div className={styles.pathCard}>
+            <div className={styles.pathBadge}>Beginner</div>
+            <div className={styles.pathEmoji}>🌱</div>
+            <h3 className={styles.pathTitle}>
+              Investment Basics
+            </h3>
+            <p className={styles.pathDescription}>
+              Start your journey with fundamental concepts, basic analysis, and essential investment principles.
+            </p>
+            <ul className={styles.pathFeatures}>
+              <li>Stock market fundamentals</li>
+              <li>Basic financial statements</li>
+              <li>Risk and return concepts</li>
+            </ul>
+            <a href="/learn/beginners" className={styles.pathButton}>
+              Start Learning
+            </a>
+          </div>
+
+          {/* Intermediate Path */}
+          <div className={styles.pathCard}>
+            <div className={styles.pathBadge}>Intermediate</div>
+            <div className={styles.pathEmoji}>⚡</div>
+            <h3 className={styles.pathTitle}>
+              Valuation Methods
+            </h3>
+            <p className={styles.pathDescription}>
+              Master different valuation techniques and learn to analyze companies like a professional.
+            </p>
+            <ul className={styles.pathFeatures}>
+              <li>DCF modeling techniques</li>
+              <li>Multiple valuation methods</li>
+              <li>Financial ratio analysis</li>
+            </ul>
+            <a href="/learn/ValuationMethods" className={styles.pathButton}>
+              Explore Methods
+            </a>
+          </div>
+
+          {/* Advanced Path */}
+          <div className={styles.pathCard}>
+            <div className={styles.pathBadge}>Advanced</div>
+            <div className={styles.pathEmoji}>🎯</div>
+            <h3 className={styles.pathTitle}>
+              Legendary Investors
+            </h3>
+            <p className={styles.pathDescription}>
+              Learn strategies and wisdom from history's most successful investors and fund managers.
+            </p>
+            <ul className={styles.pathFeatures}>
+              <li>Warren Buffett's approach</li>
+              <li>Value investing principles</li>
+              <li>Investment philosophy</li>
+            </ul>
+            <a href="/learn/legendary-investors" className={styles.pathButton}>
+              Learn from Masters
             </a>
           </div>
         </div>
+      </section>
 
-        <div className="mt-16">
-          <h2 className="text-2xl font-semibold mb-3">🚀 How It Works</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-left">
-            <div className="p-6 rounded-lg shadow bg-[#F5F8FB] dark:bg-zinc-800">
-              <h3 className="text-lg font-semibold text-[#0073E6] mb-2">Step 1: Import</h3>
-              <p>Upload your Screener Excel file or enter a stock ticker to fetch financial data instantly.</p>
-            </div>
-            <div className="p-6 rounded-lg shadow bg-[#F5F8FB] dark:bg-zinc-800">
-              <h3 className="text-lg font-semibold text-[#0073E6] mb-2">Step 2: Analyze</h3>
-              <p>Get a complete one-page report with valuation, financial health metrics, and insights — all auto-generated.</p>
-            </div>
-            <div className="p-6 rounded-lg shadow bg-[#F5F8FB] dark:bg-zinc-800">
-              <h3 className="text-lg font-semibold text-[#0073E6] mb-2">Step 3: Understand</h3>
-              <p>Read our AI-generated explanations to truly understand the <em>"Why" before the Buy</em>.</p>
-            </div>
+      {/* Features */}
+      <section className={styles.featuresSection}>
+        <div className={styles.sectionHeader}>
+          <h2 className={styles.sectionTitle}>
+            Everything You Need to Learn Investing
+          </h2>
+          <p className={styles.sectionSubtitle}>
+            Educational tools and resources to build your investment knowledge
+          </p>
+        </div>
+
+        <div className={styles.featuresGrid}>
+          {/* DCF Valuation */}
+          <div className={styles.featureCard}>
+            <div className={styles.featureEmoji}>📊</div>
+            <h3 className={styles.featureTitle}>
+              DCF Valuation
+            </h3>
+            <p className={styles.featureDescription}>
+              Learn to build sophisticated discounted cash flow models with step-by-step guidance and real examples.
+            </p>
+          </div>
+
+          {/* EPS Projections */}
+          <div className={styles.featureCard}>
+            <div className={styles.featureEmoji}>📈</div>
+            <h3 className={styles.featureTitle}>
+              EPS Analysis
+            </h3>
+            <p className={styles.featureDescription}>
+              Master earnings per share projections and understand how to analyze company growth potential.
+            </p>
+          </div>
+
+          {/* Interactive Learning */}
+          <div className={styles.featureCard}>
+            <div className={styles.featureEmoji}>🎯</div>
+            <h3 className={styles.featureTitle}>
+              Interactive Learning
+            </h3>
+            <p className={styles.featureDescription}>
+              Practice with real market data and get instant feedback on your analysis and calculations.
+            </p>
+          </div>
+
+          {/* Financial Health */}
+          <div className={styles.featureCard}>
+            <div className={styles.featureEmoji}>🏥</div>
+            <h3 className={styles.featureTitle}>
+              Financial Health
+            </h3>
+            <p className={styles.featureDescription}>
+              Learn to analyze profitability, leverage, growth, and balance sheet strength like a professional.
+            </p>
+          </div>
+
+          {/* Learning Resources */}
+          <div className={styles.featureCard}>
+            <div className={styles.featureEmoji}>📚</div>
+            <h3 className={styles.featureTitle}>
+              Learning Resources
+            </h3>
+            <p className={styles.featureDescription}>
+              Access guides, tutorials, and lessons from legendary investors to accelerate your learning journey.
+            </p>
+          </div>
+
+          {/* Progress Tracking */}
+          <div className={styles.featureCard}>
+            <div className={styles.featureEmoji}>📊</div>
+            <h3 className={styles.featureTitle}>
+              Track Progress
+            </h3>
+            <p className={styles.featureDescription}>
+              Monitor your learning journey and see how your investment analysis skills improve over time.
+            </p>
           </div>
         </div>
+      </section>
 
-        <div className="mt-16">
-          <h2 className="text-2xl font-semibold mb-3">🌱 Our Principles</h2>
-          <ul className="list-disc list-inside text-left max-w-3xl mx-auto text-gray-700 dark:text-gray-300">
-            <li><strong>Clarity:</strong> We simplify complexity for every investor.</li>
-            <li><strong>Independence:</strong> We don’t sell stocks — we teach how to think about them.</li>
-            <li><strong>Discipline:</strong> We focus on valuations, not hype.</li>
-            <li><strong>Transparency:</strong> Every assumption is editable, every number is explained.</li>
-          </ul>
-        </div>
-
-        <div className="mt-16">
-          <h2 className="text-2xl font-semibold mb-3">🌀 Smart Visuals, Smooth Experience</h2>
-          <p className="text-gray-600 dark:text-gray-400 mb-6">Enjoy subtle animations, intuitive UI, and clear breakdowns — all powered by FundaIQ’s fast backend and thoughtful design.</p>
-
-          <div className="flex justify-center items-center gap-8">
-            <div className="w-24 h-24 rounded-full border-4 border-[#0073E6] animate-spin-slow"></div>
-            <div className="w-24 h-24 rounded-full border-4 border-[#1DB954] animate-pulse"></div>
-            <div className="w-24 h-24 rounded-full border-4 border-[#F5C518] animate-bounce"></div>
+      {/* CTA Section */}
+      <section className={styles.ctaSection}>
+        <div className={styles.ctaContent}>
+          <h2 className={styles.ctaTitle}>
+            Ready to Become a Smarter Investor?
+          </h2>
+          <p className={styles.ctaSubtitle}>
+            Join thousands learning professional investment analysis techniques.
+          </p>
+          
+          <div className={styles.ctaButtons}>
+            <a
+              href="/learn"
+              className={styles.ctaPrimary}
+            >
+              Start Learning
+            </a>
+            <a
+              href="/report"
+              className={styles.ctaSecondary}
+            >
+              Try Analysis Tool
+            </a>
           </div>
+          
+          <p className={styles.ctaNote}>
+            No credit card required • Free educational resources
+          </p>
         </div>
-      </div>
+      </section>
     </div>
   );
 }

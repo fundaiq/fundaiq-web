@@ -1,0 +1,486 @@
+/* =============================================================================
+   FUNDA-IQ PRINT STYLES - FIXED VERSION
+   =============================================================================
+   
+   Fixed to not interfere with dark theme on screen display
+   Only applies styles when actually printing
+============================================================================= */
+
+@media print {
+  
+  /* ==================== GENERAL PRINT SETTINGS ==================== */
+  
+  /* Reset backgrounds and colors ONLY for printing */
+  *,
+  *::before,
+  *::after {
+    background: transparent !important;
+    color: black !important;
+    text-shadow: none !important;
+    filter: none !important;
+  }
+  
+  /* Page setup */
+  @page {
+    size: A4;
+    margin: 2cm;
+  }
+  
+  @page :first {
+    margin-top: 3cm;
+  }
+  
+  /* Body setup */
+  body {
+    font-size: 12pt;
+    line-height: 1.5;
+    font-family: Georgia, 'Times New Roman', serif;
+    background: white !important;
+    color: black !important;
+  }
+  
+  /* ==================== TYPOGRAPHY ==================== */
+  
+  h1, h2, h3, h4, h5, h6 {
+    font-family: Arial, Helvetica, sans-serif;
+    color: black !important;
+    page-break-after: avoid;
+    page-break-inside: avoid;
+    font-weight: bold !important;
+  }
+  
+  h1 {
+    font-size: 24pt;
+    margin-bottom: 10pt;
+    border-bottom: 2pt solid black;
+    padding-bottom: 5pt;
+  }
+  
+  h2 {
+    font-size: 18pt;
+    margin-top: 15pt;
+    margin-bottom: 8pt;
+    border-bottom: 1pt solid black;
+    padding-bottom: 3pt;
+  }
+  
+  h3 {
+    font-size: 14pt;
+    margin-top: 12pt;
+    margin-bottom: 6pt;
+  }
+  
+  h4, h5, h6 {
+    font-size: 12pt;
+    margin-top: 10pt;
+    margin-bottom: 5pt;
+  }
+  
+  p {
+    font-size: 12pt;
+    margin-bottom: 8pt;
+    text-align: justify;
+    orphans: 3;
+    widows: 3;
+  }
+  
+  /* ==================== LINKS ==================== */
+  
+  a {
+    color: black !important;
+    text-decoration: underline !important;
+  }
+  
+  /* Show URL after links (except for internal anchors) */
+  a[href^="http"]:after,
+  a[href^="https"]:after {
+    content: " (" attr(href) ")";
+    font-size: 10pt;
+    font-style: italic;
+    word-wrap: break-word;
+  }
+  
+  /* Don't show URL for internal links */
+  a[href^="#"]:after,
+  a[href^="javascript:"]:after {
+    content: "";
+  }
+  
+  /* ==================== IMAGES ==================== */
+  
+  img {
+    max-width: 100% !important;
+    page-break-inside: avoid;
+    display: block;
+    margin: 10pt auto;
+  }
+  
+  figure {
+    page-break-inside: avoid;
+    margin: 15pt 0;
+    text-align: center;
+  }
+  
+  figcaption {
+    font-size: 10pt;
+    font-style: italic;
+    margin-top: 5pt;
+  }
+  
+  /* ==================== TABLES ==================== */
+  
+  table {
+    border-collapse: collapse !important;
+    width: 100% !important;
+    page-break-inside: auto;
+    margin: 15pt 0;
+  }
+  
+  thead {
+    display: table-header-group;
+  }
+  
+  tfoot {
+    display: table-footer-group;
+  }
+  
+  tr {
+    page-break-inside: avoid;
+    page-break-after: auto;
+  }
+  
+  th, td {
+    border: 1pt solid black !important;
+    padding: 5pt !important;
+    font-size: 10pt;
+  }
+  
+  th {
+    background-color: #f0f0f0 !important;
+    font-weight: bold !important;
+    text-align: left !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  
+  /* Zebra striping for better readability */
+  tbody tr:nth-child(even) {
+    background-color: #f9f9f9 !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  
+  /* ==================== LISTS ==================== */
+  
+  ul, ol {
+    margin: 10pt 0;
+    padding-left: 20pt;
+  }
+  
+  li {
+    font-size: 12pt;
+    margin-bottom: 3pt;
+    page-break-inside: avoid;
+  }
+  
+  /* ==================== FINANCIAL COMPONENTS ==================== */
+  
+  /* Valuation cards */
+  .card,
+  .card-metric,
+  .valuation-badge {
+    border: 1pt solid black !important;
+    padding: 8pt !important;
+    margin: 10pt 0 !important;
+    page-break-inside: avoid;
+    background: white !important;
+  }
+  
+  /* Metric values */
+  .metric-value {
+    font-size: 16pt !important;
+    font-weight: bold !important;
+    color: black !important;
+  }
+  
+  .metric-label {
+    font-size: 10pt !important;
+    color: #333 !important;
+    text-transform: uppercase;
+  }
+  
+  /* Financial indicators */
+  .finance-positive,
+  .metric-change-positive {
+    color: black !important;
+    font-weight: bold !important;
+  }
+  
+  .finance-positive:before,
+  .metric-change-positive:before {
+    content: "▲ ";
+  }
+  
+  .finance-negative,
+  .metric-change-negative {
+    color: black !important;
+    font-weight: bold !important;
+  }
+  
+  .finance-negative:before,
+  .metric-change-negative:before {
+    content: "▼ ";
+  }
+  
+  /* ==================== CHARTS ==================== */
+  
+  /* Convert charts to grayscale */
+  .recharts-wrapper,
+  canvas {
+    filter: grayscale(100%) !important;
+    -webkit-filter: grayscale(100%) !important;
+    page-break-inside: avoid;
+  }
+  
+  /* Add border to charts */
+  .chart-container {
+    border: 1pt solid black !important;
+    padding: 10pt !important;
+    margin: 15pt 0 !important;
+    page-break-inside: avoid;
+  }
+  
+  /* ==================== LAYOUT ==================== */
+  
+  /* Container widths */
+  .container,
+  .container-fluid {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+  
+  /* Remove columns on print */
+  .grid,
+  .grid-cols-2,
+  .grid-cols-3,
+  .grid-cols-4 {
+    display: block !important;
+  }
+  
+  .grid > *,
+  [class*="col-"] {
+    width: 100% !important;
+    display: block !important;
+    page-break-inside: avoid;
+  }
+  
+  /* ==================== HIDE ELEMENTS ==================== */
+  
+  /* Hide non-printable elements */
+  .no-print,
+  .btn-primary,
+  .btn-secondary,
+  .btn-ghost,
+  button,
+  nav,
+  .navigation,
+  .nav-link,
+  .theme-toggle,
+  .mobile-menu,
+  .search-container,
+  .user-menu,
+  .footer,
+  .social-links,
+  .scroll-to-top,
+  video,
+  audio,
+  iframe,
+  .advertisement,
+  .banner,
+  .cookie-notice,
+  .modal,
+  .tooltip,
+  .dropdown,
+  [class*="animate-"],
+  [class*="hover-"],
+  .loading-spinner,
+  .skeleton {
+    display: none !important;
+  }
+  
+  /* ==================== COMPANY REPORT SPECIFIC ==================== */
+  
+  /* Company header */
+  .company-header {
+    text-align: center;
+    border-bottom: 3pt solid black;
+    padding-bottom: 10pt;
+    margin-bottom: 20pt;
+  }
+  
+  .company-name {
+    font-size: 28pt !important;
+    font-weight: bold !important;
+    margin-bottom: 5pt !important;
+  }
+  
+  .company-ticker {
+    font-size: 14pt !important;
+    color: #333 !important;
+  }
+  
+  /* Executive summary */
+  .executive-summary {
+    border: 2pt solid black !important;
+    padding: 15pt !important;
+    margin: 20pt 0 !important;
+    page-break-inside: avoid;
+  }
+  
+  .executive-summary h2 {
+    font-size: 16pt !important;
+    border-bottom: 1pt solid black !important;
+    padding-bottom: 5pt !important;
+    margin-bottom: 10pt !important;
+  }
+  
+  /* DCF and valuation tables */
+  .dcf-table,
+  .valuation-table,
+  .sensitivity-table {
+    font-size: 9pt !important;
+    page-break-inside: avoid;
+  }
+  
+  .dcf-table th,
+  .valuation-table th,
+  .sensitivity-table th {
+    background-color: #e0e0e0 !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  
+  /* Financial health indicators */
+  .health-indicator {
+    display: inline-block;
+    padding: 3pt 6pt;
+    border: 1pt solid black;
+    margin: 2pt;
+    font-size: 10pt;
+    font-weight: bold;
+  }
+  
+  /* ==================== PAGE BREAKS ==================== */
+  
+  /* Force page breaks */
+  .page-break {
+    page-break-after: always;
+  }
+  
+  .page-break-before {
+    page-break-before: always;
+  }
+  
+  .page-break-avoid {
+    page-break-inside: avoid;
+  }
+  
+  /* Section breaks */
+  section {
+    page-break-inside: auto;
+    page-break-after: auto;
+  }
+  
+  section.new-page {
+    page-break-before: always;
+  }
+  
+  /* ==================== HEADER/FOOTER ==================== */
+  
+  /* Page numbers and headers */
+  @page {
+    @top-center {
+      content: "Funda-IQ Analysis Report";
+      font-size: 10pt;
+      font-style: italic;
+    }
+    
+    @bottom-center {
+      content: counter(page) " of " counter(pages);
+      font-size: 10pt;
+    }
+    
+    @bottom-left {
+      content: "Generated: " attr(data-date);
+      font-size: 8pt;
+      font-style: italic;
+    }
+    
+    @bottom-right {
+      content: "Educational Purpose Only";
+      font-size: 8pt;
+      font-weight: bold;
+    }
+  }
+  
+  /* ==================== UTILITIES ==================== */
+  
+  /* Text utilities */
+  .print-uppercase {
+    text-transform: uppercase !important;
+  }
+  
+  .print-center {
+    text-align: center !important;
+  }
+  
+  .print-right {
+    text-align: right !important;
+  }
+  
+  .print-bold {
+    font-weight: bold !important;
+  }
+  
+  .print-italic {
+    font-style: italic !important;
+  }
+  
+  /* Spacing utilities */
+  .print-mt-1 { margin-top: 5pt !important; }
+  .print-mt-2 { margin-top: 10pt !important; }
+  .print-mt-3 { margin-top: 15pt !important; }
+  .print-mb-1 { margin-bottom: 5pt !important; }
+  .print-mb-2 { margin-bottom: 10pt !important; }
+  .print-mb-3 { margin-bottom: 15pt !important; }
+  
+  /* Border utilities */
+  .print-border {
+    border: 1pt solid black !important;
+  }
+  
+  .print-border-top {
+    border-top: 1pt solid black !important;
+  }
+  
+  .print-border-bottom {
+    border-bottom: 1pt solid black !important;
+  }
+  
+  /* ==================== WATERMARK ==================== */
+  
+  body::after {
+    content: "EDUCATIONAL PURPOSE ONLY";
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(-45deg);
+    font-size: 72pt;
+    color: rgba(0, 0, 0, 0.05);
+    z-index: -1;
+    font-weight: bold;
+    white-space: nowrap;
+  }
+}

@@ -1,0 +1,567 @@
+/* =============================================================================
+   EPS Valuation Section Styles
+   =============================================================================
+   Beautiful, mobile-first styling using design tokens
+   Following existing architecture pattern
+============================================================================= */
+
+/* ==================== MAIN CONTAINER ==================== */
+
+.container {
+  background: var(--surface-elevated);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-xl);
+  padding: var(--space-lg);
+  margin-bottom: var(--space-lg);
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow var(--transition-normal) ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: var(--gradient-brand);
+  border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+}
+
+.container:hover {
+  box-shadow: var(--shadow-md);
+}
+
+/* ==================== HEADER SECTION ==================== */
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-xl);
+  padding-bottom: var(--space-lg);
+  border-bottom: 1px solid var(--border-subtle);
+  gap: var(--space-md);
+}
+
+.headerLeft {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  flex: 1;
+}
+
+.iconWrapper {
+  padding: var(--space-md);
+  background: var(--gradient-brand);
+  border-radius: var(--radius-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow-brand-sm);
+  min-width: 48px;
+  min-height: 48px;
+}
+
+.icon {
+  width: 24px;
+  height: 24px;
+  color: var(--text-inverse);
+}
+
+.titleSection {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  flex: 1;
+}
+
+.title {
+  font-size: var(--text-xl);
+  font-weight: var(--font-bold);
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.subtitle {
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+.fairValueHighlight {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: var(--space-xs);
+  text-align: right;
+}
+
+.fairValueAmount {
+  font-size: var(--text-2xl);
+  font-weight: var(--font-bold);
+  color: var(--brand-primary);
+  margin: 0;
+}
+
+.fairValueLabel {
+  font-size: var(--text-xs);
+  font-weight: var(--font-medium);
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* ==================== EMPTY STATE ==================== */
+
+.emptyState {
+  text-align: center;
+  padding: var(--space-2xl);
+  color: var(--text-tertiary);
+  font-style: italic;
+  background: var(--surface-secondary);
+  border-radius: var(--radius-lg);
+  border: 2px dashed var(--border-subtle);
+}
+
+.emptyIcon {
+  font-size: var(--text-3xl);
+  margin-bottom: var(--space-md);
+}
+
+/* ==================== TABLE SECTIONS ==================== */
+
+.tableSection {
+  margin-bottom: var(--space-xl);
+}
+
+.sectionTitle {
+  font-size: var(--text-lg);
+  font-weight: var(--font-semibold);
+  color: var(--text-primary);
+  margin-bottom: var(--space-md);
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.sectionIcon {
+  font-size: var(--text-xl);
+}
+
+/* ==================== TABLE STYLING ==================== */
+
+.tableWrapper {
+  background: var(--surface-primary);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow var(--transition-normal) ease;
+}
+
+.tableWrapper:hover {
+  box-shadow: var(--shadow-md);
+}
+
+.scrollContainer {
+  overflow-x: auto;
+  overflow-y: visible;
+  position: relative;
+}
+
+/* Custom scrollbar styling */
+.scrollContainer::-webkit-scrollbar {
+  height: 6px;
+}
+
+.scrollContainer::-webkit-scrollbar-track {
+  background: var(--surface-secondary);
+  border-radius: var(--radius-sm);
+}
+
+.scrollContainer::-webkit-scrollbar-thumb {
+  background: var(--brand-primary);
+  border-radius: var(--radius-sm);
+}
+
+.scrollContainer::-webkit-scrollbar-thumb:hover {
+  background: var(--brand-primary-dark);
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--text-sm);
+  min-width: 640px; /* Minimum width for horizontal scroll */
+}
+
+/* ==================== TABLE HEADERS ==================== */
+
+.tableHeader {
+  background: var(--surface-elevated);
+  border-bottom: 2px solid var(--brand-primary);
+  position: sticky;
+  top: 0;
+  z-index: 2;
+}
+
+.headerCell {
+  padding: var(--space-md) var(--space-lg);
+  text-align: center;
+  font-weight: var(--font-bold);
+  font-size: var(--text-sm);
+  color: var(--text-primary);
+  background: var(--surface-elevated);
+  border-right: 1px solid var(--border-default);
+  border-bottom: 2px solid var(--brand-primary);
+  white-space: nowrap;
+  position: relative;
+}
+
+.headerCell::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--gradient-brand);
+}
+
+.headerCell:last-child {
+  border-right: none;
+}
+
+.headerCell:first-child {
+  text-align: left;
+  position: sticky;
+  left: 0;
+  z-index: 3;
+  background: var(--surface-elevated);
+  border-right: 2px solid var(--brand-primary);
+}
+
+.headerCell:first-child::before {
+  background: var(--gradient-brand);
+}
+
+/* ==================== TABLE BODY ==================== */
+
+.tableBody {
+  background: var(--surface-primary);
+}
+
+.bodyRow {
+  border-bottom: 1px solid var(--border-subtle);
+  transition: background-color var(--transition-fast) ease;
+}
+
+.bodyRow:hover {
+  background: var(--surface-secondary);
+}
+
+.bodyRow:last-child {
+  border-bottom: none;
+}
+
+.bodyCell {
+  padding: var(--space-md) var(--space-lg);
+  text-align: center;
+  color: var(--text-secondary);
+  border-right: 1px solid var(--border-subtle);
+  white-space: nowrap;
+  transition: all var(--transition-fast) ease;
+}
+
+.bodyCell:last-child {
+  border-right: none;
+}
+
+.bodyRow:hover .bodyCell {
+  color: var(--text-primary);
+  font-weight: var(--font-medium);
+}
+
+/* First column (row labels) special styling */
+.rowLabel {
+  text-align: left !important;
+  font-weight: var(--font-medium) !important;
+  color: var(--text-primary) !important;
+  background: var(--surface-elevated);
+  position: sticky;
+  left: 0;
+  z-index: 1;
+  border-right: 2px solid var(--border-default) !important;
+}
+
+.bodyRow:hover .rowLabel {
+  background: var(--surface-tertiary);
+}
+
+/* ==================== SENSITIVITY TABLE SPECIFIC STYLING ==================== */
+
+.sensitivitySection {
+  margin-top: var(--space-2xl);
+  margin-bottom: var(--space-xl);
+}
+
+.sensitivityTitle {
+  font-size: var(--text-lg);
+  font-weight: var(--font-semibold);
+  color: var(--text-primary);
+  margin-bottom: var(--space-md);
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+/* Color-coded cells for sensitivity analysis */
+.cellPositive {
+  background: var(--success-light) !important;
+  color: var(--success-text) !important;
+  border-color: var(--success-border) !important;
+}
+
+.cellNegative {
+  background: var(--danger-light) !important;
+  color: var(--danger-text) !important;
+  border-color: var(--danger-border) !important;
+}
+
+.cellNeutral {
+  background: var(--warning-light) !important;
+  color: var(--warning-text) !important;
+  border-color: var(--warning-border) !important;
+}
+
+.cellHighlight {
+  font-weight: var(--font-bold) !important;
+  box-shadow: 0 0 0 2px var(--brand-accent) !important;
+  position: relative;
+}
+
+/* ==================== VALUE FORMATTING ==================== */
+
+.positiveValue {
+  color: var(--success-primary);
+}
+
+.negativeValue {
+  color: var(--danger-primary);
+}
+
+.neutralValue {
+  color: var(--text-secondary);
+}
+
+/* ==================== DARK THEME ENHANCEMENTS ==================== */
+
+[data-theme="dark"] .tableHeader {
+  border-bottom-color: var(--brand-accent);
+}
+
+[data-theme="dark"] .headerCell {
+  background: var(--surface-secondary);
+  color: var(--text-primary);
+  border-color: var(--border-secondary);
+  border-bottom-color: var(--brand-accent);
+}
+
+[data-theme="dark"] .headerCell:first-child {
+  background: var(--surface-secondary);
+  border-right-color: var(--brand-accent);
+}
+
+[data-theme="dark"] .container {
+  background: var(--surface-secondary);
+  border-color: var(--border-secondary);
+}
+
+[data-theme="dark"] .tableWrapper {
+  background: var(--surface-primary);
+  border-color: var(--border-secondary);
+}
+
+[data-theme="dark"] .bodyRow:hover {
+  background: var(--surface-tertiary);
+}
+
+[data-theme="dark"] .rowLabel {
+  background: var(--surface-secondary);
+  color: var(--text-primary) !important;
+}
+
+[data-theme="dark"] .bodyRow:hover .rowLabel {
+  background: var(--surface-elevated);
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: var(--space-md);
+    margin-bottom: var(--space-md);
+    border-radius: var(--radius-lg);
+  }
+
+  .header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--space-lg);
+    text-align: center;
+  }
+
+  .headerLeft {
+    justify-content: center;
+    align-items: center;
+  }
+
+  .fairValueHighlight {
+    align-items: center;
+    text-align: center;
+  }
+
+  .title {
+    font-size: var(--text-lg);
+    text-align: center;
+  }
+
+  .subtitle {
+    text-align: center;
+  }
+
+  .fairValueAmount {
+    font-size: var(--text-xl);
+  }
+
+  .table {
+    min-width: 480px; /* Smaller minimum for mobile */
+  }
+
+  .headerCell,
+  .bodyCell {
+    padding: var(--space-sm) var(--space-md);
+    font-size: var(--text-xs);
+  }
+
+  .sectionTitle,
+  .sensitivityTitle {
+    font-size: var(--text-base);
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: var(--space-sm);
+    margin: 0 var(--space-xs) var(--space-md) var(--space-xs);
+    border-radius: var(--radius-md);
+  }
+
+  .iconWrapper {
+    padding: var(--space-sm);
+    min-width: 40px;
+    min-height: 40px;
+  }
+
+  .icon {
+    width: 20px;
+    height: 20px;
+  }
+
+  .header {
+    margin-bottom: var(--space-lg);
+    padding-bottom: var(--space-md);
+  }
+
+  .table {
+    min-width: 400px; /* Even smaller for very small screens */
+  }
+
+  .headerCell,
+  .bodyCell {
+    padding: var(--space-xs) var(--space-sm);
+  }
+}
+/* Color-coded cells for sensitivity analysis */
+/* Green - Fair value above current price (potentially undervalued) */
+.cellAbovePrice {
+  background: rgba(34, 197, 94, 0.1) !important; /* green-500/10 */
+  color: rgba(22, 163, 74, 1) !important; /* green-600 */
+  border-color: rgba(34, 197, 94, 0.3) !important; /* green-500/30 */
+  transition: all var(--transition-fast) ease;
+}
+
+.cellAbovePrice:hover {
+  transform: scale(1.02);
+  z-index: 3;
+  box-shadow: var(--shadow-md);
+}
+
+/* Red - Fair value below current price (potentially overvalued) */
+.cellBelowPrice {
+  background: rgba(239, 68, 68, 0.1) !important; /* red-500/10 */
+  color: rgba(185, 28, 28, 1) !important; /* red-700 */
+  border-color: rgba(239, 68, 68, 0.3) !important; /* red-500/30 */
+  transition: all var(--transition-fast) ease;
+}
+
+.cellBelowPrice:hover {
+  transform: scale(1.02);
+  z-index: 3;
+  box-shadow: var(--shadow-md);
+}
+
+/* Yellow - Fair value close to current price (fairly valued) */
+.cellNearPrice {
+  background: rgba(251, 191, 36, 0.1) !important; /* yellow-400/10 */
+  color: rgba(161, 98, 7, 1) !important; /* yellow-700 */
+  border-color: rgba(251, 191, 36, 0.3) !important; /* yellow-400/30 */
+  transition: all var(--transition-fast) ease;
+}
+
+.cellNearPrice:hover {
+  transform: scale(1.02);
+  z-index: 3;
+  box-shadow: var(--shadow-md);
+}
+
+/* Blue ring - User's current input combination */
+.cellUserInputs {
+  font-weight: var(--font-bold) !important;
+  box-shadow: 0 0 0 2px var(--brand-primary) !important;
+  border-color: var(--brand-primary) !important;
+  position: relative;
+  transition: all var(--transition-fast) ease;
+}
+
+.cellUserInputs::before {
+  content: "📍";
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  font-size: 10px;
+}
+
+.cellUserInputs:hover {
+  transform: scale(1.02);
+  z-index: 3;
+  box-shadow: var(--shadow-md);
+}
+
+/* ==================== DARK MODE OVERRIDES ==================== */
+
+[data-theme="dark"] .cellAbovePrice {
+  background: rgba(34, 197, 94, 0.15) !important;
+  color: rgba(74, 222, 128, 1) !important; /* green-400 */
+}
+
+[data-theme="dark"] .cellBelowPrice {
+  background: rgba(239, 68, 68, 0.15) !important;
+  color: rgba(248, 113, 113, 1) !important; /* red-400 */
+}
+
+[data-theme="dark"] .cellNearPrice {
+  background: rgba(251, 191, 36, 0.15) !important;
+  color: rgba(253, 224, 71, 1) !important; /* yellow-300 */
+}

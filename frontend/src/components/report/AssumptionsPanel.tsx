@@ -2,31 +2,30 @@
 
 import { useEffect, useState } from 'react';
 import { useGlobalStore } from '@/store/globalStore';
+import styles from '@/styles/AssumptionsPanel.module.css';
 
 export default function AssumptionsPanel() {
   const metrics = useGlobalStore((s) => Array.isArray(s.metrics) ? s.metrics[0] : s.metrics);
   const assumptions = useGlobalStore((s) => s.assumptions);
   const defaultAssumptions = useGlobalStore((s) => s.defaultAssumptions);
+
   const setAssumptions = useGlobalStore((s) => s.setAssumptions);
   const triggerCalculation = useGlobalStore((s) => s.triggerCalculation);
   const resetAssumptions = useGlobalStore((s) => s.resetAssumptions);
   const setDefaultAssumptions = useGlobalStore((s) => s.setDefaultAssumptions);
 
+  // Listen so we can disable the button while a run is in-flight
+  const calculationTriggered = useGlobalStore((s) => s.calculationTriggered);
+
   const [visible, setVisible] = useState(true);
 
   useEffect(() => {
     if (defaultAssumptions && Object.keys(defaultAssumptions).length > 0) {
-      console.log("📊 assumption panel :", defaultAssumptions);
+      
     }
-  }, [metrics]);
-  // ✅ Auto-calculate when assumptions change
-  useEffect(() => {
-    if (assumptions && Object.keys(assumptions).length > 0) {
-      triggerCalculation(assumptions);
-    }
-  }, [assumptions]);
+  }, [defaultAssumptions]);
 
-  const handleChange = (e) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     const parsed = parseFloat(value.replace(/,/g, ''));
     const percentFields = [
@@ -39,53 +38,61 @@ export default function AssumptionsPanel() {
       ? Math.min(Math.max(parsed, 0), 100)
       : parsed;
 
-    setAssumptions((prev) => ({
+    setAssumptions((prev: any) => ({
       ...prev,
       [name]: isNaN(safeValue) ? 0 : safeValue,
     }));
   };
 
+  // Manual calculate to ensure DCF + EPS (and sensitivities) run with the latest assumptions
+  const handleCalculate = () => {
+    if (!assumptions || Object.keys(assumptions).length === 0) return;
+    triggerCalculation(assumptions); // DCF/EPS sections will read this and re-run using current store values
+  };
+
   if (!metrics || !assumptions) {
     return (
-      <section className="mt-8 px-4 max-w-6xl mx-auto">
-        <div className="text-sm text-gray-500 italic">Waiting for data...</div>
+      <section className={styles.panel}>
+        <div className="text-sm text-tertiary italic">Waiting for data...</div>
       </section>
     );
   }
 
-  useEffect(() => {
-    if (assumptions && Object.keys(assumptions).length > 0) {
-      triggerCalculation();
-    }
-  }, [assumptions]);
-
   return (
-    <section className="mt-8 px-4 max-w-6xl mx-auto">
-      {/* Header with toggle + reset */}
-      <div className="flex justify-between items-center mb-3">
-        <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-100">
-          📊 Valuation Assumptions
+    <section className={styles.panel}>
+      {/* Header with toggle + actions */}
+      <div className={styles.header}>
+        <h2 className={styles.headerTitle}>
+          <span className={styles.headerIcon}>📊</span>
+          Valuation Assumptions
         </h2>
-        <div className="flex gap-2">
+        <div className={styles.buttonGroup}>
+          {/* Calculate Button */}
+          <button
+            onClick={handleCalculate}
+            disabled={calculationTriggered}
+            className={`${styles.button} ${styles.buttonPrimary}`}
+            title="Run DCF & EPS with current assumptions"
+          >
+            {calculationTriggered ? 'Calculating…' : 'Calculate'}
+          </button>
+
+          {/* Reset Button */}
           <button
             onClick={resetAssumptions}
-            className="text-xs bg-gray-100 dark:bg-zinc-700 border border-gray-300 dark:border-zinc-600 rounded px-2 py-1 hover:bg-gray-200 dark:hover:bg-zinc-600"
+            className={`${styles.button} ${styles.buttonSecondary}`}
+            title="Reset to your saved defaults"
           >
             Reset to Default
           </button>
-          <button
-            onClick={() => setVisible((v) => !v)}
-            className="text-xs text-blue-600 border border-blue-300 dark:border-blue-700 rounded px-2 py-1 hover:bg-blue-100 dark:hover:bg-blue-800"
-          >
-            {visible ? 'Hide' : 'Show'}
-          </button>
+          
         </div>
       </div>
 
       {/* Assumptions Grid */}
       {visible && (
-        <div className="rounded-md border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 p-4 shadow-sm">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 text-sm text-gray-600 dark:text-gray-300">
+        <div className={styles.contentContainer}>
+          <div className={styles.inputGrid}>
             {fields.map((field) => (
               <Input
                 key={field.name}
@@ -125,8 +132,8 @@ function Input({ label, name, value, defaultValue, onChange }) {
     value.toFixed(2) !== defaultValue.toFixed(2);
 
   return (
-    <div>
-      <label htmlFor={name} className="block text-gray-600 dark:text-gray-400 mb-1">
+    <div className={styles.inputGroup}>
+      <label htmlFor={name} className={styles.inputLabel}>
         {label}
       </label>
       <input
@@ -136,11 +143,7 @@ function Input({ label, name, value, defaultValue, onChange }) {
         inputMode="decimal"
         value={value ?? ''}
         onChange={onChange}
-        className={`w-full rounded border px-2 py-1 text-black ${
-          isChanged
-            ? 'border-yellow-400 bg-yellow-50 dark:border-yellow-500 dark:bg-yellow-900'
-            : 'border-gray-300'
-        }`}
+        className={`${styles.input} ${isChanged ? styles.inputChanged : ''}`}
       />
     </div>
   );

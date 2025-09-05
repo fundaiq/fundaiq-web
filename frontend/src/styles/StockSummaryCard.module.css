@@ -1,0 +1,304 @@
+/* =============================================================================
+   STOCK SUMMARY CARD MODULE
+   =============================================================================
+   
+   File: components/report/StockSummaryCard.module.css
+   Mobile-first, beautiful stock summary card with proper spacing
+============================================================================= */
+
+.cardContainer {
+  background-color: var(--surface-elevated);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-xl);
+  padding: var(--space-lg);
+  box-shadow: var(--shadow-sm);
+  transition: all var(--transition-normal) var(--easing-default);
+  width: 100%;
+  max-width: 100%;
+}
+
+.cardContainer:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-1px);
+  border-color: var(--border-secondary);
+}
+
+/* Header Section */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-md);
+  margin-bottom: var(--space-lg);
+  padding-bottom: var(--space-md);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.companyInfo {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  flex: 1;
+  min-width: 0;
+}
+
+.companyName {
+  font-size: var(--text-lg);
+  font-weight: var(--font-bold);
+  color: var(--text-primary);
+  margin: 0;
+  line-height: var(--leading-tight);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.stockIcon {
+  width: 20px;
+  height: 20px;
+  background: var(--gradient-brand);
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-inverse);
+  font-weight: var(--font-bold);
+  font-size: var(--text-xs);
+  flex-shrink: 0;
+}
+
+.priceInfo {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-xs);
+  flex-shrink: 0;
+}
+
+.currentPrice {
+  font-size: var(--text-xl);
+  font-weight: var(--font-extrabold);
+  color: var(--brand-primary);
+  margin: 0;
+  line-height: var(--leading-tight);
+}
+
+.currency {
+  font-size: var(--text-base);
+  color: var(--text-secondary);
+  font-weight: var(--font-medium);
+}
+
+/* Metrics Grid */
+.metricsGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-md);
+}
+
+/* Mobile: 1 column */
+@media (min-width: 480px) {
+  .metricsGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Tablet: 3 columns */
+@media (min-width: 768px) {
+  .metricsGrid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* Desktop: 4 columns */
+@media (min-width: 1024px) {
+  .metricsGrid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+/* Metric Item */
+.metricItem {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  padding: var(--space-md);
+  background-color: var(--surface-secondary);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  transition: all var(--transition-fast) var(--easing-default);
+  min-height: 80px;
+  justify-content: space-between;
+}
+
+.metricItem:hover {
+  background-color: var(--surface-tertiary);
+  border-color: var(--border-primary);
+  transform: translateY(-1px);
+}
+
+.metricLabel {
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+  font-weight: var(--font-medium);
+  margin: 0;
+  line-height: var(--leading-tight);
+}
+
+.metricValue {
+  font-size: var(--text-lg);
+  font-weight: var(--font-bold);
+  color: var(--text-primary);
+  margin: 0;
+  line-height: var(--leading-tight);
+}
+
+.metricValueWithBadge {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-xs);
+  flex-wrap: wrap;
+}
+
+/* Badge Styles - Using Design System Colors */
+.badge {
+  padding: var(--space-xs) var(--space-sm);
+  border-radius: var(--radius-full);
+  font-size: var(--text-xs);
+  font-weight: var(--font-semibold);
+  text-align: center;
+  white-space: nowrap;
+  flex-shrink: 0;
+  min-width: 45px;
+  transition: all var(--transition-fast) var(--easing-default);
+}
+
+.badge:hover {
+  transform: scale(1.05);
+}
+
+/* Green Badge - Excellent Performance */
+.badgeGreen {
+  composes: badge;
+  background-color: var(--success-light);
+  color: var(--success-text);
+  border: 1px solid var(--success-border);
+}
+
+[data-theme="dark"] .badgeGreen {
+  background-color: var(--success-primary);
+  color: var(--text-inverse);
+  border-color: var(--success-secondary);
+  opacity: 0.9;
+}
+
+/* Yellow Badge - Moderate Performance */
+.badgeYellow {
+  composes: badge;
+  background-color: var(--warning-light);
+  color: var(--warning-text);
+  border: 1px solid var(--warning-border);
+}
+
+[data-theme="dark"] .badgeYellow {
+  background-color: var(--warning-primary);
+  color: var(--text-inverse);
+  border-color: var(--warning-secondary);
+  opacity: 0.9;
+}
+
+/* Red Badge - Poor Performance */
+.badgeRed {
+  composes: badge;
+  background-color: var(--danger-light);
+  color: var(--danger-text);
+  border: 1px solid var(--danger-border);
+}
+
+[data-theme="dark"] .badgeRed {
+  background-color: var(--danger-primary);
+  color: var(--text-inverse);
+  border-color: var(--danger-secondary);
+  opacity: 0.9;
+}
+
+/* Gray Badge - No Data */
+.badgeGray {
+  composes: badge;
+  background-color: var(--surface-tertiary);
+  color: var(--text-tertiary);
+  border: 1px solid var(--border-primary);
+}
+
+[data-theme="dark"] .badgeGray {
+  background-color: var(--surface-hover);
+  color: var(--text-quaternary);
+  border-color: var(--border-secondary);
+}
+
+/* Responsive adjustments */
+@media (max-width: 479px) {
+  .cardContainer {
+    padding: var(--space-md);
+  }
+  
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-sm);
+    margin-bottom: var(--space-md);
+  }
+  
+  .companyInfo {
+    width: 100%;
+  }
+  
+  .companyName {
+    font-size: var(--text-base);
+  }
+  
+  .currentPrice {
+    font-size: var(--text-lg);
+  }
+  
+  .priceInfo {
+    align-self: flex-end;
+  }
+  
+  .metricItem {
+    min-height: 70px;
+    padding: var(--space-sm);
+  }
+  
+  .metricValueWithBadge {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-xs);
+  }
+  
+  .badge {
+    align-self: flex-end;
+  }
+}
+
+/* Loading state */
+.loading {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.loading .metricValue {
+  background: var(--surface-hover);
+  border-radius: var(--radius-sm);
+  color: transparent;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 0.8;
+  }
+}

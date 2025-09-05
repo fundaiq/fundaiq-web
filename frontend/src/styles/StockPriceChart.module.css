@@ -1,0 +1,608 @@
+/* =============================================================================
+   ENHANCED STOCK PRICE CHART STYLES (DEDUPED)
+   =============================================================================
+   Mobile-first design with dark mode support and Recharts-friendly selectors
+============================================================================= */
+
+/* ==================== CHART COLORS - DESIGN SYSTEM ==================== */
+
+:root {
+  /* Chart line colors */
+  --chart-stock-color: var(--brand-primary);
+  --chart-ma10-color: var(--warning-primary);
+  --chart-ma20-color: var(--success-primary);
+  --chart-ma50-color: #8b5cf6;
+  --chart-ma100-color: #f97316;
+  --chart-ma200-color: var(--danger-primary);
+  --chart-benchmark1-color: var(--accent-primary);
+  --chart-benchmark2-color: var(--warning-primary);
+  --chart-benchmark3-color: var(--danger-primary);
+  --gradient-brand: linear-gradient(90deg, var(--brand-primary) 0%, var(--brand-secondary, #4f46e5) 100%);
+}
+
+/* ==================== MAIN CONTAINER ==================== */
+
+.chartContainer {
+  background: var(--surface-primary);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: var(--space-lg);
+  margin: var(--space-md) 0;
+  box-shadow: var(--shadow-sm);
+  transition: all var(--transition-normal) var(--easing-default);
+  min-height: 320px;
+}
+
+.chartContainer:hover { box-shadow: var(--shadow-md); }
+
+/* ==================== CONTROLS ==================== */
+
+.controlsContainer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-md);
+  align-items: center;
+  margin-bottom: var(--space-md);
+  padding: var(--space-md);
+  background: var(--surface-secondary);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-subtle);
+}
+
+.controlGroup {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.controlLabel {
+  color: var(--text-secondary);
+  font-weight: var(--font-medium);
+  font-size: var(--text-sm);
+}
+
+/* Mode Toggle (two-button group) */
+.modeToggle {
+  display: flex;
+  background: var(--surface-primary);
+  border-radius: var(--radius-md);
+  padding: 2px;
+  border: 1px solid var(--border-primary);
+  box-shadow: var(--shadow-sm);
+  width: 100%;
+}
+
+@media (min-width: 640px) { .modeToggle { width: auto; } }
+
+.modeButton,
+.rangeButton,
+.maButton,
+.benchmarkButton {
+  border: 1px solid var(--border-default);
+  background: var(--surface-primary);
+  color: var(--text-primary);
+  padding: var(--space-sm) var(--space-md);
+  border-radius: var(--radius-lg);
+  cursor: pointer;
+  transition: background var(--transition-fast) var(--easing-default);
+  font-weight: var(--font-semibold);
+  font-size: var(--text-sm);
+}
+
+.modeButton:hover,
+.rangeButton:hover,
+.maButton:hover,
+.benchmarkButton:hover {
+  background: var(--surface-hover);
+}
+
+.active {
+  border-color: var(--brand-primary);
+  color: var(--brand-primary);
+}
+
+/* Range group */
+.rangeButtons {
+  display: flex;
+  gap: var(--space-xs);
+  flex-wrap: wrap;
+  width: 100%;
+}
+@media (min-width: 640px) { .rangeButtons { width: auto; flex-wrap: nowrap; } }
+
+/* Moving average group */
+.movingAverageControls {
+  display: flex;
+  gap: var(--space-sm);
+  flex-wrap: wrap;
+  width: 100%;
+}
+.maButtons { display: flex; gap: var(--space-xs); flex-wrap: wrap; }
+
+/* Benchmarks group */
+.benchmarkControls {
+  display: flex;
+  gap: var(--space-sm);
+  flex-wrap: wrap;
+  width: 100%;
+}
+.benchmarkButtons { display: flex; gap: var(--space-xs); flex-wrap: wrap; }
+
+/* ==================== CHART CONTAINERS ==================== */
+
+.priceChartContainer,
+.returnChartContainer {
+  width: 100%;
+  height: 300px;            /* mobile */
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background: var(--surface-primary);
+  position: relative;
+  margin-bottom: var(--space-xl);
+}
+
+@media (min-width: 640px) {
+  .priceChartContainer,
+  .returnChartContainer { height: 400px; }  /* tablet */
+}
+
+@media (min-width: 1024px) {
+  .priceChartContainer,
+  .returnChartContainer { height: 450px; }  /* desktop */
+}
+
+/* Recharts root */
+.recharts { width: 100%; height: 100%; }
+
+/* ==================== SERIES COLOR CLASSES ==================== */
+
+.stockLine  { stroke: var(--chart-stock-color) !important; }
+.ma10Line   { stroke: var(--chart-ma10-color) !important; }
+.ma20Line   { stroke: var(--chart-ma20-color) !important; }
+.ma50Line   { stroke: var(--chart-ma50-color) !important; }
+.ma100Line  { stroke: var(--chart-ma100-color) !important; }
+.ma200Line  { stroke: var(--chart-ma200-color) !important; }
+.benchmark1Line { stroke: var(--chart-benchmark1-color) !important; }
+.benchmark2Line { stroke: var(--chart-benchmark2-color) !important; }
+.benchmark3Line { stroke: var(--chart-benchmark3-color) !important; }
+
+/* ==================== RECHARTS INNER ELEMENTS (CSS MODULE SAFE) ==================== */
+
+/* Grid lines (use CSS variables from your design tokens) */
+.priceChartContainer :global(.recharts-cartesian-grid-horizontal line),
+.returnChartContainer :global(.recharts-cartesian-grid-horizontal line){
+  stroke: var(--chart-grid-color, #e5e7eb);
+  stroke-width: 0.5;
+  stroke-dasharray: 2 2;
+  opacity: 0.8;
+}
+
+/* Axis lines */
+.priceChartContainer :global(.recharts-xAxis .recharts-cartesian-axis-line),
+.returnChartContainer :global(.recharts-xAxis .recharts-cartesian-axis-line),
+.priceChartContainer :global(.recharts-yAxis .recharts-cartesian-axis-line),
+.returnChartContainer :global(.recharts-yAxis .recharts-cartesian-axis-line) {
+  stroke: var(--chart-grid-color-subtle) !important;
+}
+
+/* Axis tick labels */
+.priceChartContainer :global(.recharts-cartesian-axis-tick-value),
+.returnChartContainer :global(.recharts-cartesian-axis-tick-value) {
+  fill: var(--text-tertiary) !important;
+  font-weight: 800 !important;
+  font-size: 14px !important;           /* mobile */
+}
+@media (min-width: 768px) {
+  .priceChartContainer :global(.recharts-cartesian-axis-tick-value),
+  .returnChartContainer :global(.recharts-cartesian-axis-tick-value) {
+    font-size: 14px !important;
+  }
+}
+
+/* Y-axis: right aligned labels in our layout */
+.priceChartContainer :global(.recharts-yAxis),
+.returnChartContainer :global(.recharts-yAxis) {
+  text-anchor: start !important;
+}
+
+/* X-axis: rotate/anchor end handled in component; ensure end anchor for clarity */
+.priceChartContainer :global(.recharts-xAxis .recharts-cartesian-axis-tick text),
+.returnChartContainer :global(.recharts-xAxis .recharts-cartesian-axis-tick text) {
+  text-anchor: end !important;
+}
+
+/* Legend */
+.priceChartContainer :global(.recharts-legend-wrapper),
+.returnChartContainer :global(.recharts-legend-wrapper) {
+  font-size: 10px !important;
+}
+@media (min-width: 768px) {
+  .priceChartContainer :global(.recharts-legend-wrapper),
+  .returnChartContainer :global(.recharts-legend-wrapper) {
+    font-size: 12px !important;
+  }
+}
+
+/* Tooltip cursor */
+.priceChartContainer :global(.recharts-tooltip-cursor),
+.returnChartContainer :global(.recharts-tooltip-cursor) {
+  stroke: var(--text-tertiary) !important;
+  stroke-width: 1 !important;
+  stroke-dasharray: 3 3 !important;
+  opacity: 0.7 !important;
+}
+
+/* ==================== CUSTOM TOOLTIP ==================== */
+
+.customTooltip {
+  background: var(--surface-card);
+  border: 1px solid var(--border-default);
+  box-shadow: var(--shadow-sm);
+  border-radius: var(--radius-lg);
+  padding: var(--space-sm);
+  color: var(--text-primary);
+  font-size: var(--text-xs);
+  max-width: 160px;
+  z-index: 1000;
+}
+@media (min-width: 768px) {
+  .customTooltip {
+    padding: var(--space-md);
+    font-size: var(--text-sm);
+    max-width: 200px;
+  }
+}
+.tooltipLabel { font-weight: var(--font-semibold); margin-bottom: var(--space-xs); }
+.tooltipItem  { margin: 0; font-weight: var(--font-medium); }
+
+/* ==================== PERFORMANCE METRICS ==================== */
+
+.performanceContainer {
+  background: var(--surface-card);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-lg);
+  padding: var(--space-md);
+  margin-top: var(--space-lg);
+  margin-bottom: var(--space-lg);
+  box-shadow: var(--shadow-sm);
+}
+@media (min-width: 768px) { .performanceContainer { padding: var(--space-lg); } }
+
+.performanceTitle {
+  font-size: var(--text-base);
+  font-weight: var(--font-semibold);
+  color: var(--text-primary);
+  margin-bottom: var(--space-md);
+  border-bottom: 2px solid var(--border-default);
+  padding-bottom: var(--space-sm);
+}
+@media (min-width: 768px) { .performanceTitle { font-size: var(--text-lg); } }
+
+.performanceSection { margin-bottom: var(--space-md); }
+.performanceSection:last-child { margin-bottom: 0; }
+
+.performanceSubtitle {
+  font-size: var(--text-sm);
+  font-weight: var(--font-medium);
+  color: var(--text-primary);
+  margin-bottom: var(--space-sm);
+}
+@media (min-width: 768px) { .performanceSubtitle { font-size: var(--text-base); } }
+
+.performanceGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-xs);
+  margin-bottom: var(--space-md);
+}
+@media (min-width: 640px) { .performanceGrid { grid-template-columns: repeat(3, 1fr); gap: var(--space-sm); } }
+@media (min-width: 1024px) { .performanceGrid { grid-template-columns: repeat(5, 1fr); } }
+
+.performanceItem {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  padding: var(--space-sm);
+  background: var(--surface-secondary);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-subtle);
+  min-width: 0;
+}
+.performanceLabel {
+  font-size: 10px;
+  font-weight: var(--font-medium);
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+  line-height: 1.2;
+}
+@media (min-width: 768px) { .performanceLabel { font-size: var(--text-xs); } }
+
+.performanceValue {
+  font-size: var(--text-xs);
+  font-weight: var(--font-semibold);
+  color: var(--text-primary);
+  word-break: break-word;
+}
+@media (min-width: 768px) { .performanceValue { font-size: var(--text-sm); } }
+
+.performanceValue.positive { color: var(--success-primary); }
+.performanceValue.negative { color: var(--danger-primary); }
+
+/* Benchmark Performance block */
+.benchmarkPerformance {
+  background: var(--surface-primary);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: var(--space-sm);
+  margin-bottom: var(--space-sm);
+}
+@media (min-width: 768px) { .benchmarkPerformance { padding: var(--space-md); } }
+
+.benchmarkName {
+  font-size: var(--text-xs);
+  font-weight: var(--font-semibold);
+  color: var(--text-primary);
+  margin-bottom: var(--space-sm);
+  padding-bottom: var(--space-xs);
+  border-bottom: 1px solid var(--border-subtle);
+}
+@media (min-width: 768px) { .benchmarkName { font-size: var(--text-sm); } }
+
+/* ==================== STATES & FEEDBACK ==================== */
+
+.loadingSpinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid var(--border-secondary);
+  border-top-color: var(--brand-primary);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+.errorContainer {
+  border: 1px solid var(--danger-border);
+  background: var(--danger-bg);
+  color: var(--danger-text);
+  padding: var(--space-md);
+  border-radius: var(--radius-lg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+.errorTitle { font-weight: var(--font-semibold); margin-bottom: var(--space-xs); }
+.errorMessage { font-size: 0.95rem; }
+
+.emptyState {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 200px;
+  color: var(--text-tertiary);
+  font-size: var(--text-base);
+  background: var(--surface-tertiary);
+  border-radius: var(--radius-md);
+}
+
+/* ==================== ANIMATIONS ==================== */
+
+.fadeIn { animation: fadeIn 240ms var(--easing-default); }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ==================== DARK THEME TWEAKS ==================== */
+
+[data-theme="dark"] .performanceContainer { background: var(--surface-secondary); border-color: var(--border-secondary); }
+[data-theme="dark"] .performanceItem { background: var(--surface-tertiary); border-color: var(--border-secondary); }
+[data-theme="dark"] .benchmarkPerformance { background: var(--surface-secondary); border-color: var(--border-secondary); }
+[data-theme="dark"] .customTooltip { background: var(--surface-tertiary); border-color: var(--border-secondary); }
+
+/* ==================== SMALL-SCREEN PADDING ADJUST ==================== */
+
+@media (max-width: 640px) {
+  .chartContainer { padding: var(--space-md); margin: var(--space-sm) 0; }
+  .controlsContainer { padding: var(--space-sm); }
+  .performanceContainer { padding: var(--space-md); }
+}
+
+/* ===== Buttons (restored design) ===================================== */
+
+/* Group wrapper (keeps nice spacing on mobile & desktop) */
+.rangeButtons,
+.maButtons,
+.benchmarkButtons {
+  display: flex;
+  gap: var(--space-xs);
+  flex-wrap: wrap;
+}
+
+/* Two-state toggle container (Price / Return) */
+.modeToggle {
+  display: flex;
+  background: var(--surface-primary);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-xl);
+  padding: 2px;
+  box-shadow: var(--shadow-sm);
+  width: 100%;
+}
+@media (min-width: 640px) { .modeToggle { width: auto; } }
+
+/* Base button look shared across all control buttons */
+.modeButton,
+.rangeButton,
+.maButton,
+.benchmarkButton {
+  position: relative;
+  border: 1px solid var(--border-default);
+  background: var(--surface-primary);
+  color: var(--text-primary);
+  padding: var(--space-sm) var(--space-md);
+  border-radius: var(--radius-lg);
+  cursor: pointer;
+  user-select: none;
+  font-weight: var(--font-semibold);
+  font-size: var(--text-sm);
+  line-height: 1;
+  transition: 
+    transform var(--transition-fast) var(--easing-default),
+    background var(--transition-fast) var(--easing-default),
+    color var(--transition-fast) var(--easing-default),
+    border-color var(--transition-fast) var(--easing-default),
+    box-shadow var(--transition-fast) var(--easing-default);
+}
+
+/* Touch-friendly minimum widths for small chips */
+.rangeButton { min-width: 44px; }
+.maButton    { min-width: 36px; }
+.benchmarkButton { white-space: nowrap; }
+
+/* Hover state */
+.modeButton:hover,
+.rangeButton:hover,
+.maButton:hover,
+.benchmarkButton:hover {
+  background: var(--surface-hover);
+  transform: translateY(-1px);
+}
+
+/* Active/selected state */
+.active,
+.modeButton.active,
+.rangeButton.active,
+.maButton.active,
+.benchmarkButton.active {
+  /* Use your brand gradient if available, else fall back to brand color */
+  background: var(--gradient-brand, var(--brand-primary));
+  color: #fff;
+  border-color: var(--brand-primary);
+  box-shadow: var(--shadow-brand-sm);
+  transform: translateY(-1px);
+}
+
+/* Subtle focus ring for keyboard users */
+.modeButton:focus-visible,
+.rangeButton:focus-visible,
+.maButton:focus-visible,
+.benchmarkButton:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px color-mix(in oklab, var(--brand-primary) 30%, transparent);
+}
+
+/* Dark theme adjustments */
+[data-theme="dark"] .modeToggle {
+  background: var(--surface-secondary);
+  border-color: var(--border-secondary);
+}
+[data-theme="dark"] .modeButton,
+[data-theme="dark"] .rangeButton,
+[data-theme="dark"] .maButton,
+[data-theme="dark"] .benchmarkButton {
+  background: var(--surface-secondary);
+  border-color: var(--border-secondary);
+  color: var(--text-secondary);
+}
+[data-theme="dark"] .modeButton:hover,
+[data-theme="dark"] .rangeButton:hover,
+[data-theme="dark"] .maButton:hover,
+[data-theme="dark"] .benchmarkButton:hover {
+  background: var(--surface-tertiary);
+  color: var(--text-primary);
+}
+
+/* Optional color accents per control type (nice subtle hint) */
+.rangeButton.active      { box-shadow: 0 2px 10px color-mix(in oklab, var(--brand-primary) 25%, transparent); }
+.maButton.active         { box-shadow: 0 2px 10px color-mix(in oklab, var(--accent-primary) 25%, transparent); }
+.benchmarkButton.active  { box-shadow: 0 2px 10px color-mix(in oklab, var(--success-primary) 25%, transparent); }
+
+/* Make every active chart control use the brand gradient */
+.modeButton.active,
+.rangeButton.active,
+.maButton.active,
+.benchmarkButton.active {
+  background: var(--gradient-brand) !important;
+  color: #fff !important;
+  border-color: var(--brand-primary) !important;
+  box-shadow: var(--shadow-brand-sm);
+  transform: translateY(-1px);
+}
+
+.benchmarkButton.active {
+  background: var(--gradient-brand) !important;
+  color: #fff !important;
+  border-color: var(--brand-primary) !important;
+  box-shadow: var(--shadow-brand-sm);
+  transform: translateY(-1px);
+}
+
+/* ==================== PRICE INFO DISPLAY ==================== */
+
+.priceInfoContainer {
+  display: flex;
+  align-items: center;
+  gap: var(--space-lg);
+  padding: var(--space-md);
+  margin: var(--space-sm) 0;
+  background: var(--surface-secondary);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  flex-wrap: wrap;
+}
+
+.currentPriceBox {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.currentPriceLabel {
+  font-size: var(--text-xs);
+  color: var(--text-secondary);
+  font-weight: var(--font-medium);
+  margin-bottom: 2px;
+}
+
+.currentPriceValue {
+  font-size: var(--text-lg);
+  font-weight: var(--font-bold);
+  color: var(--text-primary);
+}
+
+.maValuesBox {
+  display: flex;
+  gap: var(--space-md);
+  flex-wrap: wrap;
+}
+
+.maValue {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.maLabel {
+  font-size: var(--text-xs);
+  color: var(--text-tertiary);
+  font-weight: var(--font-medium);
+  margin-bottom: 1px;
+}
+
+.maPrice {
+  font-size: var(--text-sm);
+  font-weight: var(--font-semibold);
+  color: var(--text-secondary);
+}
+
+/* Mobile adjustments */
+@media (max-width: 640px) {
+  .priceInfoContainer {
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--space-md);
+  }
+  
+  .maValuesBox {
+    justify-content: space-between;
+  }
+}

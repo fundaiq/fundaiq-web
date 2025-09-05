@@ -6,6 +6,13 @@ const nextConfig = {
   typescript: {
     ignoreBuildErrors: true,  // ✅ skip type checking too (optional)
   },
+  
+  
+  // Sass support (optional)
+  sassOptions: {
+    includePaths: ['./src/styles'],
+  },
 };
 
 module.exports = nextConfig;
+

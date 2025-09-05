@@ -8,14 +8,14 @@ import { ProfitabilitySection } from '@/components/health/sections/Profitability
 import { LeverageSection } from '@/components/health/sections/LeverageSection';
 import { BalanceSheetSection } from '@/components/health/sections/BalanceSheetSection';
 import { SummaryBox } from '@/components/health/SummaryBox';
-import CollapsibleCard from '@/components/ui/CollapsibleCard';
+import { Activity } from 'lucide-react';
+import styles from '@/styles/FinancialHealthSection.module.css';
 
 export default function FinancialHealthSection() {
   const metrics = useGlobalStore((state) => state.metrics);
   const [hydrated, setHydrated] = useState(false);
   
-  console.log("📌 metrics:", metrics || {});
-
+  
   useEffect(() => {
     setHydrated(true);
   }, []);
@@ -24,19 +24,51 @@ export default function FinancialHealthSection() {
   const years = rawYears.map((y: string) => y.replace("Mar-", ""));
 
   if (!hydrated || !metrics || Object.keys(metrics).length === 0) {
-    return <div className="text-center text-gray-500 p-8">📂 No financial data available.</div>;
+    return (
+      <div className={styles.emptyState}>
+        <div className={styles.emptyStateIcon}>📂</div>
+        <p className={styles.emptyStateText}>No financial data available.</p>
+      </div>
+    );
   }
 
   return (
-    <section className="mb-2" id="financial-health">
-      
-        <GrowthSection metrics={metrics} years={years} />
-        <GrowthRateSection metrics={metrics} years={years} />
-        <ProfitabilitySection metrics={metrics} years={years} />
-        <BalanceSheetSection metrics={metrics} years={years} />
-        <LeverageSection metrics={metrics} years={years} />
-        <SummaryBox metrics={metrics} />
-      
+    <section className={styles.container} id="financial-health">
+      {/* Section Header */}
+      <div className={styles.sectionHeader}>
+        <div className={styles.sectionIcon}>
+          <Activity size={16} />
+        </div>
+        <h1 className={styles.sectionTitle}>Financial Health Analysis</h1>
+      </div>
+
+      {/* Subsections Container */}
+      <div className={styles.subsectionsContainer}>
+        <div className={styles.subsection}>
+          <GrowthSection metrics={metrics} years={years} />
+        </div>
+
+        <div className={styles.subsection}>
+          <GrowthRateSection metrics={metrics} years={years} />
+        </div>
+
+        <div className={styles.subsection}>
+          <ProfitabilitySection metrics={metrics} years={years} />
+        </div>
+
+        <div className={styles.subsection}>
+          <BalanceSheetSection metrics={metrics} years={years} />
+        </div>
+
+        <div className={styles.subsection}>
+          <LeverageSection metrics={metrics} years={years} />
+        </div>
+
+        {/* Summary Box - Special Styling */}
+        <div className={styles.summaryCard}>
+          <SummaryBox metrics={metrics} />
+        </div>
+      </div>
     </section>
   );
 }

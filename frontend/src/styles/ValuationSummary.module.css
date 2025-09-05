@@ -1,0 +1,344 @@
+/* =============================================================================
+   ValuationSummary Component Styles
+   =============================================================================
+   Beautiful, mobile-first styling for DCF valuation summary
+   Includes color-coded verdict system and responsive design
+============================================================================= */
+
+/* ==================== MAIN CONTAINER ==================== */
+
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+  padding: 0; /* Parent section handles padding */
+}
+
+/* ==================== SUMMARY HEADER ==================== */
+
+.summaryHeader {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  padding-bottom: var(--space-md);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.fairValueDisplay {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-md);
+}
+
+.fairValueMain {
+  flex: 1;
+}
+
+.fairValueLabel {
+  font-size: var(--text-sm);
+  font-weight: var(--font-medium);
+  color: var(--text-secondary);
+  margin-bottom: var(--space-xs);
+}
+
+.fairValueAmount {
+  font-size: var(--text-3xl);
+  font-weight: var(--font-bold);
+  color: var(--text-primary);
+  line-height: var(--leading-tight);
+}
+
+.fairValueCurrency {
+  font-size: var(--text-lg);
+  color: var(--text-tertiary);
+  margin-right: var(--space-xs);
+}
+
+.comparisonBox {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: var(--space-xs);
+  padding: var(--space-md);
+  background: var(--surface-secondary);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-default);
+  min-width: 120px;
+}
+
+.currentPriceLabel {
+  font-size: var(--text-xs);
+  color: var(--text-tertiary);
+  font-weight: var(--font-medium);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.currentPriceValue {
+  font-size: var(--text-lg);
+  font-weight: var(--font-semibold);
+  color: var(--text-primary);
+}
+
+.differenceValue {
+  font-size: var(--text-sm);
+  font-weight: var(--font-semibold);
+  padding: var(--space-xs) var(--space-sm);
+  border-radius: var(--radius-md);
+}
+
+.differencePositive {
+  color: var(--color-positive);
+  background: var(--success-bg);
+}
+
+.differenceNegative {
+  color: var(--color-negative);
+  background: var(--danger-bg);
+}
+
+.differenceNeutral {
+  color: var(--text-secondary);
+  background: var(--surface-tertiary);
+}
+
+/* ==================== PHASE BREAKDOWN SECTION ==================== */
+
+.phaseSection {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.phaseSectionTitle {
+  font-size: var(--text-sm);
+  font-weight: var(--font-medium);
+  color: var(--text-secondary);
+  margin-bottom: var(--space-xs);
+}
+
+.chartContainer {
+  width: 100%;
+  min-height: 20px;
+  max-height: 24px;
+  margin-bottom: var(--space-sm);
+}
+
+/* ==================== VERDICT SECTION ==================== */
+
+.verdictContainer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  padding: var(--space-lg);
+  border-radius: var(--radius-xl);
+  border: 2px solid;
+  transition: all var(--transition-normal) ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.verdictContainer:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.verdictContainer::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: currentColor;
+  opacity: 0.8;
+}
+
+/* Verdict color variants */
+.verdictUndervalued {
+  background: var(--success-bg);
+  border-color: var(--success-border);
+  color: var(--success-text);
+}
+
+.verdictOvervalued {
+  background: var(--danger-bg);
+  border-color: var(--danger-border);
+  color: var(--danger-text);
+}
+
+.verdictFair {
+  background: var(--warning-bg);
+  border-color: var(--warning-border);
+  color: var(--warning-text);
+}
+
+.verdictUnavailable {
+  background: var(--surface-secondary);
+  border-color: var(--border-default);
+  color: var(--text-secondary);
+}
+
+.verdictHeader {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-md);
+}
+
+.verdictIcon {
+  font-size: var(--text-2xl);
+  line-height: 1;
+  margin-top: 2px;
+}
+
+.verdictContent {
+  flex: 1;
+}
+
+.verdictTitle {
+  font-size: var(--text-lg);
+  font-weight: var(--font-bold);
+  margin-bottom: var(--space-xs);
+  line-height: var(--leading-tight);
+}
+
+.verdictDescription {
+  font-size: var(--text-sm);
+  line-height: var(--leading-relaxed);
+  opacity: 0.9;
+}
+
+.verdictMetrics {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-lg);
+  margin-top: var(--space-md);
+  padding-top: var(--space-md);
+  border-top: 1px solid currentColor;
+  opacity: 0.8;
+}
+
+.metricItem {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.metricLabel {
+  font-size: var(--text-xs);
+  font-weight: var(--font-medium);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  opacity: 0.8;
+}
+
+.metricValue {
+  font-size: var(--text-sm);
+  font-weight: var(--font-semibold);
+}
+
+/* ==================== ERROR STATE ==================== */
+
+.errorState {
+  text-align: center;
+  padding: var(--space-xl);
+  color: var(--text-tertiary);
+  background: var(--surface-secondary);
+  border: 2px dashed var(--border-default);
+  border-radius: var(--radius-xl);
+}
+
+.errorIcon {
+  font-size: var(--text-2xl);
+  margin-bottom: var(--space-sm);
+}
+
+.errorMessage {
+  font-size: var(--text-sm);
+  line-height: var(--leading-relaxed);
+}
+
+/* ==================== MOBILE RESPONSIVE ==================== */
+
+@media (max-width: 640px) {
+  .fairValueDisplay {
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--space-md);
+  }
+  
+  .fairValueAmount {
+    font-size: var(--text-2xl);
+    text-align: center;
+  }
+  
+  .comparisonBox {
+    align-items: center;
+    text-align: center;
+  }
+  
+  .verdictContainer {
+    padding: var(--space-md);
+  }
+  
+  .verdictHeader {
+    flex-direction: column;
+    text-align: center;
+    gap: var(--space-sm);
+  }
+  
+  .verdictIcon {
+    font-size: var(--text-3xl);
+  }
+  
+  .verdictMetrics {
+    flex-direction: column;
+    gap: var(--space-md);
+    text-align: center;
+  }
+  
+  .metricItem {
+    align-items: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .fairValueAmount {
+    font-size: var(--text-xl);
+  }
+  
+  .verdictContainer {
+    padding: var(--space-sm);
+  }
+  
+  .chartContainer {
+    min-height: 16px;
+    max-height: 20px;
+  }
+}
+
+/* ==================== TABLET+ RESPONSIVE ==================== */
+
+@media (min-width: 768px) {
+  .verdictContainer {
+    padding: var(--space-xl);
+  }
+  
+  .verdictMetrics {
+    flex-direction: row;
+    justify-content: space-around;
+  }
+}
+
+/* ==================== DESKTOP RESPONSIVE ==================== */
+
+@media (min-width: 1024px) {
+  .fairValueAmount {
+    font-size: var(--text-4xl);
+  }
+  
+  .container {
+    gap: var(--space-xl);
+  }
+}

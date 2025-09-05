@@ -1,0 +1,542 @@
+/* =============================================================================
+   VISUAL DESIGN POLISH - PHASE 3
+   =============================================================================
+   
+   Advanced glassmorphism effects, micro-interactions, and modern design trends
+   Award-winning visual enhancements for a premium experience
+============================================================================= */
+
+/* =============================================================================
+   ENHANCED GLASSMORPHISM SYSTEM
+   ============================================================================= */
+
+/* Premium glassmorphism base */
+.glass-base {
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 
+    0 8px 32px rgba(31, 38, 135, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.4);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Glassmorphism variants */
+.glass-light {
+  backdrop-filter: blur(16px) saturate(150%);
+  -webkit-backdrop-filter: blur(16px) saturate(150%);
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 4px 16px rgba(31, 38, 135, 0.1);
+}
+
+.glass-medium {
+  backdrop-filter: blur(24px) saturate(200%);
+  -webkit-backdrop-filter: blur(24px) saturate(200%);
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  box-shadow: 
+    0 12px 40px rgba(31, 38, 135, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.5);
+}
+
+.glass-heavy {
+  backdrop-filter: blur(32px) saturate(250%);
+  -webkit-backdrop-filter: blur(32px) saturate(250%);
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  box-shadow: 
+    0 16px 48px rgba(31, 38, 135, 0.25),
+    inset 0 2px 0 rgba(255, 255, 255, 0.6);
+}
+
+/* Dark theme glassmorphism */
+:root.dark .glass-base,
+.dark .glass-base {
+  background: rgba(30, 41, 59, 0.85);
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(148, 163, 184, 0.2);
+}
+
+:root.dark .glass-light,
+.dark .glass-light {
+  background: rgba(30, 41, 59, 0.7);
+  border: 1px solid rgba(148, 163, 184, 0.1);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+}
+
+:root.dark .glass-medium,
+.dark .glass-medium {
+  background: rgba(30, 41, 59, 0.9);
+  border: 1px solid rgba(148, 163, 184, 0.3);
+  box-shadow: 
+    0 12px 40px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 rgba(148, 163, 184, 0.25);
+}
+
+:root.dark .glass-heavy,
+.dark .glass-heavy {
+  background: rgba(30, 41, 59, 0.95);
+  border: 1px solid rgba(148, 163, 184, 0.4);
+  box-shadow: 
+    0 16px 48px rgba(0, 0, 0, 0.5),
+    inset 0 2px 0 rgba(148, 163, 184, 0.3);
+}
+
+/* =============================================================================
+   ENHANCED GRADIENT SYSTEM
+   ============================================================================= */
+
+/* Premium brand gradients */
+.gradient-brand-premium {
+  background: linear-gradient(135deg, 
+    #667eea 0%, 
+    #764ba2 50%, 
+    #f093fb 100%
+  );
+}
+
+.gradient-brand-subtle {
+  background: linear-gradient(135deg, 
+    rgba(102, 126, 234, 0.1) 0%, 
+    rgba(118, 75, 162, 0.1) 50%, 
+    rgba(240, 147, 251, 0.1) 100%
+  );
+}
+
+.gradient-brand-vibrant {
+  background: linear-gradient(135deg, 
+    #667eea 0%, 
+    #764ba2 25%, 
+    #f093fb 50%, 
+    #ff9a9e 75%, 
+    #fecfef 100%
+  );
+}
+
+/* Surface gradients */
+.gradient-surface-warm {
+  background: linear-gradient(135deg, 
+    #ffecd2 0%, 
+    #fcb69f 100%
+  );
+}
+
+.gradient-surface-cool {
+  background: linear-gradient(135deg, 
+    #a8edea 0%, 
+    #fed6e3 100%
+  );
+}
+
+.gradient-surface-neutral {
+  background: linear-gradient(135deg, 
+    #f8fafc 0%, 
+    #e2e8f0 50%, 
+    #cbd5e1 100%
+  );
+}
+
+/* Dark theme gradients */
+:root.dark .gradient-surface-neutral,
+.dark .gradient-surface-neutral {
+  background: linear-gradient(135deg, 
+    #1e293b 0%, 
+    #334155 50%, 
+    #475569 100%
+  );
+}
+
+/* =============================================================================
+   MICRO-INTERACTIONS & ANIMATIONS
+   ============================================================================= */
+
+/* Floating animation */
+.float-animation {
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+/* Pulse glow effect */
+.pulse-glow {
+  position: relative;
+}
+
+.pulse-glow::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: var(--gradient-brand);
+  border-radius: inherit;
+  opacity: 0;
+  animation: pulseGlow 2s ease-in-out infinite;
+  z-index: -1;
+}
+
+@keyframes pulseGlow {
+  0%, 100% { opacity: 0; transform: scale(1); }
+  50% { opacity: 0.3; transform: scale(1.05); }
+}
+
+/* Shimmer loading effect */
+.shimmer-loading {
+  position: relative;
+  overflow: hidden;
+}
+
+.shimmer-loading::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.4) 50%,
+    transparent 100%
+  );
+  animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+  0% { left: -100%; }
+  100% { left: 100%; }
+}
+
+/* Dark theme shimmer */
+:root.dark .shimmer-loading::before,
+.dark .shimmer-loading::before {
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(148, 163, 184, 0.2) 50%,
+    transparent 100%
+  );
+}
+
+/* Magnetic hover effect */
+.magnetic-hover {
+  transition: all var(--transition-normal) var(--easing-default);
+  cursor: pointer;
+}
+
+.magnetic-hover:hover {
+  transform: scale(1.02) translateY(-2px);
+  box-shadow: 
+    0 20px 40px rgba(0, 0, 0, 0.1),
+    0 0 0 1px rgba(102, 126, 234, 0.2);
+}
+
+/* Tilt interaction */
+.tilt-hover {
+  transition: all var(--transition-normal) var(--easing-default);
+  transform-style: preserve-3d;
+}
+
+.tilt-hover:hover {
+  transform: perspective(1000px) rotateX(5deg) rotateY(5deg) translateZ(20px);
+}
+
+/* =============================================================================
+   PREMIUM BUTTON STYLES
+   ============================================================================= */
+
+.btn-premium {
+  position: relative;
+  padding: var(--space-md) var(--space-2xl);
+  font-weight: var(--font-semibold);
+  border: none;
+  border-radius: var(--radius-xl);
+  cursor: pointer;
+  overflow: hidden;
+  transition: all var(--transition-normal) var(--easing-default);
+  background: var(--gradient-brand-premium);
+  color: var(--text-inverse);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-size: var(--text-sm);
+}
+
+.btn-premium::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.3) 50%,
+    transparent 100%
+  );
+  transition: left var(--transition-slow) var(--easing-default);
+}
+
+.btn-premium:hover::before {
+  left: 100%;
+}
+
+.btn-premium:hover {
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 
+    0 20px 40px rgba(102, 126, 234, 0.4),
+    0 0 20px rgba(102, 126, 234, 0.3);
+}
+
+/* Glass button variant */
+.btn-glass {
+  composes: glass-medium;
+  padding: var(--space-md) var(--space-xl);
+  font-weight: var(--font-semibold);
+  border-radius: var(--radius-xl);
+  cursor: pointer;
+  transition: all var(--transition-normal) var(--easing-default);
+  color: var(--text-primary);
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.btn-glass:hover {
+  transform: translateY(-2px);
+  background: rgba(255, 255, 255, 0.2);
+  box-shadow: 
+    0 12px 24px rgba(31, 38, 135, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.6);
+}
+
+/* =============================================================================
+   ENHANCED CARD DESIGNS
+   ============================================================================= */
+
+.card-premium {
+  composes: glass-base;
+  border-radius: var(--radius-2xl);
+  padding: var(--space-2xl);
+  position: relative;
+  transition: all var(--transition-normal) var(--easing-default);
+}
+
+.card-premium::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, 
+    transparent 0%, 
+    rgba(102, 126, 234, 0.5) 50%, 
+    transparent 100%
+  );
+}
+
+.card-premium:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 
+    0 32px 64px rgba(31, 38, 135, 0.25),
+    inset 0 2px 0 rgba(255, 255, 255, 0.6);
+}
+
+/* Floating card with depth */
+.card-floating {
+  background: var(--surface-primary);
+  border-radius: var(--radius-xl);
+  padding: var(--space-xl);
+  box-shadow: 
+    0 10px 30px rgba(0, 0, 0, 0.1),
+    0 1px 8px rgba(0, 0, 0, 0.06);
+  transition: all var(--transition-normal) var(--easing-default);
+  position: relative;
+}
+
+.card-floating:hover {
+  transform: translateY(-12px);
+  box-shadow: 
+    0 25px 50px rgba(0, 0, 0, 0.15),
+    0 10px 24px rgba(0, 0, 0, 0.1);
+}
+
+/* Gradient border card */
+.card-gradient-border {
+  position: relative;
+  background: var(--surface-primary);
+  border-radius: var(--radius-xl);
+  padding: var(--space-xl);
+}
+
+.card-gradient-border::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: inherit;
+  padding: 2px;
+  background: var(--gradient-brand-premium);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: xor;
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+}
+
+/* =============================================================================
+   ENHANCED TYPOGRAPHY EFFECTS
+   ============================================================================= */
+
+/* Gradient text */
+.text-gradient {
+  background: var(--gradient-brand-premium);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-size: 200% 200%;
+  animation: gradientShift 3s ease infinite;
+}
+
+@keyframes gradientShift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+/* Text shadow effects */
+.text-shadow-soft {
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.text-shadow-medium {
+  text-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.text-shadow-strong {
+  text-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+/* =============================================================================
+   ADVANCED LOADING STATES
+   ============================================================================= */
+
+.skeleton-loading {
+  background: linear-gradient(
+    90deg,
+    var(--surface-secondary) 25%,
+    var(--surface-tertiary) 50%,
+    var(--surface-secondary) 75%
+  );
+  background-size: 200% 100%;
+  animation: skeletonLoading 2s infinite;
+  border-radius: var(--radius-md);
+}
+
+@keyframes skeletonLoading {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* Spinner with glassmorphism */
+.spinner-glass {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: conic-gradient(from 0deg, transparent, var(--brand-primary));
+  mask: radial-gradient(farthest-side, transparent calc(100% - 3px), #000 calc(100% - 2px));
+  -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 3px), #000 calc(100% - 2px));
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* =============================================================================
+   ENHANCED FOCUS STATES
+   ============================================================================= */
+
+.focus-premium:focus {
+  outline: none;
+  box-shadow: 
+    0 0 0 3px rgba(102, 126, 234, 0.3),
+    0 0 20px rgba(102, 126, 234, 0.2);
+  transform: scale(1.02);
+}
+
+.focus-glass:focus {
+  outline: none;
+  box-shadow: 
+    0 0 0 3px rgba(255, 255, 255, 0.3),
+    inset 0 0 20px rgba(102, 126, 234, 0.1);
+}
+
+/* =============================================================================
+   PREMIUM SCROLLBAR STYLING
+   ============================================================================= */
+
+.scrollbar-premium {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(102, 126, 234, 0.3) transparent;
+}
+
+.scrollbar-premium::-webkit-scrollbar {
+  width: 8px;
+}
+
+.scrollbar-premium::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scrollbar-premium::-webkit-scrollbar-thumb {
+  background: linear-gradient(
+    to bottom,
+    rgba(102, 126, 234, 0.5),
+    rgba(118, 75, 162, 0.5)
+  );
+  border-radius: 4px;
+}
+
+.scrollbar-premium::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(
+    to bottom,
+    rgba(102, 126, 234, 0.7),
+    rgba(118, 75, 162, 0.7)
+  );
+}
+
+/* =============================================================================
+   PERFORMANCE OPTIMIZATIONS
+   ============================================================================= */
+
+.gpu-accelerated {
+  transform: translateZ(0);
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+}
+
+/* Disable expensive effects on low-power devices */
+@media (prefers-reduced-motion: reduce) {
+  .float-animation,
+  .pulse-glow::before,
+  .shimmer-loading::before,
+  .text-gradient {
+    animation: none;
+  }
+  
+  .magnetic-hover:hover,
+  .tilt-hover:hover,
+  .card-premium:hover,
+  .card-floating:hover {
+    transform: none;
+  }
+}

@@ -1,0 +1,247 @@
+/* =============================================================================
+   COMPANY HEADER MODULE STYLES
+   =============================================================================
+   
+   Beautiful, mobile-first styling for CompanyHeader component
+   Uses design tokens and follows established architecture
+============================================================================= */
+
+/* ==================== MAIN CONTAINER ==================== */
+
+.headerContainer {
+  position: sticky;
+  top: 0;
+  z-index: var(--z-sticky);
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border-primary);
+  box-shadow: var(--shadow-sm);
+  transition: all var(--transition-normal) var(--easing-default);
+}
+
+/* Dark mode support */
+[data-theme="dark"] .headerContainer {
+  background: rgba(15, 23, 42, 0.95);
+}
+
+.headerContainer:hover {
+  box-shadow: var(--shadow-md);
+}
+
+/* ==================== GRADIENT ACCENT BAR ==================== */
+
+.gradientAccent {
+  height: 3px;
+  background: var(--gradient-brand);
+  animation: shimmer 3s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.8; }
+}
+
+/* ==================== INNER CONTAINER ==================== */
+
+.innerContainer {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: var(--space-md);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-md);
+  min-height: 80px;
+}
+
+/* Desktop spacing */
+@media (min-width: 768px) {
+  .innerContainer {
+    padding: var(--space-lg) var(--space-xl);
+    gap: var(--space-lg);
+  }
+}
+
+/* Mobile: stack vertically */
+@media (max-width: 767px) {
+  .innerContainer {
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--space-sm);
+    min-height: auto;
+    padding: var(--space-md);
+  }
+}
+
+/* ==================== LEFT SIDE - COMPANY INFO ==================== */
+
+.companySection {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  flex: 1;
+  min-width: 0;
+}
+
+/* Mobile: center alignment */
+@media (max-width: 767px) {
+  .companySection {
+    justify-content: center;
+    text-align: center;
+  }
+}
+
+.companyIcon {
+  width: 48px;
+  height: 48px;
+  background: var(--gradient-brand);
+  border-radius: var(--radius-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow-brand-sm);
+  flex-shrink: 0;
+  transition: transform var(--transition-fast) var(--easing-default);
+}
+
+.companyIcon:hover {
+  transform: scale(1.05);
+}
+
+.companyIconText {
+  font-size: var(--text-lg);
+  font-weight: var(--font-bold);
+  color: var(--text-inverse);
+}
+
+.companyDetails {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  flex: 1;
+  min-width: 0;
+}
+
+.companyName {
+  font-size: var(--text-xl);
+  font-weight: var(--font-bold);
+  color: var(--text-primary);
+  margin: 0;
+  line-height: var(--leading-tight);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Mobile: larger text, allow wrapping */
+@media (max-width: 767px) {
+  .companyName {
+    font-size: var(--text-2xl);
+    white-space: normal;
+    text-align: center;
+  }
+}
+
+.priceContainer {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+}
+
+/* Mobile: center price */
+@media (max-width: 767px) {
+  .priceContainer {
+    justify-content: center;
+  }
+}
+
+.currencySymbol {
+  font-size: var(--text-sm);
+  font-weight: var(--font-medium);
+  color: var(--text-tertiary);
+}
+
+.priceValue {
+  font-size: var(--text-lg);
+  font-weight: var(--font-semibold);
+  color: var(--brand-primary);
+  font-family: 'SF Mono', 'Monaco', 'Cascadia Code', monospace;
+}
+
+/* Mobile: larger price display */
+@media (max-width: 767px) {
+  .priceValue {
+    font-size: var(--text-xl);
+  }
+}
+
+.priceLabel {
+  font-size: var(--text-xs);
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-left: var(--space-xs);
+}
+
+/* ==================== RIGHT SIDE - ACTIONS ==================== */
+
+.actionsSection {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  flex-shrink: 0;
+}
+
+/* Mobile: full width centered */
+@media (max-width: 767px) {
+  .actionsSection {
+    width: 100%;
+    justify-content: center;
+    margin-top: var(--space-xs);
+  }
+}
+
+/* ==================== LOADING STATES ==================== */
+
+.companyNameSkeleton {
+  height: 28px;
+  background: linear-gradient(90deg, var(--surface-secondary) 25%, var(--surface-tertiary) 50%, var(--surface-secondary) 75%);
+  background-size: 200% 100%;
+  animation: loading 1.5s infinite;
+  border-radius: var(--radius-md);
+  width: 200px;
+}
+
+.priceSkeleton {
+  height: 20px;
+  background: linear-gradient(90deg, var(--surface-secondary) 25%, var(--surface-tertiary) 50%, var(--surface-secondary) 75%);
+  background-size: 200% 100%;
+  animation: loading 1.5s infinite;
+  border-radius: var(--radius-sm);
+  width: 120px;
+}
+
+@keyframes loading {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* ==================== ACCESSIBILITY ==================== */
+
+.companySection:focus-within .companyIcon {
+  outline: 2px solid var(--brand-accent);
+  outline-offset: 2px;
+}
+
+/* ==================== RESPONSIVE BREAKPOINTS ==================== */
+
+/* Tablet adjustments */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .companyName {
+    font-size: var(--text-lg);
+  }
+  
+  .priceValue {
+    font-size: var(--text-base);
+  }
+}

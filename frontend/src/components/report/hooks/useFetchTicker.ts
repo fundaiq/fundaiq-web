@@ -32,13 +32,11 @@ export const useFetchTicker = (setLoading: (val: boolean) => void) => {
 
       if (!res.ok) {
         const errorText = await res.text();
-        console.error('❌ Response:', errorText);
         setStatus(`❌ ${res.status}: ${errorText.slice(0, 200)}`);
         return;
       }
 
       const data = await res.json();
-      console.log("📊 Data :", data);
       setCompanyInfo(data.company_info);
       setMetrics(data.metrics);
       setAssumptions(data.assumptions);
@@ -48,26 +46,7 @@ export const useFetchTicker = (setLoading: (val: boolean) => void) => {
       const a = useGlobalStore.getState().assumptions;
       const d = useGlobalStore.getState().defaultAssumptions;
       
-      console.log("📊 assumptions (store):", a);
-      console.log("📊 default assumptions (store):", d);
-      console.log("📊 company_info :", data.company_info);
-      console.log("📊 metrics :", data.metrics);
-      console.log("📊 assumptions :", assumptions);
-      console.log("📊 valuationResults :", data.valuationResults);
-      console.log("📊 default assumptions :", defaultAssumptions);
       
-      
-      
-      // setMetrics(data.metrics || {});
-      // console.log("📊 New Metrics:", data?.metrics);
-      // triggerCalculation(data?.metrics);
-      // setCompanyInfo({
-      //   name: data?.company_info?.name || '',
-      //   ticker: data?.company_info?.ticker || '',
-      //   sector: data?.company_info?.sector || '',
-      //   industry: data?.company_info?.industry || '',
-      //   description: data?.company_info?.description || ''
-      // });
       setRawYahooData({
         pnl: data.pnl,
         balance_sheet: data.balance_sheet,

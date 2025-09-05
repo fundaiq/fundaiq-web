@@ -1,0 +1,241 @@
+/* =============================================================================
+   REPORT TOP NAVIGATION STYLES
+   =============================================================================
+   Mobile-first navigation bar following design system tokens
+============================================================================= */
+
+/* ==================== MAIN CONTAINER ==================== */
+
+.reportTopNavContainer {
+  position: sticky;
+  top: 4rem; /* Account for main TopNav height */
+  z-index: 45; /* Higher than most elements */
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border-default);
+  box-shadow: var(--shadow-sm);
+  width: 100%; /* Ensure full width */
+}
+
+/* Dark theme support */
+:global(.dark) .reportTopNavContainer {
+  background: rgba(24, 24, 27, 0.95);
+}
+
+/* Add this new container class for centering */
+.reportTopNavContent {
+  max-width: 1280px; /* Same as contentContainer */
+  margin: 0 auto; /* Center the content */
+  padding: 0 var(--space-lg); /* Same horizontal padding as content */
+  width: 100%;
+}
+@media (max-width: 768px) {
+  .reportTopNavContent {
+    padding: 0 var(--space-md); /* Match mobile padding */
+  }
+}
+
+@media (max-width: 640px) {
+  .reportTopNavContent {
+    padding: 0 var(--space-sm); /* Match small mobile padding */
+  }
+}
+/* ==================== NAVIGATION BUTTONS ==================== */
+
+:global(.nav-button) {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: var(--space-sm) var(--space-md);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-primary);
+  background: var(--surface-primary);
+  color: var(--text-secondary);
+  font-size: var(--text-sm);
+  font-weight: var(--font-medium);
+  white-space: nowrap;
+  transition: all var(--transition-fast) var(--easing-default);
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  min-height: 36px;
+}
+
+:global(.nav-button:hover) {
+  background: var(--surface-secondary);
+  border-color: var(--brand-accent);
+  color: var(--text-primary);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
+}
+
+:global(.nav-button.active) {
+  background: var(--gradient-brand);
+  border-color: var(--brand-primary);
+  color: var(--text-inverse);
+  box-shadow: var(--shadow-brand);
+  font-weight: var(--font-semibold);
+}
+
+/* ==================== BUTTON CONTENT ==================== */
+
+:global(.nav-button-icon) {
+  font-size: 14px;
+  opacity: 0.8;
+  transition: opacity var(--transition-fast) var(--easing-default);
+}
+
+:global(.nav-button.active .nav-button-icon) {
+  opacity: 1;
+}
+
+:global(.nav-button-text) {
+  transition: all var(--transition-fast) var(--easing-default);
+}
+
+/* ==================== RESET BUTTON ==================== */
+
+:global(.reset-button) {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: var(--space-sm) var(--space-md);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--danger-primary);
+  background: var(--danger-primary);
+  color: var(--text-inverse);
+  font-size: var(--text-sm);
+  font-weight: var(--font-medium);
+  white-space: nowrap;
+  transition: all var(--transition-fast) var(--easing-default);
+  cursor: pointer;
+  min-height: 36px;
+}
+
+:global(.reset-button:hover) {
+  background: var(--danger-secondary);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+}
+
+:global(.reset-button-icon) {
+  font-size: 14px;
+  animation: rotate 2s linear infinite;
+  animation-play-state: paused;
+}
+
+:global(.reset-button:hover .reset-button-icon) {
+  animation-play-state: running;
+}
+
+:global(.reset-button-text) {
+  font-weight: var(--font-medium);
+}
+
+/* ==================== SCROLL ANIMATIONS ==================== */
+
+@keyframes rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* ==================== POSITIONING FIX ==================== */
+
+:global(.report-nav-container) {
+  position: sticky;
+  top: 4rem; /* Increased from 3.25rem to account for main nav */
+  z-index: 45; /* Higher than most elements */
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border-default);
+  box-shadow: var(--shadow-sm);
+}
+
+:global(.dark .report-nav-container) {
+  background: rgba(24, 24, 27, 0.95);
+}
+
+/* ==================== RESPONSIVE DESIGN ==================== */
+
+/* Mobile optimization */
+@media (max-width: 640px) {
+  :global(.nav-button) {
+    padding: var(--space-xs) var(--space-sm);
+    min-width: auto;
+  }
+  
+  :global(.nav-button-text) {
+    display: none; /* Show only icons on mobile */
+  }
+  
+  :global(.nav-button-icon) {
+    font-size: 16px;
+  }
+  
+  :global(.reset-button) {
+    padding: var(--space-xs) var(--space-sm);
+  }
+  
+  :global(.reset-button-text) {
+    display: none;
+  }
+}
+
+/* Tablet and up - show full labels */
+@media (min-width: 641px) {
+  :global(.nav-button-icon) {
+    display: block;
+  }
+  
+  :global(.nav-button-text) {
+    display: block;
+  }
+  
+  :global(.reset-button-text) {
+    display: block;
+  }
+}
+
+/* ==================== SCROLLBAR HIDING ==================== */
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+:global(.nav-container)::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+:global(.nav-container) {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+/* ==================== ACCESSIBILITY ==================== */
+
+:global(.nav-button:focus),
+:global(.reset-button:focus) {
+  outline: 2px solid var(--brand-accent);
+  outline-offset: 2px;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  :global(.nav-button) {
+    border-width: 2px;
+  }
+  
+  :global(.nav-button.active) {
+    border-color: var(--text-inverse);
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  :global(.nav-button),
+  :global(.reset-button),
+  :global(.nav-button-icon),
+  :global(.reset-button-icon) {
+    transition: none;
+    animation: none;
+  }
+}

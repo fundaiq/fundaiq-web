@@ -1,6 +1,8 @@
 'use client';
 
 import { MetricLineChart } from '@/components/health/MetricLineChart';
+import { DollarSign } from 'lucide-react';
+import styles from '@/styles/FinancialHealthSection.module.css';
 
 interface Props {
   metrics: Record<string, number[]>;
@@ -16,11 +18,13 @@ export const ProfitabilitySection = ({ metrics, years }: Props) => {
   ];
 
   return (
-    <div className="space-y-2">
-      <h2 className="text-sm font-semibold">💰 Profitability & Returns</h2>
+    <div className={styles.subsection}>
+      <div className={styles.subsectionHeader}>
+        <DollarSign size={18} />
+        <h2 className={styles.subsectionTitle}>💰 Profitability & Returns</h2>
+      </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-
+      <div className={`${styles.cardsGrid} ${styles.cols4}`}>
         {items.map(({ key, label }) => {
           const data = metrics[key];
           const validData = Array.isArray(data)
@@ -33,9 +37,27 @@ export const ProfitabilitySection = ({ metrics, years }: Props) => {
 
           if (!alignedData.length || !alignedYears.length) return null;
 
+          // Calculate trend for color coding
+          const latestValue = alignedData[alignedData.length - 1];
+          const previousValue = alignedData[alignedData.length - 2];
+          const isPositive = latestValue > (previousValue || 0);
+
           return (
-            <div key={key} className="bg-white rounded-md p-4 shadow-sm">
-              <MetricLineChart label={label} data={alignedData} labels={alignedYears} percent />
+            <div key={key} className={styles.metricCard}>
+              <div className={styles.chartContainer}>
+                <MetricLineChart 
+                  label={label} 
+                  data={alignedData} 
+                  labels={alignedYears} 
+                  percent 
+                />
+              </div>
+              <div className={`${styles.trendIndicator} ${
+                isPositive ? styles.trendPositive : styles.trendNegative
+              }`}>
+                <span>•</span>
+                <span>{latestValue.toFixed(1)}%</span>
+              </div>
             </div>
           );
         })}

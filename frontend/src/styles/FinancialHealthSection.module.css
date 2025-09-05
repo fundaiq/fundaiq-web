@@ -1,0 +1,305 @@
+/* =============================================================================
+   FINANCIAL HEALTH SECTION MODULE
+   =============================================================================
+   
+   File: src/styles/FinancialHealthSection.module.css
+   Mobile-first, beautiful financial health section styling
+============================================================================= */
+
+/* Main Container */
+.container {
+  padding: var(--space-lg);
+  background: var(--surface-primary);
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--border-subtle);
+  box-shadow: var(--shadow-sm);
+  transition: all var(--transition-normal) var(--easing-default);
+}
+
+.container:hover {
+  box-shadow: var(--shadow-md);
+  border-color: var(--border-primary);
+}
+
+/* Section Header */
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  margin-bottom: var(--space-xl);
+  padding-bottom: var(--space-md);
+  border-bottom: 2px solid var(--border-subtle);
+}
+
+.sectionIcon {
+  width: 28px;
+  height: 28px;
+  padding: var(--space-xs);
+  background: var(--gradient-brand);
+  border-radius: var(--radius-md);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow-sm);
+}
+
+.sectionTitle {
+  font-size: var(--text-2xl);
+  font-weight: var(--font-bold);
+  color: var(--text-primary);
+  margin: 0;
+  line-height: var(--leading-tight);
+}
+
+/* Subsections Container */
+.subsectionsContainer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xl);
+}
+
+/* Individual Subsection */
+.subsection {
+  padding: 0;
+  border-radius: var(--radius-lg);
+  background: transparent;
+}
+
+.subsectionHeader {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-lg);
+  padding: var(--space-md) 0;
+}
+
+.subsectionTitle {
+  font-size: var(--text-lg);
+  font-weight: var(--font-semibold);
+  color: var(--text-primary);
+  margin: 0;
+  line-height: var(--leading-tight);
+}
+
+/* Cards Grid */
+.cardsGrid {
+  display: grid;
+  gap: var(--space-lg);
+  grid-template-columns: 1fr;
+}
+
+/* Responsive Grid Layouts */
+@media (min-width: 640px) {
+  .cardsGrid.cols2 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 768px) {
+  .cardsGrid.cols3 {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .cardsGrid.cols4 {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+/* Metric Cards */
+.metricCard {
+  background: var(--surface-elevated);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-lg);
+  padding: var(--space-lg);
+  box-shadow: var(--shadow-sm);
+  transition: all var(--transition-normal) var(--easing-default);
+  position: relative;
+  overflow: hidden;
+}
+
+.metricCard::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--gradient-brand);
+  opacity: 0;
+  transition: opacity var(--transition-normal) var(--easing-default);
+}
+
+.metricCard:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+  border-color: var(--border-secondary);
+}
+
+.metricCard:hover::before {
+  opacity: 1;
+}
+
+/* Special Summary Card */
+.summaryCard {
+  background: linear-gradient(135deg, var(--surface-elevated) 0%, var(--surface-secondary) 100%);
+  border: 2px solid var(--brand-primary);
+  border-radius: var(--radius-xl);
+  padding: var(--space-xl);
+  box-shadow: var(--shadow-md);
+  position: relative;
+  overflow: hidden;
+}
+
+.summaryCard::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: var(--gradient-brand);
+}
+
+.summaryCard:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-lg);
+}
+
+/* Chart Container */
+.chartContainer {
+  margin-top: var(--space-md);
+  padding: var(--space-sm);
+  background: var(--surface-primary);
+  border-radius: var(--radius-md);
+  min-height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Trend Indicator */
+.trendIndicator {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  margin-top: var(--space-sm);
+  font-size: var(--text-xs);
+  font-weight: var(--font-medium);
+}
+
+.trendPositive {
+  color: var(--success-primary);
+}
+
+.trendNegative {
+  color: var(--danger-primary);
+}
+
+.trendNeutral {
+  color: var(--text-tertiary);
+}
+
+/* Empty State */
+.emptyState {
+  text-align: center;
+  padding: var(--space-2xl);
+  color: var(--text-tertiary);
+  background: var(--surface-secondary);
+  border-radius: var(--radius-lg);
+  border: 2px dashed var(--border-primary);
+}
+
+.emptyStateIcon {
+  font-size: var(--text-4xl);
+  margin-bottom: var(--space-md);
+  opacity: 0.6;
+}
+
+.emptyStateText {
+  font-size: var(--text-lg);
+  font-weight: var(--font-medium);
+  margin: 0;
+}
+
+/* Mobile Optimizations */
+@media (max-width: 639px) {
+  .container {
+    padding: var(--space-md);
+    margin: 0 -var(--space-sm);
+    border-radius: var(--radius-lg);
+  }
+
+  .sectionHeader {
+    margin-bottom: var(--space-lg);
+  }
+
+  .sectionTitle {
+    font-size: var(--text-xl);
+  }
+
+  .subsectionHeader {
+    margin-bottom: var(--space-md);
+  }
+
+  .subsectionTitle {
+    font-size: var(--text-base);
+  }
+
+  .metricCard {
+    padding: var(--space-md);
+  }
+
+  .summaryCard {
+    padding: var(--space-lg);
+  }
+
+  .subsectionsContainer {
+    gap: var(--space-lg);
+  }
+
+  .cardsGrid {
+    gap: var(--space-md);
+  }
+}
+
+/* Dark Mode Specific Adjustments */
+[data-theme="dark"] .metricCard {
+  background: var(--surface-secondary);
+  border-color: var(--border-secondary);
+}
+
+[data-theme="dark"] .summaryCard {
+  background: linear-gradient(135deg, var(--surface-secondary) 0%, var(--surface-tertiary) 100%);
+  border-color: var(--brand-accent);
+}
+
+[data-theme="dark"] .chartContainer {
+  background: var(--surface-tertiary);
+}
+
+/* Loading State */
+.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-2xl);
+  color: var(--text-secondary);
+}
+
+.loadingSpinner {
+  width: 24px;
+  height: 24px;
+  border: 2px solid var(--border-primary);
+  border-top: 2px solid var(--brand-primary);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-right: var(--space-md);
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}

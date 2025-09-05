@@ -1,0 +1,430 @@
+/* =============================================================================
+   MOBILE UTILITIES - PHASE 2 ENHANCEMENT UTILITIES
+   =============================================================================
+   
+   Reusable mobile-first utility classes for consistent mobile experience
+   Apply these classes to any component for instant mobile optimization
+============================================================================= */
+
+/* =============================================================================
+   TOUCH INTERACTION UTILITIES
+   ============================================================================= */
+
+/* Standard touch target - minimum 44px */
+.touch-target {
+  min-width: 44px;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: all var(--transition-fast) var(--easing-default);
+}
+
+/* Large touch target - minimum 48px */
+.touch-target-lg {
+  min-width: 48px;
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: all var(--transition-fast) var(--easing-default);
+}
+
+/* Extra large touch target - minimum 56px */
+.touch-target-xl {
+  min-width: 56px;
+  min-height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: all var(--transition-fast) var(--easing-default);
+}
+
+/* =============================================================================
+   MOBILE SPACING UTILITIES
+   ============================================================================= */
+
+/* Mobile padding utilities */
+.mobile-p-sm { padding: var(--space-sm); }
+.mobile-p-md { padding: var(--space-md); }
+.mobile-p-lg { padding: var(--space-lg); }
+.mobile-p-xl { padding: var(--space-xl); }
+
+/* Mobile margin utilities */
+.mobile-m-sm { margin: var(--space-sm); }
+.mobile-m-md { margin: var(--space-md); }
+.mobile-m-lg { margin: var(--space-lg); }
+.mobile-m-xl { margin: var(--space-xl); }
+
+/* Mobile gap utilities */
+.mobile-gap-sm { gap: var(--space-sm); }
+.mobile-gap-md { gap: var(--space-md); }
+.mobile-gap-lg { gap: var(--space-lg); }
+.mobile-gap-xl { gap: var(--space-xl); }
+
+/* Responsive spacing - adjusts automatically */
+@media (max-width: 768px) {
+  .mobile-p-responsive { padding: var(--space-md); }
+  .mobile-m-responsive { margin: var(--space-md); }
+  .mobile-gap-responsive { gap: var(--space-md); }
+}
+
+@media (max-width: 640px) {
+  .mobile-p-responsive { padding: var(--space-sm); }
+  .mobile-m-responsive { margin: var(--space-sm); }
+  .mobile-gap-responsive { gap: var(--space-sm); }
+}
+
+/* =============================================================================
+   MOBILE TYPOGRAPHY UTILITIES
+   ============================================================================= */
+
+/* Mobile font sizes */
+.mobile-text-xs { font-size: var(--text-xs); }
+.mobile-text-sm { font-size: var(--text-sm); }
+.mobile-text-base { font-size: var(--text-base); }
+.mobile-text-lg { font-size: var(--text-lg); }
+.mobile-text-xl { font-size: var(--text-xl); }
+
+/* Mobile line heights */
+.mobile-leading-tight { line-height: var(--leading-tight); }
+.mobile-leading-normal { line-height: var(--leading-normal); }
+.mobile-leading-relaxed { line-height: var(--leading-relaxed); }
+
+/* Mobile text alignment */
+.mobile-text-left { text-align: left; }
+.mobile-text-center { text-align: center; }
+.mobile-text-right { text-align: right; }
+
+/* Responsive text - centers on mobile */
+@media (max-width: 768px) {
+  .mobile-text-responsive { text-align: center; }
+}
+
+/* =============================================================================
+   MOBILE LAYOUT UTILITIES
+   ============================================================================= */
+
+/* Mobile flex utilities */
+.mobile-flex { display: flex; }
+.mobile-flex-col { flex-direction: column; }
+.mobile-flex-row { flex-direction: row; }
+.mobile-items-center { align-items: center; }
+.mobile-justify-center { justify-content: center; }
+.mobile-justify-between { justify-content: space-between; }
+
+/* Mobile grid utilities */
+.mobile-grid { display: grid; }
+.mobile-grid-1 { grid-template-columns: 1fr; }
+.mobile-grid-2 { grid-template-columns: repeat(2, 1fr); }
+
+/* Responsive layout - stacks on mobile */
+@media (max-width: 768px) {
+  .mobile-stack {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .mobile-grid-responsive {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* =============================================================================
+   MOBILE VISIBILITY UTILITIES
+   ============================================================================= */
+
+/* Hide on mobile */
+@media (max-width: 768px) {
+  .mobile-hidden { display: none; }
+}
+
+/* Show only on mobile */
+.mobile-only { display: none; }
+@media (max-width: 768px) {
+  .mobile-only { display: block; }
+}
+
+.mobile-only-flex { display: none; }
+@media (max-width: 768px) {
+  .mobile-only-flex { display: flex; }
+}
+
+/* =============================================================================
+   MOBILE INTERACTION UTILITIES
+   ============================================================================= */
+
+/* Mobile button variants */
+.mobile-btn {
+  padding: var(--space-md) var(--space-lg);
+  font-size: 16px; /* Prevents zoom on iOS */
+  border: none;
+  border-radius: var(--radius-lg);
+  cursor: pointer;
+  transition: all var(--transition-fast) var(--easing-default);
+  -webkit-tap-highlight-color: transparent;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm);
+}
+
+.mobile-btn-primary {
+  composes: mobile-btn;
+  background: var(--gradient-brand);
+  color: var(--text-inverse);
+}
+
+.mobile-btn-secondary {
+  composes: mobile-btn;
+  background: var(--surface-secondary);
+  color: var(--text-primary);
+  border: 1px solid var(--border-primary);
+}
+
+.mobile-btn-ghost {
+  composes: mobile-btn;
+  background: transparent;
+  color: var(--text-secondary);
+  border: 1px solid var(--border-primary);
+}
+
+/* Mobile button sizes */
+.mobile-btn-sm {
+  padding: var(--space-sm) var(--space-md);
+  font-size: var(--text-sm);
+  min-height: 40px;
+}
+
+.mobile-btn-lg {
+  padding: var(--space-lg) var(--space-xl);
+  font-size: var(--text-lg);
+  min-height: 52px;
+}
+
+.mobile-btn-xl {
+  padding: var(--space-xl) var(--space-2xl);
+  font-size: var(--text-xl);
+  min-height: 60px;
+}
+
+/* Mobile input variants */
+.mobile-input {
+  width: 100%;
+  padding: var(--space-md) var(--space-lg);
+  font-size: 16px; /* Prevents zoom on iOS */
+  border: 2px solid var(--border-primary);
+  border-radius: var(--radius-lg);
+  background: var(--surface-primary);
+  color: var(--text-primary);
+  transition: all var(--transition-fast) var(--easing-default);
+  min-height: 44px;
+}
+
+.mobile-input:focus {
+  outline: none;
+  border-color: var(--brand-primary);
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+/* =============================================================================
+   MOBILE CARD UTILITIES
+   ============================================================================= */
+
+.mobile-card {
+  background: var(--surface-primary);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-lg);
+  padding: var(--space-lg);
+  transition: all var(--transition-normal) var(--easing-default);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.mobile-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+  border-color: var(--border-secondary);
+}
+
+.mobile-card:active {
+  transform: translateY(0);
+  box-shadow: var(--shadow-sm);
+}
+
+.mobile-card-compact {
+  composes: mobile-card;
+  padding: var(--space-md);
+}
+
+.mobile-card-spacious {
+  composes: mobile-card;
+  padding: var(--space-xl);
+}
+
+/* =============================================================================
+   MOBILE ANIMATION UTILITIES
+   ============================================================================= */
+
+/* Mobile fade animations */
+.mobile-fade-in {
+  animation: mobileFadeIn var(--transition-normal) var(--easing-default);
+}
+
+.mobile-slide-up {
+  animation: mobileSlideUp var(--transition-normal) var(--easing-default);
+}
+
+.mobile-slide-in-left {
+  animation: mobileSlideInLeft var(--transition-normal) var(--easing-default);
+}
+
+@keyframes mobileFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes mobileSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes mobileSlideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* =============================================================================
+   MOBILE PERFORMANCE UTILITIES
+   ============================================================================= */
+
+/* Optimize for mobile performance */
+.mobile-optimized {
+  will-change: transform;
+  backface-visibility: hidden;
+  perspective: 1000px;
+  transform: translateZ(0);
+}
+
+/* Smooth scrolling areas */
+.mobile-scroll-smooth {
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.mobile-scroll-smooth::-webkit-scrollbar {
+  display: none;
+}
+
+/* =============================================================================
+   MOBILE ACCESSIBILITY UTILITIES
+   ============================================================================= */
+
+/* Screen reader only content */
+.mobile-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Focus visible for mobile */
+.mobile-focus-visible:focus {
+  outline: 3px solid var(--brand-primary);
+  outline-offset: 2px;
+}
+
+/* =============================================================================
+   MOBILE BREAKPOINT UTILITIES
+   ============================================================================= */
+
+/* Small mobile devices */
+@media (max-width: 375px) {
+  .mobile-xs-hidden { display: none; }
+  .mobile-xs-p-sm { padding: var(--space-xs); }
+  .mobile-xs-gap-sm { gap: var(--space-xs); }
+  .mobile-xs-text-sm { font-size: var(--text-xs); }
+}
+
+/* Medium mobile devices */
+@media (max-width: 640px) {
+  .mobile-sm-hidden { display: none; }
+  .mobile-sm-stack { flex-direction: column; }
+  .mobile-sm-grid-1 { grid-template-columns: 1fr; }
+  .mobile-sm-text-center { text-align: center; }
+}
+
+/* Large mobile/tablet devices */
+@media (max-width: 768px) {
+  .mobile-md-hidden { display: none; }
+  .mobile-md-stack { flex-direction: column; }
+  .mobile-md-grid-1 { grid-template-columns: 1fr; }
+  .mobile-md-p-md { padding: var(--space-md); }
+}
+
+/* =============================================================================
+   MOBILE DARK MODE UTILITIES
+   ============================================================================= */
+
+:root.dark .mobile-card,
+.dark .mobile-card {
+  background: var(--surface-elevated);
+  border-color: var(--border-secondary);
+}
+
+:root.dark .mobile-input,
+.dark .mobile-input {
+  background: var(--surface-elevated);
+  border-color: var(--border-secondary);
+  color: var(--text-primary);
+}
+
+:root.dark .mobile-btn-secondary,
+.dark .mobile-btn-secondary {
+  background: var(--surface-elevated);
+  border-color: var(--border-secondary);
+}
+
+/* =============================================================================
+   DISABLE ANIMATIONS FOR REDUCED MOTION
+   ============================================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  .mobile-fade-in,
+  .mobile-slide-up,
+  .mobile-slide-in-left,
+  .mobile-card,
+  .mobile-btn,
+  .touch-target,
+  .touch-target-lg,
+  .touch-target-xl {
+    animation: none;
+    transition: none;
+  }
+}

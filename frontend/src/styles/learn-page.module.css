@@ -1,0 +1,309 @@
+/* =============================================================================
+   LEARN PAGE - BEAUTIFUL & MOBILE-FRIENDLY STYLING
+   =============================================================================
+   Beautiful card-based design using design tokens
+============================================================================= */
+
+/* ==================== MAIN CONTAINER ==================== */
+
+.container {
+  padding: calc(64px + var(--space-lg)) var(--space-md) var(--space-lg);
+  max-width: 1200px;
+  margin: 0 auto;
+  min-height: 100vh;
+}
+
+@media (min-width: 768px) {
+  .container {
+    padding: calc(64px + var(--space-2xl)) var(--space-lg) var(--space-2xl);
+  }
+}
+
+/* ==================== HEADER SECTION ==================== */
+
+.header {
+  text-align: center;
+  margin-bottom: var(--space-2xl);
+  padding: 0 var(--space-md);
+}
+
+.title {
+  font-size: var(--text-3xl);
+  font-weight: var(--font-extrabold);
+  margin-bottom: var(--space-md);
+  line-height: var(--leading-tight);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm);
+}
+
+.titleIcon {
+  /* Keep emoji natural colors */
+  font-size: var(--text-3xl);
+}
+
+.titleText {
+  background: var(--gradient-brand);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+@media (min-width: 768px) {
+  .title {
+    font-size: var(--text-4xl);
+  }
+}
+
+.subtitle {
+  font-size: var(--text-lg);
+  color: var(--text-secondary);
+  font-weight: var(--font-medium);
+  line-height: var(--leading-relaxed);
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+@media (min-width: 768px) {
+  .subtitle {
+    font-size: var(--text-xl);
+  }
+}
+
+/* ==================== CARDS GRID ==================== */
+
+.cardsGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-lg);
+  margin-top: var(--space-2xl);
+}
+
+@media (min-width: 640px) {
+  .cardsGrid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-xl);
+  }
+}
+
+@media (min-width: 1024px) {
+  .cardsGrid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-xl);
+  }
+}
+
+/* ==================== INDIVIDUAL CARDS ==================== */
+
+.card {
+  background: var(--surface-card);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-xl);
+  padding: var(--space-xl);
+  text-decoration: none;
+  display: block;
+  position: relative;
+  overflow: hidden;
+  transition: all var(--transition-normal) var(--easing-default);
+  box-shadow: var(--shadow-sm);
+  cursor: pointer;
+}
+
+.card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: var(--border-default);
+  transition: all var(--transition-normal) var(--easing-default);
+}
+
+.card:hover {
+  transform: translateY(-8px);
+  box-shadow: var(--shadow-xl);
+  border-color: var(--border-focus);
+}
+
+.card:hover::before {
+  height: 6px;
+}
+
+/* ==================== CARD COLOR CODING ==================== */
+
+/* FAQ - Info Colors (Blue) */
+.cardFaq::before {
+  background: var(--info-primary);
+}
+
+.cardFaq:hover {
+  border-color: var(--info-primary);
+}
+
+.cardFaq .cardIcon {
+  color: var(--info-primary);
+}
+
+.cardFaq .cardAction {
+  color: var(--info-primary);
+}
+
+/* Beginners - Success Colors (Green) */
+.cardBeginners::before {
+  background: var(--success-primary);
+}
+
+.cardBeginners:hover {
+  border-color: var(--success-primary);
+}
+
+.cardBeginners .cardIcon {
+  color: var(--success-primary);
+}
+
+.cardBeginners .cardAction {
+  color: var(--success-primary);
+}
+
+/* Legendary Investors - Brand Colors (Purple) */
+.cardLegendary::before {
+  background: var(--brand-primary);
+}
+
+.cardLegendary:hover {
+  border-color: var(--brand-primary);
+}
+
+.cardLegendary .cardIcon {
+  color: var(--brand-primary);
+}
+
+.cardLegendary .cardAction {
+  color: var(--brand-primary);
+}
+
+/* Macro Economics - Warning Colors (Orange) */
+.cardMacro::before {
+  background: var(--warning-primary);
+}
+
+.cardMacro:hover {
+  border-color: var(--warning-primary);
+}
+
+.cardMacro .cardIcon {
+  color: var(--warning-primary);
+}
+
+.cardMacro .cardAction {
+  color: var(--warning-primary);
+}
+
+/* Valuation Methods - Accent Colors (Blue-Purple) */
+.cardValuation::before {
+  background: var(--brand-accent);
+}
+
+.cardValuation:hover {
+  border-color: var(--brand-accent);
+}
+
+.cardValuation .cardIcon {
+  color: var(--brand-accent);
+}
+
+.cardValuation .cardAction {
+  color: var(--brand-accent);
+}
+
+/* ==================== CARD CONTENT ==================== */
+
+.cardIcon {
+  font-size: 2.5rem;
+  margin-bottom: var(--space-md);
+  display: block;
+  transition: all var(--transition-normal) var(--easing-default);
+  line-height: 1;
+}
+
+.card:hover .cardIcon {
+  transform: scale(1.1);
+}
+
+.cardTitle {
+  font-size: var(--text-xl);
+  font-weight: var(--font-bold);
+  color: var(--text-primary);
+  margin-bottom: var(--space-sm);
+  line-height: var(--leading-tight);
+}
+
+.cardDescription {
+  font-size: var(--text-base);
+  color: var(--text-secondary);
+  line-height: var(--leading-relaxed);
+  margin-bottom: var(--space-lg);
+}
+
+.cardAction {
+  font-size: var(--text-sm);
+  font-weight: var(--font-semibold);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  transition: all var(--transition-normal) var(--easing-default);
+}
+
+.card:hover .cardAction {
+  transform: translateX(4px);
+}
+
+/* ==================== MOBILE OPTIMIZATIONS ==================== */
+
+@media (max-width: 639px) {
+  .card {
+    padding: var(--space-lg);
+  }
+  
+  .cardIcon {
+    font-size: 2rem;
+    margin-bottom: var(--space-sm);
+  }
+  
+  .cardTitle {
+    font-size: var(--text-lg);
+  }
+  
+  .cardDescription {
+    font-size: var(--text-sm);
+  }
+}
+
+/* ==================== ACCESSIBILITY ==================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .card,
+  .cardIcon,
+  .cardAction {
+    transition: none;
+  }
+  
+  .card:hover {
+    transform: none;
+  }
+  
+  .card:hover .cardIcon {
+    transform: none;
+  }
+  
+  .card:hover .cardAction {
+    transform: none;
+  }
+}
+
+.card:focus-visible {
+  outline: 2px solid var(--brand-primary);
+  outline-offset: 2px;
+}

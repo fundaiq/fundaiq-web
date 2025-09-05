@@ -1,0 +1,295 @@
+/* =============================================================================
+   STOCK SEARCH NAV MODULE CSS
+   =============================================================================
+   
+   Proper z-index management to show suggestions below search input
+   Works with your existing design system
+============================================================================= */
+
+/* ==================== SEARCH CONTAINER ==================== */
+.searchContainer {
+  position: relative;
+  z-index: var(--z-popover); /* 1060 - Higher than sticky nav (1020) */
+}
+
+/* ==================== SUGGESTIONS DROPDOWN ==================== */
+.suggestionsDropdown {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  z-index: var(--z-popover); /* 1060 - Ensures it appears above everything */
+  
+  /* Glass morphism background */
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  
+  /* Enhanced styling */
+  border: 1px solid rgba(226, 232, 240, 0.8);
+  border-radius: var(--radius-xl);
+  box-shadow: 
+    0 10px 40px rgba(15, 23, 42, 0.1),
+    0 4px 16px rgba(15, 23, 42, 0.05);
+    
+  /* Smooth animations */
+  animation: dropdownSlideIn 0.2s ease-out;
+  transform-origin: top;
+  
+  /* Max height with scroll */
+  max-height: 320px;
+  overflow-y: auto;
+  
+  /* Custom scrollbar */
+  scrollbar-width: thin;
+  scrollbar-color: rgba(102, 126, 234, 0.3) transparent;
+}
+
+/* Dark theme support */
+:root.dark .suggestionsDropdown,
+.dark .suggestionsDropdown,
+[data-theme="dark"] .suggestionsDropdown {
+  background: rgba(15, 23, 42, 0.95);
+  border: 1px solid rgba(51, 65, 85, 0.8);
+  box-shadow: 
+    0 10px 40px rgba(0, 0, 0, 0.3),
+    0 4px 16px rgba(0, 0, 0, 0.2);
+}
+
+/* ==================== SUGGESTION ITEMS ==================== */
+.suggestionItem {
+  width: 100%;
+  padding: var(--space-lg) var(--space-xl);
+  text-align: left;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  transition: all var(--transition-normal) var(--easing-default);
+  border-bottom: 1px solid rgba(226, 232, 240, 0.5);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+}
+
+/* Dark theme for suggestion items */
+:root.dark .suggestionItem,
+.dark .suggestionItem,
+[data-theme="dark"] .suggestionItem {
+  border-bottom: 1px solid rgba(51, 65, 85, 0.5);
+}
+
+.suggestionItem:last-child {
+  border-bottom: none;
+}
+
+/* Hover and focus states */
+.suggestionItem:hover,
+.suggestionItem:focus {
+  background: rgba(102, 126, 234, 0.08);
+  transform: translateX(2px);
+  outline: none;
+}
+
+/* Dark theme hover */
+:root.dark .suggestionItem:hover,
+:root.dark .suggestionItem:focus,
+.dark .suggestionItem:hover,
+.dark .suggestionItem:focus,
+[data-theme="dark"] .suggestionItem:hover,
+[data-theme="dark"] .suggestionItem:focus {
+  background: rgba(124, 143, 240, 0.1);
+}
+
+/* Highlighted/selected state */
+.suggestionItem.highlighted {
+  background: rgba(102, 126, 234, 0.12);
+  transform: translateX(4px);
+  border-left: 4px solid var(--brand-primary);
+}
+
+/* Dark theme highlighted */
+:root.dark .suggestionItem.highlighted,
+.dark .suggestionItem.highlighted,
+[data-theme="dark"] .suggestionItem.highlighted {
+  background: rgba(124, 143, 240, 0.15);
+}
+
+/* ==================== SUGGESTION ITEM CONTENT ==================== */
+.suggestionIcon {
+  width: 32px;
+  height: 32px;
+  background: var(--gradient-brand);
+  border-radius: var(--radius-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.suggestionIcon svg {
+  width: 32px;
+  height: 32px;
+  color: white;
+}
+
+.suggestionContent {
+  flex: 1;
+  min-width: 0;
+}
+
+.suggestionTicker {
+  font-weight: var(--font-semibold);
+  color: var(--text-primary);
+  font-size: var(--text-sm);
+  margin-bottom: var(--space-xs);
+}
+
+.suggestionName {
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.suggestionArrow {
+  width: 16px;
+  height: 16px;
+  color: var(--text-tertiary);
+  opacity: 0;
+  transition: opacity var(--transition-normal) var(--easing-default);
+}
+
+.suggestionItem:hover .suggestionArrow {
+  opacity: 1;
+}
+
+/* ==================== NO RESULTS MESSAGE ==================== */
+.noResultsContainer {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  z-index: var(--z-popover);
+  
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(226, 232, 240, 0.8);
+  border-radius: var(--radius-xl);
+  box-shadow: 
+    0 10px 40px rgba(15, 23, 42, 0.1),
+    0 4px 16px rgba(15, 23, 42, 0.05);
+  
+  padding: var(--space-xl);
+  text-align: center;
+  animation: dropdownSlideIn 0.2s ease-out;
+}
+
+/* Dark theme for no results */
+:root.dark .noResultsContainer,
+.dark .noResultsContainer,
+[data-theme="dark"] .noResultsContainer {
+  background: rgba(15, 23, 42, 0.95);
+  border: 1px solid rgba(51, 65, 85, 0.8);
+  box-shadow: 
+    0 10px 40px rgba(0, 0, 0, 0.3),
+    0 4px 16px rgba(0, 0, 0, 0.2);
+}
+
+.noResultsIcon {
+  width: 48px;
+  height: 48px;
+  margin: 0 auto var(--space-md);
+  background: var(--surface-secondary);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.noResultsIcon svg {
+  width: 20px;
+  height: 20px;
+  color: var(--text-tertiary);
+}
+
+.noResultsText {
+  font-size: var(--text-sm);
+  color: var(--text-tertiary);
+}
+
+/* ==================== ANIMATIONS ==================== */
+@keyframes dropdownSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-8px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* ==================== RESPONSIVE ADJUSTMENTS ==================== */
+@media (max-width: 640px) {
+  .suggestionsDropdown {
+    left: calc(-1 * var(--space-md));
+    right: calc(-1 * var(--space-md));
+    max-height: 280px;
+  }
+  
+  .suggestionItem {
+    padding: var(--space-md) var(--space-lg);
+  }
+  
+  .suggestionIcon {
+    width: 28px;
+    height: 28px;
+  }
+  
+  .suggestionIcon svg {
+    width: 14px;
+    height: 14px;
+  }
+  
+  .suggestionTicker,
+  .suggestionName {
+    font-size: var(--text-xs);
+  }
+}
+
+/* ==================== ACCESSIBILITY ==================== */
+.suggestionItem:focus {
+  outline: 2px solid var(--brand-primary);
+  outline-offset: -2px;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .suggestionsDropdown,
+  .noResultsContainer {
+    border: 2px solid var(--border-primary);
+    background: var(--surface-primary);
+    backdrop-filter: none;
+  }
+  
+  .suggestionItem:hover,
+  .suggestionItem:focus {
+    background: var(--surface-secondary);
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .suggestionsDropdown,
+  .noResultsContainer {
+    animation: none;
+  }
+  
+  .suggestionItem {
+    transition: none;
+  }
+}
