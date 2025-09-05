@@ -1,33 +1,70 @@
-from fastapi import FastAPI 
-from routers import dcf, sensitivity
+# backend/main.py
+from __future__ import annotations
+
+import logging
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from routers import upload  # assuming inside routers/upload.py
-from routers import eps
-from routers import yahoo_fetcher
 
+from core.config import settings
+#from routers.enhanced_pdf_generator import router as pdf_router
+from routers import (
+    dcf,
+    sensitivity,
+    upload,
+    eps,
+    yahoo_fetcher,
+    auth,
+    portfolios,
+    transactions,
+    prices_series,  
+)
 
-app = FastAPI() 
+app = FastAPI(title="FundaIQ API")
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger("fundaiq")
+
+# ----- CORS -----
+# Keep a tight allowlist for known front-end origins, plus a LAN regex for dev.
+KNOWN_ORIGINS = {
+    settings.FRONTEND_ORIGIN,
+    settings.FRONTEND_BASE_URL,
+    "https://fundaiq.com",
+    "https://www.fundaiq.com",
+    "https://fundaiq-web.vercel.app",    
+}
+# Remove any Nones
+ALLOWED_ORIGINS = [o for o in KNOWN_ORIGINS if o]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://localhost:3000",
-        "http://192.168.0.17:3000",
-        "http://192.168.0.17:8000",
-        "https://www.fundaiq.com",   # ✅ Production
-        "https://fundaiq.com",       # ✅ Without www
-        "https://fundaiq-web.vercel.app"
-    ],
-    allow_credentials=True,
+    allow_origins=ALLOWED_ORIGINS,
+    allow_origin_regex=r"http://192\.168\.\d{1,3}\.\d{1,3}:\d{2,5}",
+    allow_credentials=True,          # required because frontend uses credentials: 'include'
     allow_methods=["*"],
     allow_headers=["*"],
-) 
+)
 
-@app.get("/") 
-def read_root(): 
-    return {"message": "Backend is working!"} 
+# ----- Health / Root -----
+@app.get("/")
+def read_root():
+    return {"message": "Backend is working!"}
 
-app.include_router(upload.router, prefix="/api")    
+@app.get("/api/health")
+def health():
+    return {"ok": True}
+
+# ----- Routers -----
+app.include_router(upload.router, prefix="/api")
 app.include_router(dcf.router, prefix="/api")
 app.include_router(sensitivity.router, prefix="/api")
 app.include_router(eps.router, prefix="/api")
-app.include_router(yahoo_fetcher.router,  prefix="/api")
+app.include_router(yahoo_fetcher.router, prefix="/api")
+app.include_router(auth.router, prefix="/api")
+app.include_router(portfolios.router, prefix="/api")
+app.include_router(transactions.router, prefix="/api")
+#app.include_router(auth_debug.router, prefix="/api")
+#app.include_router(analysis_reports.router, prefix="/api")
+#app.include_router(executive_summary.router, prefix="/api")  # ✅ Add this line
+#app.include_router(pdf_router, prefix="/api")
+app.include_router(prices_series.router, prefix="/api")

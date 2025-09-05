@@ -146,7 +146,7 @@ def calculate_metrics(pnl, bs, cf, years, source="excel", yahoo_info=None):
         "latest_net_debt": latest_net_debt,
         "ebit_margin": round(safe_divide(safe_last(ebit), safe_last(revenue)) * 100, 2) if ebit and revenue else 0,
         "depreciation_pct": round(safe_divide(safe_last(depreciation), safe_last(revenue)) * 100, 2) if depreciation and revenue else 0,
-        "wc_change_pct": 2.0,
+        "wc_change_pct": 1.0,
         "interest_pct": 11.0,
         "interest_exp": safe_last(interest),
         "interest_exp_pct": round(interest_exp_pct,2),
@@ -157,7 +157,7 @@ def calculate_metrics(pnl, bs, cf, years, source="excel", yahoo_info=None):
         "period_x": 5,
         "period_y": 15,
         "growth_terminal": 2,
-        "capex_pct": capex_pct,
+        "capex_pct": 1, # capex_pct,
         "shares_outstanding": shares[-1]
 
     }

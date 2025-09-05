@@ -35,10 +35,7 @@ def fetch_yahoo_financials(ticker):
             "info":info
 
         })
-        print("✅ P&L:", result["pnl"].keys())
-        print("✅ BS:", result["balance_sheet"].keys())
-        print("✅ CF:", result["cashflow"].keys())
-        print("✅ Years:", result["years"])
+        
         
         return result
 
@@ -52,11 +49,6 @@ def fetch_yahoo_financials2(ticker: str):
         financials = stock.financials
         balance_sheet = stock.balance_sheet
         cashflow = stock.cashflow
-
-        # DEBUG prints
-        print("📊 Raw financials shape:", financials.shape)
-        print("📊 Raw balance sheet shape:", balance_sheet.shape)
-        print("📊 Raw cash flow shape:", cashflow.shape)
 
         # If any of these are empty, print and raise
         if financials.empty or balance_sheet.empty or cashflow.empty:
@@ -145,8 +137,7 @@ def fetch_yahoo_financials2(ticker: str):
 
 
         pnl, pnl_years = clean_and_parse_df(financials, pnl_row_map, pnl_row_order)
-        print("✅ Parsed P&L rows:", list(pnl.keys()))
-        print("✅ Parsed P&L years:", pnl_years)
+        
 
         bs, bs_years = clean_and_parse_df(balance_sheet, bs_row_map, bs_row_order)
         cf, cf_years = clean_and_parse_df(cashflow, cf_row_map, cf_row_order)

@@ -27,10 +27,7 @@ def project_eps(
     net_profit_list = []
 
     # ✅ Time 0 Row
-    print("✅ base_revenue :", base_revenue)
-    print("✅ ebit_margin :", ebit_margin)
-    print("✅ interest_exp_pct :", interest_exp_pct)
-    print("✅ tax_rate :", tax_rate)
+    
     
 
     ebit_0 = base_revenue * ebit_margin / 100
@@ -39,13 +36,9 @@ def project_eps(
     tax_0 = ebt_0 * tax_rate / 100
     net_profit_0 = ebt_0 - tax_0
     eps_0 = net_profit_0 / shares_outstanding if shares_outstanding else 0
-    print("✅ ebit_0 :", ebit_0)
-    print("✅ ebt_0 :", ebt_0)
-    print("✅ tax_0 :", tax_0)
-    print("✅ net_profit_0 :", net_profit_0)
-    print("✅ eps_0 :", eps_0)
+    
     pe_0 = current_price / eps_0 if eps_0 else None
-    print("✅ pe_0 :", pe_0)
+    
     results.append({
         "year": f"FY{base_year_int + 1}"  ,
         "revenue": round(base_revenue, 2),

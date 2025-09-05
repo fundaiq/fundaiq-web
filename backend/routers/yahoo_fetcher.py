@@ -19,7 +19,7 @@ def get_yahoo_profile(data: dict = Body(...)):
     try:
         
         ticker = data.get("ticker")
-        print("Received ticker:", ticker)
+        
         result = fetch_yahoo_financials(ticker)
 
         pnl = result.get("pnl", {})
@@ -52,8 +52,6 @@ def get_yahoo_profile(data: dict = Body(...)):
             "base_year": metrics["base_year"],
             "interest_exp_pct": metrics["interest_exp_pct"]
         }
-        print("✅ Assumptions :", metrics)
-        print("✅ Assumptions :", assumptions)
         # Run DCF and Sensitivity
         
 
