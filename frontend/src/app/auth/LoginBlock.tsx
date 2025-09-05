@@ -5,7 +5,9 @@ import { useState, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import Turnstile from "react-turnstile";
 import { login } from "@/app/lib/api";
-// import EnvDiagnostic from '@/components/EnvDiagnostic';
+import EnvDiagnostic from '@/components/EnvDiagnostic';
+import SessionDebug from '@/components/SessionDebug';
+
 type Props = {
   /** Where to go after a successful login (defaults to /profile). Passed in from /auth/page.tsx via ?next=... */
   nextUrl?: string;
@@ -95,8 +97,8 @@ export function LoginBlock({ nextUrl = "/profile" }: Props) {
 
   return (
     <>
-      {/* {process.env.NODE_ENV === 'production' && <EnvDiagnostic />} */}
-
+      {process.env.NODE_ENV === 'production' && <EnvDiagnostic />}
+      {process.env.NODE_ENV === 'production' && <SessionDebug />}
       <form onSubmit={onSubmit} className="space-y-6">
         <div className="text-center mb-6">
           <h2 className="text-2xl font-bold text-primary mb-2">Welcome back</h2>
