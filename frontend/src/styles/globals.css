@@ -395,7 +395,7 @@ button {
 
 /* ==================== NAVIGATION BUTTONS ==================== */
 
-:global(.nav-button) {
+.nav-button {
   display: flex;
   align-items: center;
   gap: var(--space-xs);
@@ -415,58 +415,58 @@ button {
 }
 
 @media (max-width: 640px) {
-  :global(.nav-button) {
+  .nav-button {
     padding: var(--space-xs) var(--space-sm);
     min-width: auto;
   }
   
-  :global(.nav-button-text) {
+  .nav-button-text {
     display: none; /* Show only icons on mobile */
   }
   
-  :global(.nav-button-icon) {
+  .nav-button-icon {
     font-size: 16px;
   }
   
-  :global(.reset-button) {
+  .reset-button {
     padding: var(--space-xs) var(--space-sm);
   }
   
-  :global(.reset-button-text) {
+  .reset-button-text {
     display: none;
   }
 }
 
 /* High contrast mode support */
 @media (prefers-contrast: high) {
-  :global(.nav-button) {
+  .nav-button {
     border-width: 2px;
   }
   
-  :global(.nav-button.active) {
+  .nav-button.active {
     border-color: var(--text-inverse);
   }
 }
 
 /* Reduced motion support */
 @media (prefers-reduced-motion: reduce) {
-  :global(.nav-button),
-  :global(.reset-button),
-  :global(.nav-button-icon),
-  :global(.reset-button-icon) {
+  .nav-button,
+  .reset-button,
+  .nav-button-icon,
+  .reset-button-icon {
     transition: none;
     animation: none;
   }
 }
 
-:global(.nav-button:focus),
-:global(.reset-button:focus) {
+.nav-button:focus,
+.reset-button:focus {
   outline: 2px solid var(--brand-accent);
   outline-offset: 2px;
 }
 
 
-:global(.nav-button:hover) {
+.nav-button:hover {
   background: var(--surface-secondary);
   border-color: var(--brand-accent);
   color: var(--text-primary);
@@ -474,7 +474,7 @@ button {
   box-shadow: var(--shadow-sm);
 }
 
-:global(.nav-button.active) {
+.nav-button.active {
   background: var(--gradient-brand);
   border-color: var(--brand-primary);
   color: var(--text-inverse);
@@ -484,23 +484,23 @@ button {
 
 /* ==================== BUTTON CONTENT ==================== */
 
-:global(.nav-button-icon) {
+.nav-button-icon {
   font-size: 14px;
   opacity: 0.8;
   transition: opacity var(--transition-fast) var(--easing-default);
 }
 
-:global(.nav-button.active .nav-button-icon) {
+.nav-button.active .nav-button-icon {
   opacity: 1;
 }
 
-:global(.nav-button-text) {
+.nav-button-text {
   transition: all var(--transition-fast) var(--easing-default);
 }
 
 /* ==================== RESET BUTTON ==================== */
 
-:global(.reset-button) {
+.reset-button {
   display: flex;
   align-items: center;
   gap: var(--space-xs);
@@ -517,27 +517,27 @@ button {
   min-height: 36px;
 }
 
-:global(.reset-button:hover) {
+.reset-button:hover {
   background: var(--danger-secondary);
   transform: translateY(-1px);
   box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
 }
 
-:global(.reset-button-icon) {
+.reset-button-icon {
   font-size: 14px;
   animation: rotate 2s linear infinite;
   animation-play-state: paused;
 }
 
-:global(.reset-button:hover .reset-button-icon) {
+.reset-button:hover .reset-button-icon {
   animation-play-state: running;
 }
 
-:global(.reset-button-text) {
+.reset-button-text {
   font-weight: var(--font-medium);
 }
 
-:global(.report-nav-container) {
+.report-nav-container {
   position: sticky;
   top: 4rem; /* Increased from 3.25rem to account for main nav */
   z-index: 45; /* Higher than most elements */
@@ -547,11 +547,11 @@ button {
   box-shadow: var(--shadow-sm);
 }
 
-:global(.dark .report-nav-container) {
+.dark .report-nav-container {
   background: rgba(24, 24, 27, 0.95);
 }
 
-:global(.dark) .reportTopNavContainer {
+.dark .reportTopNavContainer {
   background: rgba(24, 24, 27, 0.95);
 }
 /* ==================== ACCESSIBILITY ==================== */
@@ -599,15 +599,15 @@ button {
 
 /* Tablet and up - show full labels */
 @media (min-width: 641px) {
-  :global(.nav-button-icon) {
+  .nav-button-icon {
     display: block;
   }
   
-  :global(.nav-button-text) {
+  .nav-button-text {
     display: block;
   }
   
-  :global(.reset-button-text) {
+  .reset-button-text {
     display: block;
   }
 }
@@ -615,12 +615,12 @@ button {
 /* ==================== SCROLLBAR HIDING ==================== */
 
 /* Hide scrollbar for Chrome, Safari and Opera */
-:global(.nav-container)::-webkit-scrollbar {
+.nav-container ::-webkit-scrollbar {
   display: none;
 }
 
 /* Hide scrollbar for IE, Edge and Firefox */
-:global(.nav-container) {
+.nav-container {
   -ms-overflow-style: none;  /* IE and Edge */
   scrollbar-width: none;  /* Firefox */
 }
