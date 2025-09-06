@@ -17,7 +17,7 @@ const ALL_FAQS: QA[] = [
   {
     category: "Getting Started",
     q: "Is Funda-IQ free?",
-    a: "Yes—core features are free. We’ll introduce premium features later, but you’ll always have a free path for analysis.",
+    a: "Yes—core features are free. We'll introduce premium features later, but you'll always have a free path for analysis.",
   },
   {
     category: "Getting Started",
@@ -72,13 +72,13 @@ const ALL_FAQS: QA[] = [
   // Financial Health
   {
     category: "Financial Health",
-    q: "What’s inside Financial Health?",
+    q: "What's inside Financial Health?",
     a: "Growth (Sales/EPS), Profitability (EBIT/EBITDA, margins), Solvency (Debt/Equity, Interest Coverage), CapEx (Net Block, CWIP), Efficiency (ROE/ROCE), and Cash Flow quality.",
   },
   {
     category: "Financial Health",
     q: "Why do some charts show 0s or missing data?",
-    a: "Sometimes Yahoo Finance doesn’t provide all rows. We handle missing values gracefully and clearly flag them.",
+    a: "Sometimes Yahoo Finance doesn't provide all rows. We handle missing values gracefully and clearly flag them.",
   },
 
   // Portfolios
@@ -148,9 +148,22 @@ const ALL_FAQS: QA[] = [
   {
     category: "Learn Section",
     q: "Can I request topics?",
-    a: "Absolutely. Tell us what would help, and we’ll prioritize it in the Learn roadmap.",
+    a: "Absolutely. Tell us what would help, and we'll prioritize it in the Learn roadmap.",
   },
 ];
+
+// Category icons mapping
+const categoryIcons = {
+  "Getting Started": "🚀",
+  "Data": "📊",
+  "Valuation": "💰",
+  "Financial Health": "🏥",
+  "Portfolios": "📈",
+  "Product & UX": "🎨",
+  "Accuracy & Scope": "🎯",
+  "Accounts & Security": "🔒",
+  "Learn Section": "📚"
+};
 
 export default function FAQPage() {
   const [query, setQuery] = useState("");
@@ -186,42 +199,108 @@ export default function FAQPage() {
     mainEntity: schemaItems,
   };
 
+  // Get category stats
+  const categoryStats = useMemo(() => {
+    const stats = {};
+    ALL_FAQS.forEach(faq => {
+      stats[faq.category] = (stats[faq.category] || 0) + 1;
+    });
+    return stats;
+  }, []);
+
   return (
-    <div style={{paddingTop: '80px'}} className="py-8">
+    <div className="container mx-auto" style={{ paddingTop: 'calc(64px + var(--space-lg))' }}>
       <Breadcrumbs />
 
-      <header className="mb-6">
-        <h1 className="text-3xl font-bold text-primary">FAQ</h1>
-        <p className="text-secondary mt-2">
-          Answers about data, valuation, portfolios, and your account.
+      {/* Beautiful Header */}
+      <div className="text-center mb-5 px-4 py-5 bg-brand rounded-2xl text-white shadow-lg">
+        <h1 className="text-4xl font-extrabold mb-3 flex items-center justify-center gap-3">
+          <span className="text-4xl">❓</span>
+          <span>Frequently Asked Questions</span>
+        </h1>
+        <p className="text-xl font-medium">
+          Find answers about data, valuation, portfolios, and your account
         </p>
-      </header>
-
-      {/* Controls */}
-      <div className="flex flex-col md:flex-row gap-3 md:items-center md:justify-between mb-6">
-        <input
-          className="w-full md:w-1/2 px-4 py-2 rounded-lg border border-default bg-surface"
-          placeholder="Search questions (e.g., DCF, EPS, portfolio)..."
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-        />
-        <div className="flex items-center gap-3">
-          <label className="text-sm text-secondary">Category</label>
-          <select
-            className="px-3 py-2 rounded-lg border border-default bg-surface"
-            value={category}
-            onChange={(e) => setCategory(e.target.value)}
-          >
-            {categories.map((c) => (
-              <option key={c} value={c}>
-                {c}
-              </option>
-            ))}
-          </select>
+        <div className="mt-4 text-sm opacity-90">
+          <span className="bg-white/20 px-3 py-1 rounded-full">
+            {ALL_FAQS.length} questions answered
+          </span>
         </div>
       </div>
 
-      {/* List */}
+      {/* Search and Filter Controls */}
+      <div className="card-base mb-5">
+        <div className="flex flex-col lg:flex-row gap-4">
+          {/* Search Input */}
+          <div className="flex-1">
+            <label className="block text-sm font-medium text-secondary mb-2">
+              🔍 Search Questions
+            </label>
+            <input
+              className="input-base w-full"
+              placeholder="Search questions (e.g., DCF, EPS, portfolio)..."
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+            />
+          </div>
+
+          {/* Category Filter */}
+          <div className="lg:w-64">
+            <label className="block text-sm font-medium text-secondary mb-2">
+              📁 Filter by Category
+            </label>
+            <select
+              className="input-base w-full"
+              value={category}
+              onChange={(e) => setCategory(e.target.value)}
+            >
+              {categories.map((c) => (
+                <option key={c} value={c}>
+                  {c === "All" ? "All Categories" : `${categoryIcons[c] || "📄"} ${c}`}
+                  {c !== "All" && ` (${categoryStats[c] || 0})`}
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
+
+        {/* Quick Stats */}
+        {query || category !== "All" ? (
+          <div className="mt-4 pt-4 border-t border-default">
+            <p className="text-sm text-secondary">
+              Showing <span className="font-semibold text-primary">{filtered.length}</span> of {ALL_FAQS.length} questions
+              {category !== "All" && (
+                <span> in <span className="font-semibold brand-text">{category}</span></span>
+              )}
+              {query && (
+                <span> matching "<span className="font-semibold brand-text">{query}</span>"</span>
+              )}
+            </p>
+          </div>
+        ) : null}
+      </div>
+
+      {/* Category Quick Links */}
+      {!query && category === "All" && (
+        <div className="mb-5">
+          <h2 className="text-2xl font-bold text-primary mb-3">Browse by Category</h2>
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+            {categories.slice(1).map((cat) => (
+              <button
+                key={cat}
+                onClick={() => setCategory(cat)}
+                className="bg-surface-secondary hover:bg-surface-tertiary border border-default rounded-lg p-3 text-left transition-all hover:shadow-sm hover:scale-105"
+              >
+                <div className="text-2xl mb-1">{categoryIcons[cat] || "📄"}</div>
+                <div className="font-medium text-primary text-sm">{cat}</div>
+                <div className="text-xs text-secondary">{categoryStats[cat]} questions</div>
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* FAQ List */}
       <div className="space-y-3">
         {filtered.map((f, idx) => {
           const id = `${f.category}-${idx}`;
@@ -229,22 +308,35 @@ export default function FAQPage() {
           return (
             <div
               key={id}
-              className="rounded-lg border border-default bg-surface overflow-hidden"
+              className="card-base !p-0 overflow-hidden transition-all duration-200"
             >
               <button
-                className="w-full text-left px-4 py-3 hover:bg-surface-secondary flex items-start justify-between gap-4"
+                className="w-full text-left p-4 hover:bg-surface-secondary flex items-start justify-between gap-4 transition-colors"
                 onClick={() => setOpen(expanded ? null : id)}
                 aria-expanded={expanded}
               >
-                <div>
-                  <div className="text-xs text-accent font-medium">{f.category}</div>
-                  <div className="text-lg font-semibold text-primary">{f.q}</div>
+                <div className="flex-1">
+                  <div className="flex items-center gap-2 mb-2">
+                    <span className="text-lg">{categoryIcons[f.category] || "📄"}</span>
+                    <span className="text-xs font-medium brand-text bg-surface-secondary px-2 py-1 rounded-full">
+                      {f.category}
+                    </span>
+                  </div>
+                  <div className="text-lg font-semibold text-primary leading-tight">
+                    {f.q}
+                  </div>
                 </div>
-                <div className="text-2xl leading-none select-none">{expanded ? "−" : "+"}</div>
+                <div className="flex-shrink-0 w-8 h-8 bg-surface-secondary rounded-full flex items-center justify-center text-lg font-bold text-secondary transition-transform duration-200" 
+                     style={{ transform: expanded ? 'rotate(45deg)' : 'rotate(0deg)' }}>
+                  +
+                </div>
               </button>
+              
               {expanded && (
-                <div className="px-4 pb-4 -mt-1 text-secondary">
-                  <p className="pt-1">{f.a}</p>
+                <div className="px-4 pb-4 bg-surface-secondary/50 border-t border-default">
+                  <div className="pt-4 text-secondary leading-relaxed">
+                    {f.a}
+                  </div>
                 </div>
               )}
             </div>
@@ -252,8 +344,39 @@ export default function FAQPage() {
         })}
 
         {filtered.length === 0 && (
-          <div className="text-secondary text-sm">No results. Try another keyword.</div>
+          <div className="card-base text-center py-8">
+            <div className="text-4xl mb-3">🔍</div>
+            <h3 className="text-xl font-semibold text-primary mb-2">No results found</h3>
+            <p className="text-secondary mb-4">
+              Try a different keyword or browse all categories
+            </p>
+            <button
+              onClick={() => {
+                setQuery("");
+                setCategory("All");
+              }}
+              className="btn-base btn-primary"
+            >
+              Reset Filters
+            </button>
+          </div>
         )}
+      </div>
+
+      {/* Help Section */}
+      <div className="mt-5 card-base text-center">
+        <h3 className="text-xl font-bold text-primary mb-3">Still have questions?</h3>
+        <p className="text-secondary mb-4">
+          Can't find what you're looking for? We're here to help!
+        </p>
+        <div className="flex flex-col sm:flex-row gap-3 justify-center">
+          <button className="btn-base btn-primary">
+            Contact Support
+          </button>
+          <button className="btn-base btn-secondary">
+            Request New FAQ
+          </button>
+        </div>
       </div>
 
       {/* SEO: JSON-LD */}

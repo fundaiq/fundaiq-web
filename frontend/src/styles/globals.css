@@ -60,9 +60,29 @@ body {
   --chart-benchmark1-color: var(--accent-primary);
   --chart-benchmark2-color: var(--warning-primary);
   --chart-benchmark3-color: var(--danger-primary);
+ 
   --gradient-brand: linear-gradient(90deg, var(--brand-primary) 0%, var(--brand-secondary, #4f46e5) 100%);
+    /* ==================== CHART COLORS - LIGHT THEME ==================== */
+  --chart-grid-light: rgba(229, 231, 235, 0.4);
+  --chart-tick-light: #6B7280;
+  --chart-line-light: rgba(59, 130, 246, 1);
+  --chart-bg-light: rgba(34, 197, 94, 0.1);
+  --chart-point-light: rgba(34, 197, 94, 1);
+  --chart-label-light: #374151;
+  --chart-bar-bg-light: rgba(59, 130, 246, 0.6);
 }
 
+[data-theme="dark"] {
+  /* Existing dark theme variables... */
+  
+  --chart-grid-dark: rgba(75, 85, 99, 0.4);
+  --chart-tick-dark: #9CA3AF;
+  --chart-line-dark: rgba(96, 165, 250, 1);
+  --chart-bg-dark: rgba(34, 197, 94, 0.2);
+  --chart-point-dark: rgba(34, 197, 94, 1);
+  --chart-label-dark: #D1D5DB;
+  --chart-bar-bg-dark: rgba(96, 165, 250, 0.7);
+}
 
 /* ==================== TYPOGRAPHY DEFAULTS ==================== */
 
@@ -633,8 +653,8 @@ button {
 
 .reportTopNavContainer {
   position: sticky;
-  top: 4rem; /* Account for main TopNav height */
-  z-index: 45; /* Higher than most elements */
+  top: 64px; /* Account for main TopNav height */
+  z-index: 40; /* Higher than most elements */
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
@@ -655,6 +675,7 @@ button {
 }
 @media (max-width: 768px) {
   .reportTopNavContent {
+    top: 64px;
     padding: 0 var(--space-md); /* Match mobile padding */
   }
 }

@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 
 const sections = [
   { id: 'pricechart', label: 'Price Chart', icon: '📈' },
-  { id: 'stockmetrics', label: 'Key Metircs', icon: '📊' },
+  { id: 'stockmetrics', label: 'Key Metrics', icon: '📊' },
   { id: 'health', label: 'Financial Health', icon: '💊' },
   { id: 'valuation', label: 'Valuation Output', icon: '🎯' },
   { id: 'assumptions', label: 'Valuation Assumptions', icon: '⚙️' },
@@ -12,9 +12,6 @@ const sections = [
   { id: 'eps', label: 'EPS Projection', icon: '💰' },
   { id: 'info', label: 'Company Info', icon: '🏢' },
 ];
-
-import styles from '@/styles/ReportTopNav.module.css';
-
 
 interface ReportTopNavProps {
   scrollTo: (sectionId: string) => void;
@@ -44,34 +41,30 @@ export default function ReportTopNav({ scrollTo, showSections, onReset }: Report
   }, []);
 
   return (
-    
-    <div className={styles.reportTopNavContainer}>
-      <div className={styles.reportTopNavContent}>
+    <div className="reportTopNavContainer">
+      <div className="reportTopNavContent">
         <div className="px-4 py-3">
           <div 
             ref={navRef}
             className="flex gap-2 overflow-x-auto scroll-smooth pb-1"
-            style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
           >
             <div className="flex gap-2 min-w-max">
-              {sections.map((section) => 
-                showSections && (
-                  <button
-                    key={section.id}
-                    onClick={() => scrollTo(section.id)}
-                    className={`nav-button ${
-                      active === section.id ? 'active' : ''
-                    }`}
-                  >
-                    <span className="nav-button-icon">
-                      {section.icon}
-                    </span>
-                    <span className="nav-button-text">
-                      {section.label}
-                    </span>
-                  </button>
-                )
-              )}
+              {sections.map((section) => (
+                <button
+                  key={section.id}
+                  onClick={() => scrollTo(section.id)}
+                  className={`nav-button ${
+                    active === section.id ? 'active' : ''
+                  }`}
+                >
+                  <span className="nav-button-icon">
+                    {section.icon}
+                  </span>
+                  <span className="nav-button-text">
+                    {section.label}
+                  </span>
+                </button>
+              ))}
 
               <button
                 onClick={onReset}

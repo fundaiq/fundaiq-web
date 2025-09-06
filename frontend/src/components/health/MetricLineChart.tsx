@@ -1,4 +1,4 @@
-// MetricLineChart.tsx
+// MetricLineChart.tsx - SIMPLIFIED with CSS Custom Properties
 'use client';
 
 import {
@@ -14,6 +14,7 @@ import {
 import { Line } from 'react-chartjs-2';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { useEffect, useState } from 'react';
+import styles from '@/styles/FinancialHealthSection.module.css';
 
 ChartJS.register(
   LineElement,
@@ -33,49 +34,53 @@ interface Props {
 }
 
 export const MetricLineChart = ({ label, data, labels, percent = false }: Props) => {
-  const [theme, setTheme] = useState<'light' | 'dark'>('light');
+  const [colors, setColors] = useState({
+    gridColor: '',
+    tickColor: '',
+    lineColor: '',
+    backgroundColor: '',
+    pointColor: '',
+    labelColor: '',
+  });
 
   useEffect(() => {
-    // Detect theme from CSS variables or data attribute
-    const checkTheme = () => {
+    // Get colors from CSS custom properties
+    const updateColors = () => {
       const isDark = document.documentElement.getAttribute('data-theme') === 'dark' ||
-                    window.matchMedia('(prefers-color-scheme: dark)').matches;
-      setTheme(isDark ? 'dark' : 'light');
+                    document.documentElement.classList.contains('dark');
+      
+      const suffix = isDark ? 'dark' : 'light';
+      const computedStyle = getComputedStyle(document.documentElement);
+      
+      const newColors = {
+        gridColor: computedStyle.getPropertyValue(`--chart-grid-${suffix}`).trim(),
+        tickColor: computedStyle.getPropertyValue(`--chart-tick-${suffix}`).trim(),
+        lineColor: computedStyle.getPropertyValue(`--chart-line-${suffix}`).trim(),
+        backgroundColor: computedStyle.getPropertyValue(`--chart-bg-${suffix}`).trim(),
+        pointColor: computedStyle.getPropertyValue(`--chart-point-${suffix}`).trim(),
+        labelColor: computedStyle.getPropertyValue(`--chart-label-${suffix}`).trim(),
+      };
+
+      console.log('=== LINE CHART DEBUG ===');
+      console.log('Theme detected:', suffix);
+      console.log('isDark:', isDark);
+      console.log('CSS Colors:', newColors);
+      console.log('Y-axis tick color:', newColors.tickColor);
+      
+      setColors(newColors);
     };
-    
-    checkTheme();
-    
+
+    updateColors();
+
     // Listen for theme changes
-    const observer = new MutationObserver(checkTheme);
+    const observer = new MutationObserver(updateColors);
     observer.observe(document.documentElement, { 
       attributes: true, 
-      attributeFilter: ['data-theme'] 
+      attributeFilter: ['data-theme', 'class'] 
     });
-    
+
     return () => observer.disconnect();
   }, []);
-
-  // Theme-aware colors
-  const colors = {
-    light: {
-      gridColor: 'rgba(229, 231, 235, 0.4)',        // Light gray, subtle
-      tickColor: '#6B7280',                         // Gray-500
-      lineColor: 'rgba(34, 197, 94, 1)',           // Green-500
-      backgroundColor: 'rgba(34, 197, 94, 0.1)',   // Green with low opacity
-      pointColor: 'rgba(34, 197, 94, 1)',          // Solid green points
-      labelColor: '#374151',                        // Gray-700
-    },
-    dark: {
-      gridColor: 'rgba(75, 85, 99, 0.3)',          // Dark gray, very subtle
-      tickColor: '#9CA3AF',                         // Gray-400
-      lineColor: 'rgba(74, 222, 128, 1)',          // Green-400 (brighter for dark)
-      backgroundColor: 'rgba(74, 222, 128, 0.1)',   // Green with low opacity
-      pointColor: 'rgba(74, 222, 128, 1)',         // Solid bright green
-      labelColor: '#D1D5DB',                        // Gray-300
-    }
-  };
-
-  const currentColors = colors[theme];
 
   const chartData = {
     labels,
@@ -84,10 +89,10 @@ export const MetricLineChart = ({ label, data, labels, percent = false }: Props)
         label,
         data,
         fill: false,
-        borderColor: currentColors.lineColor,
-        backgroundColor: currentColors.backgroundColor,
-        pointBackgroundColor: currentColors.pointColor,
-        pointBorderColor: currentColors.pointColor,
+        borderColor: colors.lineColor || 'rgba(34, 197, 94, 1)',
+        backgroundColor: colors.backgroundColor || 'rgba(34, 197, 94, 0.1)',
+        pointBackgroundColor: colors.pointColor || 'rgba(34, 197, 94, 1)',
+        pointBorderColor: colors.pointColor || 'rgba(34, 197, 94, 1)',
         borderWidth: 2.5,
         pointRadius: 3,
         pointHoverRadius: 5,
@@ -102,7 +107,7 @@ export const MetricLineChart = ({ label, data, labels, percent = false }: Props)
           },
           formatter: (value: number) =>
             percent ? `${value.toFixed(1)}%` : value.toFixed(1),
-          color: currentColors.labelColor,
+          color: colors.labelColor || '#374151',
         },
       },
     ],
@@ -114,13 +119,13 @@ export const MetricLineChart = ({ label, data, labels, percent = false }: Props)
     scales: {
       x: {
         ticks: {
-          color: currentColors.tickColor,
+          color: colors.tickColor || '#6B7280',
           autoSkip: false,
           maxRotation: 45,
           font: { size: 11 }
         },
         grid: { 
-          color: currentColors.gridColor,
+          color: colors.gridColor || 'rgba(229, 231, 235, 0.4)',
           lineWidth: 1,
           drawOnChartArea: true,
           drawTicks: false,
@@ -128,13 +133,13 @@ export const MetricLineChart = ({ label, data, labels, percent = false }: Props)
       },
       y: {
         ticks: {
-          color: currentColors.tickColor,
+          color: colors.tickColor,
           font: { size: 11 },
           callback: (value: string | number) =>
             percent ? `${Number(value).toFixed(0)}%` : Number(value).toFixed(0),
         },
         grid: { 
-          color: currentColors.gridColor,
+          color: colors.gridColor,
           lineWidth: 1,
           drawOnChartArea: true,
           drawTicks: false,
@@ -154,7 +159,7 @@ export const MetricLineChart = ({ label, data, labels, percent = false }: Props)
   return (
     <div className="w-full">
       <h5 className="text-xs font-medium mb-1 text-tertiary">{label}</h5>
-      <div className="relative w-full h-[200px]">
+      <div className={`relative w-full h-[200px] ${styles.chartContainer}`}>
         <Line data={chartData} options={options} />
       </div>
     </div>
