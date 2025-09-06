@@ -97,8 +97,8 @@ export function LoginBlock({ nextUrl = "/profile" }: Props) {
 
   return (
     <>
-      {process.env.NODE_ENV === 'production' && <EnvDiagnostic />}
-      {process.env.NODE_ENV === 'production' && <SessionDebug />}
+      {/* {process.env.NODE_ENV === 'production' && <EnvDiagnostic />} */}
+      {/* {process.env.NODE_ENV === 'production' && <SessionDebug />} */}
       <form onSubmit={onSubmit} className="space-y-6">
         <div className="text-center mb-6">
           <h2 className="text-2xl font-bold text-primary mb-2">Welcome back</h2>
