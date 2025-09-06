@@ -89,6 +89,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
           <ScrollToTopButton />
           <GlobalScripts />
         </ThemeProvider>
+        <Analytics />
       </body>
     </html>
   );
