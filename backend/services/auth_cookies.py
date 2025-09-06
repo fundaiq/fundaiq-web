@@ -24,22 +24,42 @@ def _secure_cookies() -> bool:
     If you run dev over HTTPS, you can force SECURE by setting APP_ENV != 'dev'.
     """
     local_hosts = ("http://localhost", "http://127.0.0.1")
+    print(f"🔍 [COOKIE DEBUG] APP_ENV: {getattr(settings, 'APP_ENV', 'NOT_SET')}")
+    print(f"🔍 [COOKIE DEBUG] BACKEND_ORIGIN: {getattr(settings, 'BACKEND_ORIGIN', 'NOT_SET')}")
+    
     if settings.APP_ENV.lower() == "dev":
         if any(str(settings.BACKEND_ORIGIN or "").startswith(h) for h in local_hosts):
+            print(f"🔍 [COOKIE DEBUG] Using insecure cookies (dev + localhost)")
             return False
+    print(f"🔍 [COOKIE DEBUG] Using secure cookies (production)")
     return True
 
 
 def _base_cookie_kwargs():
+    secure = _secure_cookies()
+    cookie_domain = getattr(settings, 'COOKIE_DOMAIN', None)
+    
     kwargs = {
         "httponly": True,             # only for refresh cookie
-        "secure": _secure_cookies(),
+        "secure": secure,
         "samesite": "lax",
         "path": "/",
     }
+    
+    print(f"🔍 [COOKIE DEBUG] Base cookie settings:")
+    print(f"🔍 [COOKIE DEBUG]   secure: {secure}")
+    print(f"🔍 [COOKIE DEBUG]   samesite: lax")
+    print(f"🔍 [COOKIE DEBUG]   path: /")
+    print(f"🔍 [COOKIE DEBUG]   httponly: True")
+    print(f"🔍 [COOKIE DEBUG]   COOKIE_DOMAIN from settings: {cookie_domain}")
+    
     # Attach domain if provided (e.g., ".yourdomain.com") to share across subdomains
-    if settings.COOKIE_DOMAIN:
-        kwargs["domain"] = settings.COOKIE_DOMAIN
+    if cookie_domain:
+        kwargs["domain"] = cookie_domain
+        print(f"🔍 [COOKIE DEBUG]   domain: {cookie_domain}")
+    else:
+        print(f"🔍 [COOKIE DEBUG]   domain: NOT SET")
+    
     return kwargs
 
 
@@ -51,13 +71,13 @@ def _encode(payload: dict, ttl: timedelta, secret: str) -> str:
 
 
 def create_access(sub: str, minutes: Optional[int] = None) -> str:
-    """Create short‑lived access token (used in Authorization header by the FE)."""
+    """Create short-lived access token (used in Authorization header by the FE)."""
     ttl_min = minutes or (settings.ACCESS_TTL_MIN or settings.ACCESS_TOKEN_MINUTES)
     return _encode({"sub": sub, "type": "access"}, timedelta(minutes=ttl_min), settings.jwt_secret)
 
 
 def create_refresh(sub: str, days: Optional[int] = None) -> str:
-    """Create long‑lived refresh token (stored in HttpOnly cookie)."""
+    """Create long-lived refresh token (stored in HttpOnly cookie)."""
     ttl_days = days or (settings.REFRESH_TTL_DAYS or settings.REFRESH_TOKEN_DAYS)
     return _encode({"sub": sub, "type": "refresh"}, timedelta(days=ttl_days), settings.refresh_secret)
 
@@ -68,19 +88,33 @@ def set_session_cookies(response: Response, refresh_token: str, remember: bool =
     Set the HttpOnly refresh cookie + a readable 'logged_in=true' marker cookie.
     If remember=False, cookies are session cookies (no max_age).
     """
+    print(f"🔍 [COOKIE DEBUG] ==========================================")
+    print(f"🔍 [COOKIE DEBUG] set_session_cookies called")
+    print(f"🔍 [COOKIE DEBUG] refresh_token: {refresh_token[:20]}..." if refresh_token else "None")
+    print(f"🔍 [COOKIE DEBUG] remember: {remember}")
+    
     base = _base_cookie_kwargs()
+    
+    refresh_ttl_days = getattr(settings, 'REFRESH_TTL_DAYS', None) or getattr(settings, 'REFRESH_TOKEN_DAYS', 30)
+    max_age_seconds = refresh_ttl_days * 24 * 3600
+    
+    print(f"🔍 [COOKIE DEBUG] refresh_ttl_days: {refresh_ttl_days}")
+    print(f"🔍 [COOKIE DEBUG] max_age_seconds: {max_age_seconds}")
 
     # HttpOnly refresh cookie
     if remember:
+        print(f"🔍 [COOKIE DEBUG] Setting refresh cookie with max_age")
         response.set_cookie(
             REFRESH_COOKIE,
             refresh_token,
-            max_age=(settings.REFRESH_TTL_DAYS or settings.REFRESH_TOKEN_DAYS) * 24 * 3600,
+            max_age=max_age_seconds,
             **base,
         )
+        print(f"🔍 [COOKIE DEBUG] Refresh cookie set: {REFRESH_COOKIE}={refresh_token[:10]}... (max_age={max_age_seconds})")
     else:
-        # session cookie (no max_age)
+        print(f"🔍 [COOKIE DEBUG] Setting refresh cookie as session cookie")
         response.set_cookie(REFRESH_COOKIE, refresh_token, **base)
+        print(f"🔍 [COOKIE DEBUG] Refresh cookie set: {REFRESH_COOKIE}={refresh_token[:10]}... (session)")
 
     # Non-sensitive marker cookie (NOT HttpOnly) for fast frontend redirects
     logged_in_kwargs = {
@@ -89,18 +123,36 @@ def set_session_cookies(response: Response, refresh_token: str, remember: bool =
         "path": base["path"],
         # do not set httponly so middleware can read it
     }
-    if settings.COOKIE_DOMAIN:
-        logged_in_kwargs["domain"] = settings.COOKIE_DOMAIN
+    
+    cookie_domain = getattr(settings, 'COOKIE_DOMAIN', None)
+    if cookie_domain:
+        logged_in_kwargs["domain"] = cookie_domain
+        print(f"🔍 [COOKIE DEBUG] logged_in cookie domain: {cookie_domain}")
+
+    print(f"🔍 [COOKIE DEBUG] logged_in_kwargs: {logged_in_kwargs}")
 
     if remember:
-        response.set_cookie(LOGGED_IN_COOKIE, "true", max_age=(settings.REFRESH_TTL_DAYS or settings.REFRESH_TOKEN_DAYS) * 24 * 3600, **logged_in_kwargs)  # type: ignore[arg-type]
+        response.set_cookie(LOGGED_IN_COOKIE, "true", max_age=max_age_seconds, **logged_in_kwargs)
+        print(f"🔍 [COOKIE DEBUG] Logged in cookie set: {LOGGED_IN_COOKIE}=true (max_age={max_age_seconds})")
     else:
-        response.set_cookie(LOGGED_IN_COOKIE, "true", **logged_in_kwargs)  # type: ignore[arg-type]
+        response.set_cookie(LOGGED_IN_COOKIE, "true", **logged_in_kwargs)
+        print(f"🔍 [COOKIE DEBUG] Logged in cookie set: {LOGGED_IN_COOKIE}=true (session)")
+    
+    print(f"🔍 [COOKIE DEBUG] set_session_cookies completed")
+    print(f"🔍 [COOKIE DEBUG] ==========================================")
 
 
 def clear_session_cookies(response: Response) -> None:
     """Delete all auth cookies (refresh + marker + legacy access)."""
-    response.delete_cookie(REFRESH_COOKIE, path="/", domain=settings.COOKIE_DOMAIN or None)
-    response.delete_cookie(LOGGED_IN_COOKIE, path="/", domain=settings.COOKIE_DOMAIN or None)
-    # legacy access cookie (if it was used anywhere)
-    response.delete_cookie(ACCESS_COOKIE, path="/", domain=settings.COOKIE_DOMAIN or None)
+    cookie_domain = getattr(settings, 'COOKIE_DOMAIN', None)
+    
+    print(f"🔍 [COOKIE DEBUG] ==========================================")
+    print(f"🔍 [COOKIE DEBUG] clear_session_cookies called")
+    print(f"🔍 [COOKIE DEBUG] cookie_domain: {cookie_domain}")
+    
+    response.delete_cookie(REFRESH_COOKIE, path="/", domain=cookie_domain)
+    response.delete_cookie(LOGGED_IN_COOKIE, path="/", domain=cookie_domain)
+    response.delete_cookie(ACCESS_COOKIE, path="/", domain=cookie_domain)
+    
+    print(f"🔍 [COOKIE DEBUG] All cookies cleared")
+    print(f"🔍 [COOKIE DEBUG] ==========================================")

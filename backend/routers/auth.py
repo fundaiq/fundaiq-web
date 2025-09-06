@@ -215,22 +215,29 @@ async def login(payload: LoginIn, request: Request, response: Response, db: Sess
 @router.post("/refresh")
 def refresh(request: Request, response: Response, db: Session = Depends(get_db)):
     """
-    Returns a short‑lived access token. Uses the DB‑backed refresh cookie to authenticate.
+    Returns a short-lived access token. Uses the DB-backed refresh cookie to authenticate.
     Frontend should call this silently on 401 or at app start.
     """
+    print(f"🔍 [REFRESH DEBUG] ==========================================")
+    print(f"🔍 [REFRESH DEBUG] Refresh endpoint called")
+    print(f"🔍 [REFRESH DEBUG] All cookies: {dict(request.cookies)}")
+    print(f"🔍 [REFRESH DEBUG] Refresh cookie: {request.cookies.get('refresh_token')}")
+    print(f"🔍 [REFRESH DEBUG] Logged in cookie: {request.cookies.get('logged_in')}")
+    print(f"🔍 [REFRESH DEBUG] Request headers: {dict(request.headers)}")
+    
     user = security.get_user_from_refresh(request, db)
+    print(f"🔍 [REFRESH DEBUG] User from refresh: {user}")
+    
     if not user:
+        print(f"🔍 [REFRESH DEBUG] No user found, clearing cookies")
         clear_session_cookies(response)
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Not authenticated")
 
-    # Create short‑lived access token (JWT)
+    # Create short-lived access token (JWT)
     access_jwt = security.create_access_token(data={"sub": str(user.id)}, expires_delta=timedelta(minutes=15))
-
-    # Rotate refresh? (Optional)
-    # If you want rotation, create a new refresh token here and set_session_cookies(response, new_id, remember=True)
+    print(f"🔍 [REFRESH DEBUG] Access token created: {access_jwt[:20]}...")
 
     return {"access_token": access_jwt}
-
 
 @router.post("/logout")
 def logout(response: Response):
