@@ -237,13 +237,23 @@ export async function login(email: string, password: string, remember = true, ts
 }
 
 export async function logout() {
+  console.log("[AUTH] Logout starting");
+  
   try {
-    await fetch(apiUrl("auth/logout"), {
+    const response = await fetch(apiUrl("auth/logout"), {
       method: "POST",
       credentials: "include",
     });
+    console.log("[AUTH] Logout response:", response.status);
+  } catch (error) {
+    console.log("[AUTH] Logout error:", error);
   } finally {
+    console.log("[AUTH] Clearing access token");
     setAccessToken(null);
+    
+    // ADD THIS LINE - Trigger UI refresh
+    window.dispatchEvent(new Event('logout'));
+    console.log("[AUTH] Logout complete");
   }
 }
 
