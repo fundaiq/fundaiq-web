@@ -40,25 +40,23 @@ def _base_cookie_kwargs():
     cookie_domain = getattr(settings, 'COOKIE_DOMAIN', None)
     
     kwargs = {
-        "httponly": True,             # only for refresh cookie
+        "httponly": True,
         "secure": secure,
-        "samesite": "lax",
+        "samesite": "none",  # Changed from "lax" to "none" for cross-site
         "path": "/",
     }
     
     print(f"🔍 [COOKIE DEBUG] Base cookie settings:")
     print(f"🔍 [COOKIE DEBUG]   secure: {secure}")
-    print(f"🔍 [COOKIE DEBUG]   samesite: lax")
+    print(f"🔍 [COOKIE DEBUG]   samesite: none")  # Updated debug
     print(f"🔍 [COOKIE DEBUG]   path: /")
     print(f"🔍 [COOKIE DEBUG]   httponly: True")
     print(f"🔍 [COOKIE DEBUG]   COOKIE_DOMAIN from settings: {cookie_domain}")
     
-    # Attach domain if provided (e.g., ".yourdomain.com") to share across subdomains
-    if cookie_domain:
-        kwargs["domain"] = cookie_domain
-        print(f"🔍 [COOKIE DEBUG]   domain: {cookie_domain}")
-    else:
-        print(f"🔍 [COOKIE DEBUG]   domain: NOT SET")
+    # Don't set domain for cross-site cookies
+    # Remove this part:
+    # if cookie_domain:
+    #     kwargs["domain"] = cookie_domain
     
     return kwargs
 
@@ -119,7 +117,7 @@ def set_session_cookies(response: Response, refresh_token: str, remember: bool =
     # Non-sensitive marker cookie (NOT HttpOnly) for fast frontend redirects
     logged_in_kwargs = {
         "secure": base["secure"],
-        "samesite": base["samesite"],
+        "samesite": "none",  # Changed from "lax" to "none"
         "path": base["path"],
         # do not set httponly so middleware can read it
     }
