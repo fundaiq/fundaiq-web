@@ -240,14 +240,22 @@ def refresh(request: Request, response: Response, db: Session = Depends(get_db))
     return {"access_token": access_jwt}
 
 @router.post("/logout")
-def logout(request: Request, response: Response):
+def logout(request: Request, response: Response, db: Session = Depends(get_db)):
     print(f"🔍 [LOGOUT DEBUG] ==========================================")
     print(f"🔍 [LOGOUT DEBUG] Logout endpoint called")
-    print(f"🔍 [LOGOUT DEBUG] All cookies received: {dict(request.cookies)}")
+    
+    # Also delete the refresh token from database
+    refresh_cookie = request.cookies.get("refresh_token")
+    if refresh_cookie:
+        refresh_token = db.query(RefreshToken).filter(RefreshToken.id == refresh_cookie).first()
+        if refresh_token:
+            db.delete(refresh_token)
+            db.commit()
+            print(f"🔍 [LOGOUT DEBUG] Deleted refresh token from database")
     
     clear_session_cookies(response)
     
-    print(f"🔍 [LOGOUT DEBUG] Cookies cleared")
+    print(f"🔍 [LOGOUT DEBUG] Logout complete")
     print(f"🔍 [LOGOUT DEBUG] ==========================================")
     return {"ok": True}
 

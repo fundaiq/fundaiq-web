@@ -142,15 +142,13 @@ def set_session_cookies(response: Response, refresh_token: str, remember: bool =
 
 def clear_session_cookies(response: Response) -> None:
     """Delete all auth cookies (refresh + marker + legacy access)."""
-    cookie_domain = getattr(settings, 'COOKIE_DOMAIN', None)
-    
     print(f"🔍 [COOKIE DEBUG] ==========================================")
     print(f"🔍 [COOKIE DEBUG] clear_session_cookies called")
-    print(f"🔍 [COOKIE DEBUG] cookie_domain: {cookie_domain}")
     
-    response.delete_cookie(REFRESH_COOKIE, path="/", domain=cookie_domain)
-    response.delete_cookie(LOGGED_IN_COOKIE, path="/", domain=cookie_domain)
-    response.delete_cookie(ACCESS_COOKIE, path="/", domain=cookie_domain)
+    # For cross-site cookies (SameSite=none), don't set domain when deleting
+    response.delete_cookie(REFRESH_COOKIE, path="/", secure=True, samesite="none")
+    response.delete_cookie(LOGGED_IN_COOKIE, path="/", secure=True, samesite="none")
+    response.delete_cookie(ACCESS_COOKIE, path="/", secure=True, samesite="none")
     
-    print(f"🔍 [COOKIE DEBUG] All cookies cleared")
+    print(f"🔍 [COOKIE DEBUG] All cookies cleared with cross-site settings")
     print(f"🔍 [COOKIE DEBUG] ==========================================")
