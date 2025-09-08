@@ -1,137 +1,242 @@
 /* =============================================================================
-   STOCK SEARCH NAV MODULE CSS
+   STOCK SEARCH NAV - COMPLETE MODULE CSS
    =============================================================================
    
-   Proper z-index management to show suggestions below search input
-   Works with your existing design system
+   File: src/styles/StockSearchNav.module.css
+   Purpose: Beautiful, mobile-first styling for StockSearchNav component
 ============================================================================= */
 
-/* ==================== SEARCH CONTAINER ==================== */
+/* ==================== MAIN CONTAINER ==================== */
+
 .searchContainer {
   position: relative;
-  z-index: var(--z-popover); /* 1060 - Higher than sticky nav (1020) */
-}
-
-/* ==================== SUGGESTIONS DROPDOWN ==================== */
-.suggestionsDropdown {
-  position: absolute;
-  top: calc(100% + 4px);
-  left: 0;
-  right: 0;
-  z-index: var(--z-popover); /* 1060 - Ensures it appears above everything */
-  
-  /* Glass morphism background */
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  
-  /* Enhanced styling */
-  border: 1px solid rgba(226, 232, 240, 0.8);
-  border-radius: var(--radius-xl);
-  box-shadow: 
-    0 10px 40px rgba(15, 23, 42, 0.1),
-    0 4px 16px rgba(15, 23, 42, 0.05);
-    
-  /* Smooth animations */
-  animation: dropdownSlideIn 0.2s ease-out;
-  transform-origin: top;
-  
-  /* Max height with scroll */
-  max-height: 320px;
-  overflow-y: auto;
-  
-  /* Custom scrollbar */
-  scrollbar-width: thin;
-  scrollbar-color: rgba(102, 126, 234, 0.3) transparent;
-}
-
-/* Dark theme support */
-:root.dark .suggestionsDropdown,
-.dark .suggestionsDropdown,
-[data-theme="dark"] .suggestionsDropdown {
-  background: rgba(15, 23, 42, 0.95);
-  border: 1px solid rgba(51, 65, 85, 0.8);
-  box-shadow: 
-    0 10px 40px rgba(0, 0, 0, 0.3),
-    0 4px 16px rgba(0, 0, 0, 0.2);
-}
-
-/* ==================== SUGGESTION ITEMS ==================== */
-.suggestionItem {
   width: 100%;
-  padding: var(--space-lg) var(--space-xl);
-  text-align: left;
-  border: none;
-  background: transparent;
-  cursor: pointer;
-  transition: all var(--transition-normal) var(--easing-default);
-  border-bottom: 1px solid rgba(226, 232, 240, 0.5);
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.searchInputWrapper {
   position: relative;
-  overflow: hidden;
+  width: 100%;
+}
+
+.searchInputContainer {
+  position: relative;
+  width: 100%;
   display: flex;
   align-items: center;
-  gap: var(--space-md);
 }
 
-/* Dark theme for suggestion items */
-:root.dark .suggestionItem,
-.dark .suggestionItem,
-[data-theme="dark"] .suggestionItem {
-  border-bottom: 1px solid rgba(51, 65, 85, 0.5);
-}
+/* ==================== SEARCH INPUT ==================== */
 
-.suggestionItem:last-child {
-  border-bottom: none;
-}
-
-/* Hover and focus states */
-.suggestionItem:hover,
-.suggestionItem:focus {
-  background: rgba(102, 126, 234, 0.08);
-  transform: translateX(2px);
+.searchInput {
+  width: 100%;
+  padding: var(--space-md) var(--space-lg);
+  padding-left: var(--space-4xl); /* Space for search icon */
+  padding-right: 120px; /* Space for buttons */
+  background: var(--surface-elevated);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-lg);
+  color: var(--text-primary);
+  font-size: var(--text-base);
+  transition: all var(--transition-fast) var(--easing-default);
   outline: none;
 }
 
-/* Dark theme hover */
-:root.dark .suggestionItem:hover,
-:root.dark .suggestionItem:focus,
-.dark .suggestionItem:hover,
-.dark .suggestionItem:focus,
-[data-theme="dark"] .suggestionItem:hover,
-[data-theme="dark"] .suggestionItem:focus {
-  background: rgba(124, 143, 240, 0.1);
+.searchInput:focus {
+  border-color: var(--brand-primary);
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
 }
 
-/* Highlighted/selected state */
-.suggestionItem.highlighted {
-  background: rgba(102, 126, 234, 0.12);
-  transform: translateX(4px);
-  border-left: 4px solid var(--brand-primary);
+.searchInput::placeholder {
+  color: var(--text-tertiary);
 }
 
-/* Dark theme highlighted */
-:root.dark .suggestionItem.highlighted,
-.dark .suggestionItem.highlighted,
-[data-theme="dark"] .suggestionItem.highlighted {
-  background: rgba(124, 143, 240, 0.15);
+/* Search Icon */
+.searchIcon {
+  position: absolute;
+  left: var(--space-lg);
+  top: 50%;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 20px;
+  color: var(--text-tertiary);
+  z-index: 10;
 }
 
-/* ==================== SUGGESTION ITEM CONTENT ==================== */
-.suggestionIcon {
-  width: 32px;
-  height: 32px;
-  background: var(--gradient-brand);
-  border-radius: var(--radius-lg);
+/* ==================== RIGHT CONTROLS (SEARCH BUTTON + TOOLTIP) ==================== */
+
+.rightControls {
+  position: absolute;
+  right: var(--space-md);
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  z-index: 30;
+}
+
+/* Search Button */
+.searchButton {
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-shrink: 0;
-}
-
-.suggestionIcon svg {
   width: 32px;
   height: 32px;
+  background: var(--brand-primary);
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all var(--transition-fast) var(--easing-default);
+  box-shadow: var(--shadow-sm);
+}
+
+.searchButton:hover:not(:disabled) {
+  background: var(--brand-primary-hover);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+.searchButton:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.searchButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.searchButtonIcon {
+  width: 16px;
+  height: 16px;
   color: white;
+}
+
+/* ==================== TOOLTIP STYLES ==================== */
+
+.tooltipContainer {
+  position: relative;
+  cursor: pointer;
+}
+
+.helpIcon {
+  width: 16px;
+  height: 16px;
+  color: var(--text-tertiary);
+  transition: color var(--transition-fast) var(--easing-default);
+}
+
+.helpIcon:hover {
+  color: var(--brand-primary);
+}
+
+.tooltip {
+  position: absolute;
+  right: 0;
+  top: calc(100% + var(--space-sm));
+  z-index: 40;
+  animation: tooltipFadeIn 0.2s ease-out;
+}
+
+.tooltipContent {
+  background: var(--surface-elevated);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-md);
+  padding: var(--space-md);
+  box-shadow: var(--shadow-lg);
+  min-width: 280px;
+  max-width: 320px;
+}
+
+.tooltipTitle {
+  font-size: var(--text-sm);
+  font-weight: var(--font-semibold);
+  color: var(--text-primary);
+  margin-bottom: var(--space-sm);
+  margin: 0 0 var(--space-sm) 0;
+}
+
+.tooltipList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  margin-bottom: var(--space-sm);
+}
+
+.tooltipItem {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.tooltipLabel {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  font-weight: var(--font-semibold);
+  color: var(--brand-primary);
+  background: var(--brand-primary-light);
+  padding: var(--space-xs) var(--space-sm);
+  border-radius: var(--radius-sm);
+  min-width: 40px;
+  text-align: center;
+}
+
+.tooltipText {
+  font-size: var(--text-xs);
+  color: var(--text-secondary);
+}
+
+.tooltipExample {
+  font-size: var(--text-xs);
+  color: var(--text-tertiary);
+  font-style: italic;
+  margin: 0;
+  padding-top: var(--space-xs);
+  border-top: 1px solid var(--border-subtle);
+}
+
+/* ==================== SUGGESTIONS DROPDOWN ==================== */
+
+.suggestionsDropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: var(--surface-elevated);
+  border: 1px solid var(--border-primary);
+  border-top: none;
+  border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  z-index: 50;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.suggestionItem {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: var(--space-md) var(--space-lg);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: background-color var(--transition-fast) var(--easing-default);
+  text-align: left;
+}
+
+.suggestionItem:hover,
+.suggestionItem.highlighted {
+  background: var(--surface-secondary);
+}
+
+.suggestionIcon {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  color: var(--brand-primary);
+  margin-right: var(--space-md);
 }
 
 .suggestionContent {
@@ -140,14 +245,14 @@
 }
 
 .suggestionTicker {
+  font-size: var(--text-sm);
   font-weight: var(--font-semibold);
   color: var(--text-primary);
-  font-size: var(--text-sm);
   margin-bottom: var(--space-xs);
 }
 
 .suggestionName {
-  font-size: var(--text-sm);
+  font-size: var(--text-xs);
   color: var(--text-secondary);
   white-space: nowrap;
   overflow: hidden;
@@ -155,141 +260,278 @@
 }
 
 .suggestionArrow {
+  flex-shrink: 0;
   width: 16px;
   height: 16px;
   color: var(--text-tertiary);
   opacity: 0;
-  transition: opacity var(--transition-normal) var(--easing-default);
+  transition: opacity var(--transition-fast) var(--easing-default);
 }
 
-.suggestionItem:hover .suggestionArrow {
+.suggestionItem:hover .suggestionArrow,
+.suggestionItem.highlighted .suggestionArrow {
   opacity: 1;
 }
 
-/* ==================== NO RESULTS MESSAGE ==================== */
+/* ==================== NO RESULTS ==================== */
+
 .noResultsContainer {
   position: absolute;
-  top: calc(100% + 4px);
+  top: 100%;
   left: 0;
   right: 0;
-  z-index: var(--z-popover);
-  
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(226, 232, 240, 0.8);
-  border-radius: var(--radius-xl);
-  box-shadow: 
-    0 10px 40px rgba(15, 23, 42, 0.1),
-    0 4px 16px rgba(15, 23, 42, 0.05);
-  
+  background: var(--surface-elevated);
+  border: 1px solid var(--border-primary);
+  border-top: none;
+  border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+  box-shadow: var(--shadow-lg);
   padding: var(--space-xl);
   text-align: center;
-  animation: dropdownSlideIn 0.2s ease-out;
-}
-
-/* Dark theme for no results */
-:root.dark .noResultsContainer,
-.dark .noResultsContainer,
-[data-theme="dark"] .noResultsContainer {
-  background: rgba(15, 23, 42, 0.95);
-  border: 1px solid rgba(51, 65, 85, 0.8);
-  box-shadow: 
-    0 10px 40px rgba(0, 0, 0, 0.3),
-    0 4px 16px rgba(0, 0, 0, 0.2);
+  z-index: 50;
 }
 
 .noResultsIcon {
   width: 48px;
   height: 48px;
-  margin: 0 auto var(--space-md);
-  background: var(--surface-secondary);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.noResultsIcon svg {
-  width: 20px;
-  height: 20px;
   color: var(--text-tertiary);
+  margin: 0 auto var(--space-md);
 }
 
 .noResultsText {
   font-size: var(--text-sm);
+  color: var(--text-secondary);
+  margin: 0 0 var(--space-sm) 0;
+}
+
+.noResultsHint {
+  font-size: var(--text-xs);
   color: var(--text-tertiary);
+  margin: 0;
+  font-style: italic;
+}
+
+/* ==================== PLACEHOLDER SPACE ==================== */
+
+.placeholderSpace {
+  width: 80px; /* Same width as rightControls */
+  height: 1px;
+}
+
+/* ==================== MOBILE RESPONSIVE ==================== */
+
+@media (max-width: 768px) {
+  .searchInput {
+    padding-right: 100px; /* Smaller padding on mobile */
+  }
+  
+  .tooltip {
+    right: -var(--space-sm);
+    left: -var(--space-sm);
+  }
+  
+  .tooltipContent {
+    min-width: auto;
+    max-width: none;
+  }
+  
+  .suggestionName {
+    white-space: normal;
+    line-height: 1.3;
+  }
 }
 
 /* ==================== ANIMATIONS ==================== */
-@keyframes dropdownSlideIn {
+
+@keyframes tooltipFadeIn {
   from {
     opacity: 0;
-    transform: translateY(-8px) scale(0.98);
+    transform: translateY(-8px);
   }
   to {
     opacity: 1;
-    transform: translateY(0) scale(1);
+    transform: translateY(0);
   }
 }
 
-/* ==================== RESPONSIVE ADJUSTMENTS ==================== */
-@media (max-width: 640px) {
-  .suggestionsDropdown {
-    left: calc(-1 * var(--space-md));
-    right: calc(-1 * var(--space-md));
-    max-height: 280px;
+/* ==================== LOADING STATE ==================== */
+
+.searchButton:disabled .searchButtonIcon {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
   }
-  
-  .suggestionItem {
-    padding: var(--space-md) var(--space-lg);
-  }
-  
-  .suggestionIcon {
-    width: 28px;
-    height: 28px;
-  }
-  
-  .suggestionIcon svg {
-    width: 14px;
-    height: 14px;
-  }
-  
-  .suggestionTicker,
-  .suggestionName {
-    font-size: var(--text-xs);
+  to {
+    transform: rotate(360deg);
   }
 }
 
-/* ==================== ACCESSIBILITY ==================== */
-.suggestionItem:focus {
-  outline: 2px solid var(--brand-primary);
-  outline-offset: -2px;
+
+/* ADD THESE TOOLTIP STYLES TO YOUR StockSearchNav.module.css FILE */
+
+/* ==================== RIGHT CONTROLS (SEARCH BUTTON + TOOLTIP) ==================== */
+
+.rightControls {
+  position: absolute;
+  right: var(--space-md);
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  z-index: 30;
 }
 
-/* High contrast mode support */
-@media (prefers-contrast: high) {
-  .suggestionsDropdown,
-  .noResultsContainer {
-    border: 2px solid var(--border-primary);
-    background: var(--surface-primary);
-    backdrop-filter: none;
+/* Search Button */
+.searchButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  background: var(--brand-primary, #667eea);
+  border: none;
+  border-radius: var(--radius-md, 8px);
+  cursor: pointer;
+  transition: all var(--transition-fast, 150ms) var(--easing-default, ease);
+  box-shadow: var(--shadow-sm, 0 1px 3px rgba(0,0,0,0.1));
+}
+
+.searchButton:hover:not(:disabled) {
+  background: var(--brand-primary-hover, #5a67d8);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md, 0 4px 6px rgba(0,0,0,0.1));
+}
+
+.searchButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.searchButtonIcon {
+  width: 16px;
+  height: 16px;
+  color: white;
+}
+
+/* ==================== TOOLTIP STYLES ==================== */
+
+.tooltipContainer {
+  position: relative;
+  cursor: pointer;
+}
+
+.helpIcon {
+  width: 16px;
+  height: 16px;
+  color: var(--text-tertiary, #94a3b8);
+  transition: color var(--transition-fast, 150ms) var(--easing-default, ease);
+}
+
+.helpIcon:hover {
+  color: var(--brand-primary, #667eea);
+}
+
+.tooltip {
+  position: absolute;
+  right: 0;
+  top: calc(100% + var(--space-sm, 8px));
+  z-index: var(--z-tooltip, 9999); /* Very high z-index */
+  animation: tooltipFadeIn 0.2s ease-out;
+  pointer-events: auto; /* Make sure it's clickable */
+}
+
+.tooltipContent {
+  background: var(--surface-elevated, white);
+  border: 1px solid var(--border-primary, #e2e8f0);
+  border-radius: var(--radius-md, 8px);
+  padding: var(--space-md, 16px);
+  box-shadow: var(--shadow-lg, 0 10px 15px -3px rgba(0,0,0,0.1));
+  min-width: 280px;
+  max-width: 320px;
+  white-space: nowrap;
+}
+
+/* Dark theme support */
+[data-theme="dark"] .tooltipContent {
+  background: var(--surface-elevated, #1e293b);
+  border-color: var(--border-primary, #334155);
+  box-shadow: 0 10px 15px -3px rgba(0,0,0,0.3);
+}
+
+.tooltipTitle {
+  font-size: var(--text-sm, 14px);
+  font-weight: var(--font-semibold, 600);
+  color: var(--text-primary, #1e293b);
+  margin: 0 0 var(--space-sm, 8px) 0;
+  white-space: normal;
+}
+
+.tooltipList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs, 4px);
+  margin-bottom: var(--space-sm, 8px);
+}
+
+.tooltipItem {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm, 8px);
+}
+
+.tooltipLabel {
+  font-family: var(--font-mono, 'Fira Code', monospace);
+  font-size: var(--text-xs, 12px);
+  font-weight: var(--font-semibold, 600);
+  color: var(--brand-primary, #b6bfe6);
+  background: var(--brand-primary-light, rgba(102, 126, 234, 0.1));
+  padding: var(--space-xs, 4px) var(--space-sm, 8px);
+  border-radius: var(--radius-sm, 4px);
+  min-width: 40px;
+  text-align: center;
+}
+
+.tooltipText {
+  font-size: var(--text-xs, 12px);
+  color: var(--text-secondary, #11233c);
+  white-space: normal;
+}
+
+.tooltipExample {
+  font-size: var(--text-xs, 12px);
+  color: var(--text-tertiary, #94a3b8);
+  font-style: italic;
+  margin: 0;
+  padding-top: var(--space-xs, 4px);
+  border-top: 1px solid var(--border-subtle, #f1f5f9);
+  white-space: normal;
+}
+
+/* Mobile responsive tooltip */
+@media (max-width: 768px) {
+  .tooltip {
+    right: -var(--space-sm, -8px);
+    left: -var(--space-sm, -8px);
   }
   
-  .suggestionItem:hover,
-  .suggestionItem:focus {
-    background: var(--surface-secondary);
+  .tooltipContent {
+    min-width: auto;
+    max-width: none;
   }
 }
 
-/* Reduced motion support */
-@media (prefers-reduced-motion: reduce) {
-  .suggestionsDropdown,
-  .noResultsContainer {
-    animation: none;
+/* Tooltip animation */
+@keyframes tooltipFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
   }
-  
-  .suggestionItem {
-    transition: none;
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }

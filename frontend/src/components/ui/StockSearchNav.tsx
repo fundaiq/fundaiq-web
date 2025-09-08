@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { useGlobalStore } from '@/store/globalStore';
-import { Search, TrendingUp, X, ArrowRight } from 'lucide-react';
+import { Search, TrendingUp, X, ArrowRight, HelpCircle } from 'lucide-react';
 import { useFetchTicker } from '@/components/report/hooks/useFetchTicker';
 import styles from '@/styles/StockSearchNav.module.css';
 
@@ -25,6 +25,7 @@ export default function StockSearchNav({ className = "" }: StockSearchNavProps) 
   const [loading, setLoading] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
   const [highlightedIndex, setHighlightedIndex] = useState(-1);
+  const [showTooltip, setShowTooltip] = useState(false);
 
   // Use the existing hook for fetching ticker data
   const fetchTickerData = useFetchTicker(setLoading);
@@ -40,13 +41,14 @@ export default function StockSearchNav({ className = "" }: StockSearchNavProps) 
       .catch((err) => console.error('Failed to load tickers:', err));
   }, []);
 
-  // Handle clicks outside to close suggestions
+  // Handle clicks outside to close suggestions and tooltip
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (searchRef.current && !searchRef.current.contains(event.target as Node)) {
         setShowSuggestions(false);
         setIsFocused(false);
         setHighlightedIndex(-1);
+        setShowTooltip(false);
       }
     };
 
@@ -99,35 +101,29 @@ export default function StockSearchNav({ className = "" }: StockSearchNavProps) 
 
   // Enhanced keyboard navigation
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (!showSuggestions || filtered.length === 0) {
-      if (e.key === 'Enter' && tickerInput.trim()) {
-        handleManualSearch();
-      }
-      return;
-    }
-
     switch (e.key) {
       case 'ArrowDown':
         e.preventDefault();
-        setHighlightedIndex(prev => 
-          prev < filtered.length - 1 ? prev + 1 : 0
-        );
+        if (showSuggestions && filtered.length > 0) {
+          setHighlightedIndex(prev => 
+            prev < filtered.length - 1 ? prev + 1 : 0
+          );
+        }
         break;
         
       case 'ArrowUp':
         e.preventDefault();
-        setHighlightedIndex(prev => 
-          prev > 0 ? prev - 1 : filtered.length - 1
-        );
+        if (showSuggestions && filtered.length > 0) {
+          setHighlightedIndex(prev => 
+            prev > 0 ? prev - 1 : filtered.length - 1
+          );
+        }
         break;
         
       case 'Enter':
         e.preventDefault();
-        if (highlightedIndex >= 0 && highlightedIndex < filtered.length) {
-          handleStockSelection(filtered[highlightedIndex]);
-        } else if (filtered.length > 0) {
-          handleStockSelection(filtered[0]);
-        } else {
+        // ONLY do manual search - never auto-select suggestions
+        if (tickerInput.trim()) {
           handleManualSearch();
         }
         break;
@@ -140,13 +136,11 @@ export default function StockSearchNav({ className = "" }: StockSearchNavProps) 
         break;
         
       case 'Tab':
-        if (filtered.length > 0) {
-          e.preventDefault();
-          handleStockSelection(filtered[0]);
-        }
+        // Let browser handle normal Tab behavior
         break;
     }
   };
+
 
   // Handle stock selection
   const handleStockSelection = async (stock: any) => {
@@ -157,6 +151,7 @@ export default function StockSearchNav({ className = "" }: StockSearchNavProps) 
     setIsFocused(false);
     setHighlightedIndex(-1);
     setLoading(true);
+    
     // Navigate to report page first
     router.push('/report');
     
@@ -164,97 +159,115 @@ export default function StockSearchNav({ className = "" }: StockSearchNavProps) 
     setTimeout(() => {
       fetchTickerData(stock.ticker);
     }, 100);
-    
   };
 
-  // Handle manual search
+  // Handle manual search - UPDATED to allow any input
   const handleManualSearch = () => {
     if (!tickerInput?.trim()) return;
     
-    const input = tickerInput.toLowerCase();
-    const match = tickersList.find((entry) => {
-      const name = entry?.name?.toLowerCase?.() || '';
-      const ticker = entry?.ticker?.toLowerCase?.() || '';
-      return ticker === input || name.includes(input);
-    });
-
-    if (match) {
-      handleStockSelection(match);
-    } else {
-      // For educational purposes, show message about stock not found
-      console.log('Stock information not available for educational analysis');
-    }
-  };
-
-  // Clear search
-  const clearSearch = () => {
-    setTickerInput('');
+    // Search exactly what user typed
+    const userInput = tickerInput.trim().toUpperCase();
+    
     setShowSuggestions(false);
     setIsFocused(false);
     setHighlightedIndex(-1);
+    setLoading(true);
+    
+    // Navigate to report page first
+    router.push('/report');
+    
+    // Small delay to ensure navigation, then fetch data
+    setTimeout(() => {
+      fetchTickerData(userInput); // Search exactly what user typed
+    }, 100);
+  };
+
+  // Clear search input
+  const clearSearch = () => {
+    setTickerInput('');
+    setShowSuggestions(false);
+    setFiltered([]);
+    setHighlightedIndex(-1);
     inputRef.current?.focus();
   };
-  // Add this right before the return statement in your component
 
   return (
     <div className={`${styles.searchContainer} ${className}`} ref={searchRef}>
-      {/* Search Input Container */}
-      <div className="relative">
-        <div className="relative flex items-center">
-          {/* Search Icon - Inside input */}
-          <div className="absolute left-3 z-10 pointer-events-none">
-            <Search className="w-4 h-4 text-gray-400 dark:text-gray-500" />
-          </div>
+      <div className={styles.searchInputWrapper}>
+        <div className={styles.searchInputContainer}>
+          <Search className={styles.searchIcon} />
           
-          {/* Search Input */}
           <input
             ref={inputRef}
             type="text"
-            value={tickerInput || ''}
+            value={tickerInput}
             onChange={(e) => handleInput(e.target.value)}
             onKeyDown={handleKeyDown}
             onFocus={() => {
               setIsFocused(true);
-              if (filtered.length > 0) setShowSuggestions(true);
+              if (tickerInput.length >= 2) setShowSuggestions(true);
             }}
-            placeholder="Search stocks for analysis..."
-            className="w-full pl-10 pr-10 py-3 text-base 
-                     bg-gray-50 dark:bg-gray-800 
-                     border border-gray-200 dark:border-gray-600 
-                     rounded-lg
-                     text-gray-900 dark:text-gray-100
-                     placeholder:text-gray-500 dark:placeholder:text-gray-400
-                     focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 
-                     focus:border-transparent
-                     transition-all duration-200
-                     hover:border-gray-300 dark:hover:border-gray-500"
-            style={{ minWidth: '320px' }}
+            placeholder="Search stocks (e.g., RELIANCE.NS, TCS.BO)"
+            className={styles.searchInput}
+            autoComplete="off"
+            spellCheck="false"
           />
-          
-          {/* Clear Button - Inside input */}
-          {loading ? (
-            <div className="absolute right-3 top-1/2 transform -translate-y-1/2 z-20"> 
-              Loading...
-            </div>
-          ) : tickerInput ? (
-            <button
-              onClick={clearSearch}
-              className="absolute right-3 z-10 p-0.5 
-                      text-gray-400 hover:text-gray-600 
-                      dark:text-gray-500 dark:hover:text-gray-300
-                      transition-colors duration-200"
-              type="button"
-              aria-label="Clear search"
-            >
-              <X className="w-4 h-4" />
-            </button>
-          ) : null}
-        </div>
 
-        
+          {/* Search Button and Tooltip */}
+          <div className={styles.rightControls}>
+            {/* Search Button */}
+            <button
+              onClick={handleManualSearch}
+              disabled={!tickerInput?.trim() || loading}
+              className={styles.searchButton}
+              type="button"
+              aria-label="Search stock"
+              title="Search for this stock"
+            >
+              <Search className={styles.searchButtonIcon} />
+            </button>
+
+            {/* Tooltip Icon */}
+            <div 
+              className={styles.tooltipContainer}
+              onMouseEnter={() => setShowTooltip(true)}
+              onMouseLeave={() => setShowTooltip(false)}
+              onClick={() => setShowTooltip(!showTooltip)} // For mobile touch
+            >
+              <HelpCircle className={styles.helpIcon} />
+              
+              {/* Tooltip Content */}
+              {showTooltip && (
+                <div className={styles.tooltip}>
+                  <div className={styles.tooltipContent}>
+                    <p className={styles.tooltipTitle}>Stock Exchange Guide:</p>
+                    <div className={styles.tooltipList}>
+                      <div className={styles.tooltipItem}>
+                        <span className={styles.tooltipLabel}>.NS</span>
+                        <span className={styles.tooltipText}>NSE (National Stock Exchange)</span>
+                      </div>
+                      <div className={styles.tooltipItem}>
+                        <span className={styles.tooltipLabel}>.BO</span>
+                        <span className={styles.tooltipText}>BSE (Bombay Stock Exchange)</span>
+                      </div>
+                    </div>
+                    <p className={styles.tooltipExample}>
+                      Example: RELIANCE.NS, TCS.BO
+                    </p>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Clear button (when no search button is needed) */}
+          {!tickerInput && !loading && (
+            <div className={styles.placeholderSpace}></div>
+          )}
+        </div>
       </div>
 
-      {/* Search Suggestions Dropdown - PROPER CSS MODULE STYLING */}
+      {/* Search Suggestions Dropdown */}
       {showSuggestions && filtered.length > 0 && (
         <div className={styles.suggestionsDropdown}>
           <div className="py-2">
@@ -294,6 +307,9 @@ export default function StockSearchNav({ className = "" }: StockSearchNavProps) 
           </div>
           <p className={styles.noResultsText}>
             No stocks found for "<strong>{tickerInput}</strong>"
+          </p>
+          <p className={styles.noResultsHint}>
+            Try clicking the search button to search anyway
           </p>
         </div>
       )}

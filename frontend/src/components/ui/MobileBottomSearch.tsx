@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import { useGlobalStore } from '@/store/globalStore';
-import { Search, TrendingUp, X, ArrowRight } from 'lucide-react';
+import { Search, TrendingUp, X, ArrowRight, HelpCircle } from 'lucide-react';
 import { useFetchTicker } from '@/components/report/hooks/useFetchTicker';
 import styles from '@/styles/MobileBottomSearch.module.css';
 
@@ -22,6 +22,7 @@ export default function MobileBottomSearch() {
   const [loading, setLoading] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
   const [highlightedIndex, setHighlightedIndex] = useState(-1);
+  const [showTooltip, setShowTooltip] = useState(false);
 
   // Use the existing hook for fetching ticker data
   const fetchTickerData = useFetchTicker(setLoading);
@@ -80,45 +81,44 @@ export default function MobileBottomSearch() {
     }
   };
 
-  // Enhanced keyboard navigation
+  // Enhanced keyboard navigation - NO AUTO-SELECTION
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (!showSuggestions || filtered.length === 0) {
-      if (e.key === 'Enter' && tickerInput.trim()) {
-        handleManualSearch();
-      }
-      return;
-    }
-
     switch (e.key) {
       case 'ArrowDown':
         e.preventDefault();
-        setHighlightedIndex(prev => 
-          prev < filtered.length - 1 ? prev + 1 : 0
-        );
+        if (showSuggestions && filtered.length > 0) {
+          setHighlightedIndex(prev => 
+            prev < filtered.length - 1 ? prev + 1 : 0
+          );
+        }
         break;
         
       case 'ArrowUp':
         e.preventDefault();
-        setHighlightedIndex(prev => 
-          prev > 0 ? prev - 1 : filtered.length - 1
-        );
+        if (showSuggestions && filtered.length > 0) {
+          setHighlightedIndex(prev => 
+            prev > 0 ? prev - 1 : filtered.length - 1
+          );
+        }
         break;
         
       case 'Enter':
         e.preventDefault();
-        if (highlightedIndex >= 0 && highlightedIndex < filtered.length) {
-          handleStockSelection(filtered[highlightedIndex]);
-        } else if (filtered.length > 0) {
-          handleStockSelection(filtered[0]);
-        } else {
+        // ONLY do manual search - never auto-select suggestions
+        if (tickerInput.trim()) {
           handleManualSearch();
         }
         break;
         
       case 'Escape':
         setShowSuggestions(false);
-        setIsExpanded(false);
+        setIsExpanded(false); // Mobile-specific
         setHighlightedIndex(-1);
+        setShowTooltip(false); // Mobile-specific
+        break;
+        
+      case 'Tab':
+        // Let browser handle normal Tab behavior
         break;
     }
   };
@@ -131,6 +131,7 @@ export default function MobileBottomSearch() {
     setShowSuggestions(false);
     setIsExpanded(false);
     setHighlightedIndex(-1);
+    setShowTooltip(false);
     
     // Navigate to report page first if not already there
     if (pathname !== '/report') {
@@ -143,18 +144,18 @@ export default function MobileBottomSearch() {
     }, pathname !== '/report' ? 100 : 0);
   };
 
-  // Handle manual search
+  // Handle manual search - UPDATED to allow any input
   const handleManualSearch = () => {
     if (!tickerInput?.trim()) return;
     
-    const input = tickerInput.toLowerCase();
-    const match = tickersList.find((entry) => {
-      const name = entry?.name?.toLowerCase?.() || '';
-      const ticker = entry?.ticker?.toLowerCase?.() || '';
-      return ticker === input || name.includes(input);
-    });
+    // Search exactly what user typed
+    const userInput = tickerInput.trim().toUpperCase();
     
-    const finalTicker = match?.ticker || tickerInput;
+    setShowSuggestions(false);
+    setIsExpanded(false); // Mobile-specific
+    setHighlightedIndex(-1);
+    setShowTooltip(false); // Mobile-specific
+    setLoading(true);
     
     // Navigate to report page first if not already there
     if (pathname !== '/report') {
@@ -163,47 +164,39 @@ export default function MobileBottomSearch() {
     
     // Small delay to ensure navigation, then fetch data
     setTimeout(() => {
-      fetchTickerData(finalTicker);
-      setIsExpanded(false);
+      fetchTickerData(userInput); // Search exactly what user typed
     }, pathname !== '/report' ? 100 : 0);
   };
 
-  // Close suggestions when clicking outside
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (searchRef.current && !searchRef.current.contains(event.target as Node)) {
-        setShowSuggestions(false);
-        if (!tickerInput?.trim()) {
-          setIsExpanded(false);
-        }
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, [tickerInput]);
+  // Don't show on desktop
+  if (typeof window !== 'undefined' && window.innerWidth > 768) {
+    return null;
+  }
 
   return (
     <div className={styles.mobileSearchContainer} ref={searchRef}>
-      {/* Backdrop for expanded state */}
+      {/* Backdrop */}
       {isExpanded && (
         <div 
           className={styles.backdrop}
-          onClick={() => setIsExpanded(false)}
+          onClick={() => {
+            setIsExpanded(false);
+            setShowTooltip(false);
+          }}
         />
       )}
-      
-      {/* Suggestions Dropdown - Above the search bar */}
-      {showSuggestions && filtered.length > 0 && isExpanded && (
+
+      {/* Suggestions */}
+      {isExpanded && showSuggestions && filtered.length > 0 && (
         <div className={styles.suggestionsContainer}>
           <div className={styles.suggestionsDropdown}>
-            {filtered.map((item, index) => (
+            {filtered.map((stock, index) => (
               <button
-                key={`${item.ticker}-${index}`}
+                key={`${stock.ticker}-${index}`}
+                onClick={() => handleStockSelection(stock)}
                 className={`${styles.suggestionItem} ${
                   index === highlightedIndex ? styles.highlighted : ''
                 }`}
-                onClick={() => handleStockSelection(item)}
               >
                 <div className={styles.suggestionIcon}>
                   <TrendingUp />
@@ -211,10 +204,10 @@ export default function MobileBottomSearch() {
                 
                 <div className={styles.suggestionContent}>
                   <div className={styles.suggestionTicker}>
-                    {item.ticker}
+                    {stock.ticker}
                   </div>
                   <div className={styles.suggestionName}>
-                    {item.name}
+                    {stock.name}
                   </div>
                 </div>
                 
@@ -225,10 +218,9 @@ export default function MobileBottomSearch() {
         </div>
       )}
 
-      {/* Bottom Search Bar */}
+      {/* Main Search Bar */}
       <div className={styles.searchBar}>
-        <div className={styles.searchContent}>
-          {/* Collapsed State - Beautiful Trigger */}
+        <div className={styles.searchBarInner}>
           {!isExpanded ? (
             <button
               onClick={() => {
@@ -247,7 +239,7 @@ export default function MobileBottomSearch() {
                   {tickerInput || 'Search stocks...'}
                 </div>
                 <div className={styles.collapsedSubtext}>
-                  Tap to find companies
+                  Add .NS (NSE) or .BO (BSE) for Indian stocks
                 </div>
               </div>
               
@@ -261,10 +253,10 @@ export default function MobileBottomSearch() {
             <>
               {/* Expanded Search Input */}
               <div className={styles.expandedInput}>
-                                  <input
+                <input
                   ref={inputRef}
                   type="text"
-                  placeholder="Find a stock..."
+                  placeholder="e.g., RELIANCE.NS, TCS.BO"
                   value={tickerInput || ''}
                   onChange={(e) => handleInput(e.target.value)}
                   onKeyDown={handleKeyDown}
@@ -278,23 +270,54 @@ export default function MobileBottomSearch() {
                   <Search />
                 </div>
                 
-                {/* Loading or Clear Button */}
-                {loading ? (
-                  <div className={styles.inputAction}>
+                {/* Right Controls */}
+                <div className={styles.rightControls}>
+                  {/* Loading or Clear Button */}
+                  {loading ? (
                     <div className={styles.loadingSpinner} />
-                  </div>
-                ) : tickerInput ? (
-                  <button
-                    onClick={() => {
-                      setTickerInput('');
-                      setShowSuggestions(false);
-                      inputRef.current?.focus();
-                    }}
-                    className={styles.inputAction}
+                  ) : tickerInput ? (
+                    <button
+                      onClick={() => {
+                        setTickerInput('');
+                        setShowSuggestions(false);
+                        inputRef.current?.focus();
+                      }}
+                      className={styles.clearButton}
+                    >
+                      <X />
+                    </button>
+                  ) : null}
+
+                  {/* Tooltip Icon */}
+                  <div 
+                    className={styles.tooltipContainer}
+                    onClick={() => setShowTooltip(!showTooltip)}
                   >
-                    <X />
-                  </button>
-                ) : null}
+                    <HelpCircle className={styles.helpIcon} />
+                    
+                    {/* Tooltip Content */}
+                    {showTooltip && (
+                      <div className={styles.tooltip}>
+                        <div className={styles.tooltipContent}>
+                          <p className={styles.tooltipTitle}>Stock Exchange Guide:</p>
+                          <div className={styles.tooltipList}>
+                            <div className={styles.tooltipItem}>
+                              <span className={styles.tooltipLabel}>.NS</span>
+                              <span className={styles.tooltipText}>NSE (National Stock Exchange)</span>
+                            </div>
+                            <div className={styles.tooltipItem}>
+                              <span className={styles.tooltipLabel}>.BO</span>
+                              <span className={styles.tooltipText}>BSE (Bombay Stock Exchange)</span>
+                            </div>
+                          </div>
+                          <p className={styles.tooltipExample}>
+                            Example: RELIANCE.NS, TCS.BO
+                          </p>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
               </div>
 
               {/* Search Button */}
@@ -306,14 +329,17 @@ export default function MobileBottomSearch() {
                 {loading ? (
                   <div className={styles.loadingSpinner} />
                 ) : (
-                  <TrendingUp />
+                  <Search />
                 )}
                 <span className={styles.searchButtonText}>Search</span>
               </button>
 
               {/* Close Button */}
               <button
-                onClick={() => setIsExpanded(false)}
+                onClick={() => {
+                  setIsExpanded(false);
+                  setShowTooltip(false);
+                }}
                 className={styles.closeButton}
               >
                 <X />
