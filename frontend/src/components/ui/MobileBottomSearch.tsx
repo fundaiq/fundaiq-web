@@ -24,8 +24,8 @@ export default function MobileBottomSearch() {
   const [highlightedIndex, setHighlightedIndex] = useState(-1);
   const [showTooltip, setShowTooltip] = useState(false);
 
-  // Use the existing hook for fetching ticker data
-  const fetchTickerData = useFetchTicker(setLoading);
+  // Use the existing hook for fetching ticker data - BUT don't let it control loading
+  const fetchTickerData = useFetchTicker(() => {}); // Pass empty function instead of setLoading
 
   // Load tickers list
   useEffect(() => {
@@ -133,28 +133,7 @@ export default function MobileBottomSearch() {
     setHighlightedIndex(-1);
     setShowTooltip(false);
     
-    // Navigate to report page first if not already there
-    if (pathname !== '/report') {
-      router.push('/report');
-    }
-    
-    // Small delay to ensure navigation, then fetch data
-    setTimeout(() => {
-      fetchTickerData(stock.ticker);
-    }, pathname !== '/report' ? 100 : 0);
-  };
-
-  // Handle manual search - UPDATED to allow any input
-  const handleManualSearch = () => {
-    if (!tickerInput?.trim()) return;
-    
-    // Search exactly what user typed
-    const userInput = tickerInput.trim().toUpperCase();
-    
-    setShowSuggestions(false);
-    setIsExpanded(false); // Mobile-specific
-    setHighlightedIndex(-1);
-    setShowTooltip(false); // Mobile-specific
+    // Set loading manually
     setLoading(true);
     
     // Navigate to report page first if not already there
@@ -163,9 +142,54 @@ export default function MobileBottomSearch() {
     }
     
     // Small delay to ensure navigation, then fetch data
-    setTimeout(() => {
-      fetchTickerData(userInput); // Search exactly what user typed
+    setTimeout(async () => {
+      try {
+        await fetchTickerData(stock.ticker);
+      } catch (error) {
+        console.error('Fetch error:', error);
+      } finally {
+        setLoading(false); // Always turn off loading
+      }
     }, pathname !== '/report' ? 100 : 0);
+  };
+
+  // Handle manual search - COMPLETELY CONTROL LOADING STATE
+  const handleManualSearch = async () => {
+    if (!tickerInput?.trim()) return;
+    
+    // Search exactly what user typed
+    const userInput = tickerInput.trim().toUpperCase();
+    
+    setShowSuggestions(false);
+    setIsExpanded(false);
+    setHighlightedIndex(-1);
+    setShowTooltip(false);
+    
+    // We control loading state completely
+    setLoading(true);
+    
+    try {
+      // Navigate to report page first if not already there
+      if (pathname !== '/report') {
+        router.push('/report');
+      }
+      
+      // Small delay to ensure navigation, then fetch data
+      setTimeout(async () => {
+        try {
+          await fetchTickerData(userInput);
+        } catch (error) {
+          console.error('Fetch error:', error);
+        } finally {
+          // Always turn off loading when done
+          setLoading(false);
+        }
+      }, pathname !== '/report' ? 100 : 0);
+      
+    } catch (error) {
+      console.error('Search error:', error);
+      setLoading(false);
+    }
   };
 
   // Don't show on desktop
@@ -327,11 +351,13 @@ export default function MobileBottomSearch() {
                 className={styles.searchButton}
               >
                 {loading ? (
-                  <div className={styles.loadingSpinner} />
+                  <>
+                    <div className={styles.loadingSpinner}></div>
+                    <span className={styles.searchButtonText}>Searching...</span>
+                  </>
                 ) : (
-                  <Search />
+                  <span className={styles.searchButtonText}>Search</span>
                 )}
-                <span className={styles.searchButtonText}>Search</span>
               </button>
 
               {/* Close Button */}
