@@ -55,6 +55,32 @@
   margin: 0 auto;
 }
 
+/* ==================== HERO LOGO ==================== */
+.heroLogo {
+  display: flex;
+  justify-content: center;
+  margin-bottom: var(--space-md);
+}
+
+.heroLogoIcon {
+  width: 80px;
+  height: 80px;
+  object-fit: contain;
+  filter: drop-shadow(0 4px 12px rgba(255, 255, 255, 0.3));
+  transition: all var(--transition-normal) var(--easing-default);
+  animation: logoFloat 3s ease-in-out infinite;
+}
+
+.heroLogoIcon:hover {
+  transform: scale(1.05);
+  filter: drop-shadow(0 6px 16px rgba(255, 255, 255, 0.4));
+}
+
+@keyframes logoFloat {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-8px); }
+}
+
 /* ==================== HEADLINE ==================== */
 .headline {
   font-size: clamp(2.5rem, 5vw, 4rem);
@@ -128,7 +154,7 @@
   flex-direction: column;
   align-items: center;
   text-align: center;
-  max-width: 100%;
+  max-width: 100%px;
 }
 
 .gaugeImage {

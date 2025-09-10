@@ -10,14 +10,23 @@ export default function HomePage() {
       <section className={styles.heroSection}>
         <div className={styles.heroContent}>
           
+          {/* Logo Icon */}
+          <div className={styles.heroLogo}>
+            <img 
+              src="/icon.png" 
+              alt="Funda-IQ Logo" 
+              className={styles.heroLogoIcon}
+            />
+          </div>
           {/* Stock Search - The Main CTA */}
           <div className={styles.searchContainer}>
-            <StockSearchNav className={styles.mainSearch} />
+            <div className={styles.searchWrapper}>
+              <StockSearchNav className={styles.mainSearch} />
+            </div>
             <p className={styles.searchHint}>
-              Search any stock (e.g., TCS.NS, RELIANCE.NS)
+              Search any stock (e.g., TCS.NS, RELIANCE.NS, TATAMOTORS.NS)
             </p>
           </div>
-
           {/* Main Headline - Direct and Action-Focused */}
           <h1 className={styles.headline}>
             Find Your Stock's 
@@ -48,7 +57,20 @@ export default function HomePage() {
             epsValue={2750} 
           />
           
+          <div className={styles.demoDetails}>
+            <div className={styles.demoPrice}>
+              <span className={styles.demoLabel}>Current Price:</span>
+              <span className={styles.demoValue}>₹2,500</span>
+            </div>
+            <div className={styles.demoPrice}>
+              <span className={styles.demoLabel}>Fair Value:</span>
+              <span className={styles.demoValue}>₹2,800</span>
+            </div>
+          </div>
           
+          <p className={styles.gaugeLabel}>
+            This stock appears undervalued - search any stock to get real analysis!
+          </p>
         </div>
       </section>
 
