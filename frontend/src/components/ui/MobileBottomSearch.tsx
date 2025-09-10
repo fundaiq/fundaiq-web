@@ -157,7 +157,8 @@ export default function MobileBottomSearch() {
   const handleManualSearch = async () => {
     if (!tickerInput?.trim()) return;
     
-    // Search exactly what user typed
+    console.log('🚀 Starting search - setting loading to TRUE');
+    
     const userInput = tickerInput.trim().toUpperCase();
     
     setShowSuggestions(false);
@@ -165,32 +166,24 @@ export default function MobileBottomSearch() {
     setHighlightedIndex(-1);
     setShowTooltip(false);
     
-    // We control loading state completely
+    // Set loading to true
     setLoading(true);
     
-    try {
-      // Navigate to report page first if not already there
-      if (pathname !== '/report') {
-        router.push('/report');
-      }
-      
-      // Small delay to ensure navigation, then fetch data
-      setTimeout(async () => {
-        try {
-          await fetchTickerData(userInput);
-        } catch (error) {
-          console.error('Fetch error:', error);
-        } finally {
-          // Always turn off loading when done
-          setLoading(false);
-        }
-      }, pathname !== '/report' ? 100 : 0);
-      
-    } catch (error) {
-      console.error('Search error:', error);
+    console.log('✅ Loading should now be TRUE');
+    
+    // Simple 3-second delay to test spinner
+    setTimeout(() => {
+      console.log('⏰ 3 seconds passed - turning off loading');
       setLoading(false);
-    }
+      
+      // ONLY AFTER we test the spinner, do the actual fetch
+      // fetchTickerData(userInput);
+    }, 3000);
   };
+
+  // ALSO, let's make sure your button shows loading state by adding this debug:
+  console.log('🔍 Current loading state in render:', loading);
+
 
   // Don't show on desktop
   if (typeof window !== 'undefined' && window.innerWidth > 768) {
@@ -362,13 +355,19 @@ export default function MobileBottomSearch() {
 
               {/* Close Button */}
               <button
-                onClick={() => {
-                  setIsExpanded(false);
-                  setShowTooltip(false);
-                }}
-                className={styles.closeButton}
+                onClick={handleManualSearch}
+                disabled={loading || !tickerInput?.trim()}
+                className={styles.searchButton}
+                style={{ backgroundColor: loading ? 'red' : undefined }} // Debug: red when loading
               >
-                <X />
+                {loading ? (
+                  <>
+                    <div className={styles.loadingSpinner}></div>
+                    <span className={styles.searchButtonText}>Searching...</span>
+                  </>
+                ) : (
+                  <span className={styles.searchButtonText}>Search</span>
+                )}
               </button>
             </>
           )}

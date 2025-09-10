@@ -2,22 +2,14 @@ import Image from 'next/image';
 import StockSearchNav from '@/components/ui/StockSearchNav';
 import styles from '@/styles/HomePage.module.css';
 import MobileBottomSearch from '@/components/ui/MobileBottomSearch';
-import DemoGauge from '@/components/ui/DemoGauge';
+
 export default function HomePage() {
   return (
     <div className={styles.container}>
-      {/* Hero Banner - Clean and Focused */}
+      {/* Hero Section - Minimal and Focused */}
       <section className={styles.heroSection}>
         <div className={styles.heroContent}>
           
-          {/* Stock Search - The Main CTA */}
-          <div className={styles.searchContainer}>
-            <StockSearchNav className={styles.mainSearch} />
-            <p className={styles.searchHint}>
-              Search any stock (e.g., TCS.NS, RELIANCE.NS)
-            </p>
-          </div>
-
           {/* Main Headline - Direct and Action-Focused */}
           <h1 className={styles.headline}>
             Find Your Stock's 
@@ -29,26 +21,28 @@ export default function HomePage() {
             Get instant DCF and EPS analysis with fair value calculations
           </p>
 
-          
-        </div>
-      </section>
-
-      {/* Gauge Meter Section - Interactive Demo */}
-      <section className={styles.gaugeSection}>
-        <div className={styles.gaugeContainer}>
-          <div className={styles.demoHeader}>
-            <h3 className={styles.demoTitle}>Live Valuation Example</h3>
-            <p className={styles.demoSubtitle}>See how our analysis works with sample data</p>
+          {/* Stock Search - The Main CTA */}
+          <div className={styles.searchContainer}>
+            <StockSearchNav className={styles.mainSearch} />
+            <p className={styles.searchHint}>
+              Search any stock (e.g., AAPL, TSLA, GOOGL)
+            </p>
           </div>
-          
-          {/* Demo Gauge with real component */}
-          <DemoGauge 
-            fairValue={2800} 
-            currentPrice={2500} 
-            epsValue={2750} 
+        </div>
+
+        {/* Visual Indicator - Gauge Meter */}
+        <div className={styles.gaugeContainer}>
+          <Image
+            src="/GuageMeter.png"
+            alt="Fair Value Gauge"
+            width={300}
+            height={200}
+            className={styles.gaugeImage}
+            priority
           />
-          
-          
+          <p className={styles.gaugeLabel}>
+            See if your stock is undervalued, fairly valued, or overvalued
+          </p>
         </div>
       </section>
 
