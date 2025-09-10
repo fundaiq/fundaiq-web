@@ -74,24 +74,26 @@ function ValuationGauge({ fairValue, currentPrice, epsValue }: { fairValue: numb
             position: 'absolute',
             bottom: '0px', /* Position at bottom of chart */
             left: '50%',
-            width: '2px',
+            width: '3px',
             height: '30px', /* Shorter needle */
-            background: '#1f2937',
+            background: 'var(--text-primary, #1f2937)', /* Use CSS variable with fallback */
             transformOrigin: 'bottom center',
             transform: `translate(-50%, 0) rotate(${needleAngle}deg)`,
             pointerEvents: 'none',
             zIndex: 10,
+            filter: 'drop-shadow(0 1px 2px rgba(0,0,0,0.3))', /* Add shadow for visibility */
           }}
         >
           <div style={{
             position: 'absolute',
-            bottom: '-6px',
-            left: '-6px',
-            width: '14px',
-            height: '14px',
-            background: '#1f2937',
+            bottom: '-8px',
+            left: '-8px',
+            width: '19px',
+            height: '19px',
+            background: 'var(--text-primary, #1f2937)',
             borderRadius: '50%',
-            border: '2px solid white',
+            border: '3px solid var(--surface-elevated, white)',
+            boxShadow: '0 2px 4px rgba(0,0,0,0.2)',
           }} />
         </div>
       </div>
