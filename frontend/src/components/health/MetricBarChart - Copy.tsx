@@ -55,7 +55,11 @@ export const MetricBarChart = ({ label, data, labels, percent = false }: Props) 
         labelColor: computedStyle.getPropertyValue(`--chart-label-${suffix}`).trim(),
       };
 
-      
+      console.log('=== BAR CHART DEBUG ===');
+      console.log('Theme detected:', suffix);
+      console.log('isDark:', isDark);
+      console.log('CSS Colors:', newColors);
+      console.log('Y-axis tick color:', newColors.tickColor);
       
       setColors(newColors);
     };
@@ -72,42 +76,12 @@ export const MetricBarChart = ({ label, data, labels, percent = false }: Props) 
     return () => observer.disconnect();
   }, []);
 
-  // Multi-layer conditional formatting for scaling
-  const getScalingInfo = (data: number[]) => {
-    const maxAbsValue = Math.max(...data.map(value => Math.abs(value)));
-    
-    if (maxAbsValue >= 1000) {
-      return {
-        scaleFactor: 1000,
-        unitLabel: '(₹ 1000 Cr)',
-        shouldScale: true
-      };
-    } else if (maxAbsValue >= 100) {
-      return {
-        scaleFactor: 100,
-        unitLabel: '(₹ 100 Cr)',
-        shouldScale: true
-      };
-    } else {
-      return {
-        scaleFactor: 1,
-        unitLabel: '',
-        shouldScale: false
-      };
-    }
-  };
-
-  const { scaleFactor, unitLabel, shouldScale } = getScalingInfo(data);
-
-  // Scale down data if needed
-  const scaledData = shouldScale ? data.map(value => value / scaleFactor) : data;
-
   const chartData = {
     labels,
     datasets: [
       {
         label,
-        data: scaledData,
+        data,
         backgroundColor: colors.backgroundColor || 'rgba(59, 130, 246, 0.6)',
         borderRadius: 4,
         datalabels: {
@@ -156,7 +130,7 @@ export const MetricBarChart = ({ label, data, labels, percent = false }: Props) 
           drawTicks: false,
         },
         beginAtZero: true,
-        suggestedMax: Math.max(...scaledData) * 1.15,
+        suggestedMax: Math.max(...data) * 1.15,
       }
     },
     plugins: {
@@ -167,12 +141,7 @@ export const MetricBarChart = ({ label, data, labels, percent = false }: Props) 
 
   return (
     <div className="w-full">
-      <div className="flex items-center justify-between mb-1">
-        <h5 className="text-xs font-medium text-tertiary">{label}</h5>
-        {unitLabel && (
-          <span className="text-xs font-medium text-gray-500">{unitLabel}</span>
-        )}
-      </div>
+      <h5 className="text-xs font-medium mb-1 text-tertiary">{label}</h5>
       <div className={`h-[200px] ${styles.chartContainer}`}>
         <Bar data={chartData} options={options} />
       </div>

@@ -4,35 +4,50 @@ import { useGlobalStore } from '@/store/globalStore';
 import styles from '@/styles/StockSummaryCard.module.css';
 
 function formatCr(value: number | undefined) {
-  return value ? `₹${(value / 1e7).toFixed(1)} Cr` : 'N/A';
+  if (value === null || value === undefined || isNaN(Number(value))) return 'N/A';
+  const numValue = Number(value);
+  return `₹${(numValue / 1e7).toFixed(1)} Cr`;
 }
 
 function formatPercent(value: number | undefined, digits = 1) {
-  return value || value === 0 ? `${value.toFixed(digits)}%` : 'N/A';
+  if (value === null || value === undefined || isNaN(Number(value))) return 'N/A';
+  const numValue = Number(value);
+  return `${numValue.toFixed(digits)}%`;
 }
 
 function formatCurrency(value: number | undefined) {
-  return value || value === 0
-    ? `₹${value.toLocaleString('en-IN', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`
-    : '₹—';
+  if (value === null || value === undefined || isNaN(Number(value))) return '₹—';
+  const numValue = Number(value);
+  return `₹${numValue.toLocaleString('en-IN', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`;
 }
 
+// FIXED: This is the main function causing the error
 function format(value: number | undefined, digits = 1) {
-  return value || value === 0 ? value.toFixed(digits) : 'N/A';
+  // Check if value is null, undefined, or not a valid number
+  if (value === null || value === undefined) return 'N/A';
+  
+  // Convert to number if it's a string
+  const numValue = Number(value);
+  
+  // Check if the conversion resulted in a valid number
+  if (isNaN(numValue) || !isFinite(numValue)) return 'N/A';
+  
+  // Now safely use toFixed
+  return numValue.toFixed(digits);
 }
 
 function getMarketCapCategory(marketCap: number | undefined) {
-  if (!marketCap || marketCap === 0) return { label: 'N/A', style: styles.badgeGray };
-  
-  // Market cap could be in different units, let's check the magnitude
-  let capInCrores = marketCap;
-  
-  // If the value is very large (like in paisa or rupees), convert to crores
-  if (marketCap > 10000000) { // Greater than 1 crore in paisa/rupees
-    capInCrores = marketCap / 1e7; // Convert to crores
+  if (!marketCap || marketCap === 0 || isNaN(Number(marketCap))) {
+    return { label: 'N/A', style: styles.badgeGray };
   }
   
+  // Market cap could be in different units, let's check the magnitude
+  let capInCrores = Number(marketCap);
   
+  // If the value is very large (like in paisa or rupees), convert to crores
+  if (capInCrores > 10000000) { // Greater than 1 crore in paisa/rupees
+    capInCrores = capInCrores / 1e7; // Convert to crores
+  }
   
   if (capInCrores >= 100000) {
     return { label: 'Large Cap', style: styles.badgeGreen };
@@ -46,7 +61,7 @@ function getMarketCapCategory(marketCap: number | undefined) {
 }
 
 function getBadgeStyle(metric: string, value: number | undefined) {
-  if (value === undefined || isNaN(value)) return styles.badgeGray;
+  if (value === undefined || value === null || isNaN(Number(value))) return styles.badgeGray;
   const val = Number(value);
 
   switch (metric) {
@@ -79,7 +94,7 @@ function getBadgeStyle(metric: string, value: number | undefined) {
 }
 
 function getBadgeText(metric: string, value: number | undefined) {
-  if (value === undefined || isNaN(value)) return 'N/A';
+  if (value === undefined || value === null || isNaN(Number(value))) return 'N/A';
   const val = Number(value);
 
   switch (metric) {
@@ -116,12 +131,9 @@ export default function StockSummaryCard() {
   const raw = useGlobalStore((s) => s.metrics);
   const metrics = Array.isArray(raw) ? raw[0] : raw;
 
-  const companyName = info?.name || '—';
+  const companyName = info || '—';
   const price = metrics?.current_price;
   const marketCapCategory = getMarketCapCategory(metrics?.market_cap);
-
-  // Debug log to see market cap value
-  
 
   // Extract first letter of company name for icon
   const companyInitial = companyName.charAt(0).toUpperCase();
@@ -180,16 +192,16 @@ export default function StockSummaryCard() {
     },
     { 
       label: 'ROCE', 
-      value: formatPercent(metrics?.roce?.at(-1)), 
+      value: formatPercent(metrics?.ttm_roce), 
       metric: 'ROCE', 
-      rawValue: metrics?.roce?.at(-1),
+      rawValue: metrics?.ttm_roce,
       showBadge: true
     },
     { 
       label: 'ROE', 
-      value: formatPercent(metrics?.roe?.at(-1)), 
+      value: formatPercent(metrics?.ttm_roe), 
       metric: 'ROE', 
-      rawValue: metrics?.roe?.at(-1),
+      rawValue: metrics?.ttm_roe,
       showBadge: true
     },
     { 
@@ -200,15 +212,22 @@ export default function StockSummaryCard() {
       showBadge: true
     },
     { 
-      label: 'Current Ratio', 
-      value: format(metrics?.current_ratio, 2),
-      showBadge: false
+      label: 'Interest Coverage', 
+      value: format(metrics?.ttm_interest_coverage, 2), 
+      metric: 'InterestCoverage', 
+      rawValue: metrics?.ttm_interest_coverage,
+      showBadge: true
     },
-    { 
-      label: 'Quick Ratio', 
-      value: format(metrics?.quick_ratio, 2),
-      showBadge: false
-    },
+    // { 
+    //   label: 'Current Ratio', 
+    //   value: format(metrics?.current_ratio, 2),
+    //   showBadge: false
+    // },
+    // { 
+    //   label: 'Quick Ratio', 
+    //   value: format(metrics?.quick_ratio, 2),
+    //   showBadge: false
+    // },
     { 
       label: 'Price to Sales', 
       value: format(metrics?.price_to_sales, 2),
@@ -237,11 +256,11 @@ export default function StockSummaryCard() {
           <h2 className={styles.companyName}>{companyName}</h2>
         </div>
         
-        {price && (
+        {price && !isNaN(Number(price)) && (
           <div className={styles.priceInfo}>
             <span className={styles.currency}>₹</span>
             <h3 className={styles.currentPrice}>
-              {price.toLocaleString('en-IN', { 
+              {Number(price).toLocaleString('en-IN', { 
                 minimumFractionDigits: 0, 
                 maximumFractionDigits: 2 
               })}
@@ -260,20 +279,14 @@ export default function StockSummaryCard() {
               <div className={styles.metricValueWithBadge}>
                 <span className={styles.metricValue}>{metric.value}</span>
                 {metric.customBadge ? (
-                  <span 
-                    className={metric.customBadge.style}
-                    title={`${metric.label}: ${metric.customBadge.label}`}
-                  >
+                  <span className={`${styles.badge} ${metric.customBadge.style}`}>
                     {metric.customBadge.label}
                   </span>
-                ) : metric.metric ? (
-                  <span 
-                    className={getBadgeStyle(metric.metric, metric.rawValue)}
-                    title={`${metric.label}: ${getBadgeText(metric.metric, metric.rawValue)}`}
-                  >
+                ) : (
+                  <span className={`${styles.badge} ${getBadgeStyle(metric.metric, metric.rawValue)}`}>
                     {getBadgeText(metric.metric, metric.rawValue)}
                   </span>
-                ) : null}
+                )}
               </div>
             ) : (
               <span className={styles.metricValue}>{metric.value}</span>

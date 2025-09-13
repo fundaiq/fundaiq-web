@@ -2,26 +2,26 @@
 
 import { MetricBarChart } from '@/components/health/MetricBarChart';
 import { getTrendSummaryLine } from '@/lib/TrendAnalyzer';
-import { TrendingUp } from 'lucide-react';
+import { BarChart2 } from 'lucide-react';
 import styles from '@/styles/FinancialHealthSection.module.css';
 
 interface Props {
   metrics: Record<string, number[]>;
-  years_with_ttm: string[];
+  qtrs: string[];
 }
 
-export const GrowthSection = ({ metrics, years_with_ttm }: Props) => {
+export const QuarterlySection = ({ metrics, qtrs }: Props) => {
   const items = [
-    { key: 'revenue_with_ttm', label: 'Revenue' },
-    { key: 'ebitda_with_ttm', label: 'EBITDA' },
-    { key: 'net_profit_with_ttm', label: 'Net Profit' },
+    { key: 'q_sales', label: 'Quarterly Sales' },
+    { key: 'q_op', label: 'Quarterly Operating Profit' },
+    { key: 'q_np', label: 'Quarterly Net Profit' },
   ];
 
   return (
     <div className={styles.subsection}>
       <div className={styles.subsectionHeader}>
-        <TrendingUp size={18} />
-        <h2 className={styles.subsectionTitle}>📊 Past Growth</h2>
+        <BarChart2 size={18} />
+        <h2 className={styles.subsectionTitle}>📈 Quarterly Performance</h2>
       </div>
 
       <div className={`${styles.cardsGrid} ${styles.cols3}`}>
@@ -30,7 +30,7 @@ export const GrowthSection = ({ metrics, years_with_ttm }: Props) => {
           const validData = Array.isArray(data) ? data.map((n) => Number(n)).filter((n) => !isNaN(n)) : [];
 
           // Test fallback chart if data is missing
-          if (label === 'Revenue' && (!validData.length || !years_with_ttm.length)) {
+          if (label === 'Quarterly Sales' && (!validData.length || !qtrs.length)) {
             console.warn(`🔍 Showing test fallback chart for ${label}`);
             return (
               <div key="test" className={styles.metricCard}>
@@ -39,24 +39,24 @@ export const GrowthSection = ({ metrics, years_with_ttm }: Props) => {
                   <MetricBarChart
                     label="Test"
                     data={[100, 200, 300]}
-                    labels={['2021', '2022', '2023']}
+                    labels={['Q1', 'Q2', 'Q3']}
                   />
                 </div>
               </div>
             );
           }
 
-          if (!validData.length || !years_with_ttm.length) return null;
+          if (!validData.length || !qtrs.length) return null;
 
-          const minLen = Math.min(validData.length, years_with_ttm.length);
+          const minLen = Math.min(validData.length, qtrs.length);
           const alignedData = validData.slice(-minLen);
-          const alignedYears = years_with_ttm.slice(-minLen);
+          const alignedQtrs = qtrs.slice(-minLen);
           const trend = getTrendSummaryLine(alignedData);
           
           return (
             <div key={key} className={styles.metricCard}>
               <div className={styles.chartContainer}>
-                <MetricBarChart label={label} data={alignedData} labels={alignedYears} />
+                <MetricBarChart label={label} data={alignedData} labels={alignedQtrs} />
               </div>
               <div className={`${styles.trendIndicator} ${
                 trend.color.includes('green') ? styles.trendPositive : 

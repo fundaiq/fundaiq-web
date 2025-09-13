@@ -1,0 +1,278 @@
+/* =============================================================================
+   HERO SECTION COMPONENT STYLES - src/styles/HeroSection.module.css
+   =============================================================================
+   Reusable hero section that works for both homepage and empty state
+============================================================================= */
+
+/* ==================== BASE HERO SECTION ==================== */
+
+.heroSection {
+  background: var(--gradient-brand);
+  border-radius: var(--radius-xl);
+  padding: var(--space-2xl) var(--space-xl);
+  text-align: center;
+  color: white;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Animated background effect */
+.heroSection::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(
+    circle at 30% 70%,
+    rgba(255, 255, 255, 0.1),
+    transparent 50%
+  );
+  animation: float 6s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translate(0, 0) rotate(0deg); }
+  50% { transform: translate(-20px, -20px) rotate(3deg); }
+}
+
+/* ==================== HERO CONTENT ==================== */
+
+.heroContent {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  position: relative;
+  z-index: 2;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+/* ==================== HERO HEADER ==================== */
+
+.heroHeader {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-lg);
+  flex-wrap: wrap;
+}
+
+.heroLogoIcon {
+  width: 50px;
+  height: 50px;
+  object-fit: contain;
+  filter: drop-shadow(0 4px 12px rgba(255, 255, 255, 0.3));
+  transition: all var(--transition-normal) var(--easing-default);
+  animation: logoFloat 3s ease-in-out infinite;
+  flex-shrink: 0;
+}
+
+.heroLogoIcon:hover {
+  transform: scale(1.05);
+  filter: drop-shadow(0 6px 16px rgba(255, 255, 255, 0.4));
+}
+
+@keyframes logoFloat {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-8px); }
+}
+
+/* ==================== HEADLINE ==================== */
+
+.headline {
+  font-size: clamp(1.5rem, 3.5vw, 2.2rem);
+  font-weight: var(--font-bold);
+  line-height: 1.2;
+  color: white;
+  margin: 0;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  text-align: left;
+}
+
+.brandText {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 1));
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: var(--font-black);
+}
+
+/* ==================== SUBHEADING ==================== */
+
+.subheading {
+  font-size: var(--text-base);
+  color: rgba(255, 255, 255, 0.85);
+  line-height: 1.4;
+  margin: 0;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* ==================== UPLOAD SECTION ==================== */
+
+.uploadSection {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  margin-top: var(--space-md);
+}
+
+.uploadComponent {
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.uploadHint {
+  font-size: var(--text-sm);
+  color: rgba(255, 255, 255, 0.8);
+  margin: 0;
+}
+
+/* ==================== TRUST INDICATORS ==================== */
+
+.trustIndicators {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: var(--space-xl);
+  flex-wrap: wrap;
+  margin-top: var(--space-lg);
+}
+
+.trustItem {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  font-size: var(--text-sm);
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: var(--font-medium);
+}
+
+/* ==================== QUICK STEPS (for empty state) ==================== */
+
+.quickSteps {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-lg);
+  padding: var(--space-lg);
+  margin-top: var(--space-lg);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.quickStepsTitle {
+  font-size: var(--text-sm);
+  font-weight: var(--font-semibold);
+  margin-bottom: var(--space-md);
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.quickStepsList {
+  display: flex;
+  justify-content: center;
+  gap: var(--space-lg);
+  flex-wrap: wrap;
+}
+
+.quickStep {
+  font-size: var(--text-xs);
+  color: rgba(255, 255, 255, 0.8);
+  font-weight: var(--font-medium);
+  white-space: nowrap;
+}
+
+/* ==================== VARIANT STYLES ==================== */
+
+/* Homepage variant - default styling */
+.homepage {
+  margin-bottom: var(--space-2xl);
+}
+
+/* Empty state variant - full container */
+.emptyState {
+  margin-bottom: var(--space-3xl);
+}
+
+.emptyState .heroContent {
+  max-width: 900px;
+}
+
+.emptyState .uploadComponent {
+  max-width: 500px;
+}
+
+/* ==================== MOBILE RESPONSIVE ==================== */
+
+@media (max-width: 768px) {
+  .heroSection {
+    padding: var(--space-xl) var(--space-lg);
+  }
+  
+  .heroHeader {
+    flex-direction: column;
+    gap: var(--space-sm);
+    text-align: center;
+  }
+  
+  .heroLogoIcon {
+    width: 45px;
+    height: 45px;
+  }
+  
+  .heroContent {
+    gap: var(--space-sm);
+  }
+  
+  .headline {
+    font-size: clamp(1.3rem, 4vw, 1.8rem);
+    text-align: center;
+  }
+  
+  .subheading {
+    font-size: var(--text-sm);
+  }
+  
+  .trustIndicators {
+    gap: var(--space-lg);
+  }
+  
+  .trustItem {
+    font-size: var(--text-xs);
+  }
+  
+  .quickStepsList {
+    gap: var(--space-md);
+  }
+  
+  .quickStep {
+    font-size: var(--text-xs);
+  }
+  
+  /* Smaller padding for homepage variant on mobile */
+  .homepage {
+    margin-bottom: var(--space-xl);
+  }
+}
+
+/* ==================== ACCESSIBILITY ==================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .heroSection::before,
+  .heroLogoIcon {
+    animation: none;
+  }
+  
+  .heroLogoIcon:hover {
+    transform: none;
+  }
+}
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+  .quickSteps {
+    border-width: 2px;
+    background: rgba(255, 255, 255, 0.15);
+  }
+}

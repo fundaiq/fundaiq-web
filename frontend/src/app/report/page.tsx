@@ -41,10 +41,23 @@ export default function CompanyReportPage() {
 
   // ORIGINAL LOGIC PRESERVED: Show sections when company data is available
   // FIX: Only depend on the company name to prevent infinite loops
+  // FIXED: Proper logic for string company_info
   useEffect(() => {
-    const valid = !companyInfo?.name?.trim();
-    setShowSections(!valid);
-  }, [companyInfo?.name]); // Only depend on the name, not the entire object
+    // Since company_info is a string, check if it exists and has content
+    const hasValidData = Boolean(
+      companyInfo && 
+      typeof companyInfo === 'string' && 
+      companyInfo.trim().length > 0
+    );
+    
+    setShowSections(hasValidData);
+    
+    // Debug logs to help troubleshoot
+    console.log('CompanyInfo:', companyInfo);
+    console.log('CompanyInfo type:', typeof companyInfo);
+    console.log('ShowSections:', hasValidData);
+  }, [companyInfo]);
+
 
   useEffect(() => setMounted(true), []);
   if (!mounted) return null;
@@ -94,14 +107,16 @@ export default function CompanyReportPage() {
                 <Disclaimer />
               </section>
               {/* 2. Company Header  */}
-              <section id="companyheader" className={styles.section}>
+              {/* <section id="companyheader" className={styles.section}>
                 <CompanyHeader />
-              </section>
-              {/* 2. Stock Price Chart - Fixed ID */}
+              </section> */}
+              {/* 2. Stock Price Chart - Fixed ID
               <section id="pricechart" className={styles.section}>
-                <StockPriceChart />
+                 <StockPriceChart ticker={"NSE:TCS"} />
               </section>
-
+              <button onClick={() => console.log('Testing symbol format:', toTradingViewSymbol('TCS'))}>
+                Test Symbol Format
+              </button> */}
               {/* 3. Stock Summary - Fixed ID */}
               <section id="stockmetrics" className={styles.section}>
                 <StockSummaryCard />
@@ -132,10 +147,10 @@ export default function CompanyReportPage() {
                 <EPSValuationSection />
               </section>
 
-              {/* 9. Company Info - Fixed ID */}
+              {/* 9. Company Info - Fixed ID
               <section id="info" className={styles.section}>
                 <CompanyInfoSection />
-              </section>
+              </section> */}
 
             </div>
           )}

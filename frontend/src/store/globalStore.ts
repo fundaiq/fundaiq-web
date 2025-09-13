@@ -205,7 +205,7 @@ export const useGlobalStore = create<GlobalState>()(
           valuationResults: {},
           assumptions: {},
           defaultAssumptions: {},
-          companyInfo: {},
+          companyInfo: '',
           rawYahooData: {},
           status: '',
           calculationTriggered: false,

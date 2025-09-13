@@ -114,7 +114,7 @@ const fields = [
   { label: 'Base Rev (₹ Cr)', name: 'base_revenue' },
   { label: 'Net Debt (₹ Cr)', name: 'latest_net_debt' },
   { label: 'EBIT Margin (%)', name: 'ebit_margin' },
-  { label: 'Tax Rate (%)', name: 'tax_rate' },
+  { label: 'Tax Rate (%) of EBIT', name: 'tax_rate' },
   { label: 'CapEx (% of Revenue)', name: 'capex_pct' },
   { label: 'Depreciation (% of Revenue)', name: 'depreciation_pct' },
   { label: 'Interest Expense % of EBIT', name: 'interest_exp_pct' },

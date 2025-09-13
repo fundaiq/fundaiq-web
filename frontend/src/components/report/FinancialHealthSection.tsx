@@ -7,6 +7,8 @@ import { GrowthRateSection } from '@/components/health/sections/GrowthRateSectio
 import { ProfitabilitySection } from '@/components/health/sections/ProfitabilitySection';
 import { LeverageSection } from '@/components/health/sections/LeverageSection';
 import { BalanceSheetSection } from '@/components/health/sections/BalanceSheetSection';
+import { QuarterlySection } from '@/components/health/sections/QuarterlySection';
+import { QuarterlyGrowthRateSection } from '@/components/health/sections/QuarterlyGrowthRateSection';
 import { SummaryBox } from '@/components/health/SummaryBox';
 import { Activity } from 'lucide-react';
 import styles from '@/styles/FinancialHealthSection.module.css';
@@ -21,6 +23,8 @@ export default function FinancialHealthSection() {
   }, []);
 
   const rawYears = metrics?.years || [];
+  const years_with_ttm = metrics?.years_with_ttm || [];
+  const qtrs = metrics?.qtrs || [];
   const years = rawYears.map((y: string) => y.replace("Mar-", ""));
 
   if (!hydrated || !metrics || Object.keys(metrics).length === 0) {
@@ -45,7 +49,14 @@ export default function FinancialHealthSection() {
       {/* Subsections Container */}
       <div className={styles.subsectionsContainer}>
         <div className={styles.subsection}>
-          <GrowthSection metrics={metrics} years={years} />
+          <QuarterlySection metrics={metrics} qtrs={qtrs} />
+        </div>
+        <div className={styles.subsection}>
+          <QuarterlyGrowthRateSection metrics={metrics} qtrs={qtrs} />
+        </div>
+
+        <div className={styles.subsection}>
+          <GrowthSection metrics={metrics} years_with_ttm={years_with_ttm} />
         </div>
 
         <div className={styles.subsection}>
@@ -65,9 +76,9 @@ export default function FinancialHealthSection() {
         </div>
 
         {/* Summary Box - Special Styling */}
-        <div className={styles.summaryCard}>
+        {/* <div className={styles.summaryCard}>
           <SummaryBox metrics={metrics} />
-        </div>
+        </div> */}
       </div>
     </section>
   );

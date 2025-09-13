@@ -1,0 +1,426 @@
+/* ExcelUploadSection.module.css */
+
+.uploadContainer {
+  position: relative;
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.uploadInputWrapper {
+  position: relative;
+}
+
+.uploadInputContainer {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: var(--surface-elevated, #ffffff);
+  border: 2px solid var(--border-color, #e5e7eb);
+  border-radius: 0.75rem;
+  padding: 0.5rem;
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.uploadInputContainer:hover {
+  border-color: var(--color-accent, #2563eb);
+  box-shadow: 0 4px 6px rgba(37, 99, 235, 0.1);
+}
+
+.uploadInputContainer:focus-within {
+  border-color: var(--color-accent, #2563eb);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+/* Upload Area */
+.uploadArea {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex: 1;
+  padding: 1rem;
+  border: 2px dashed var(--border-secondary, #d1d5db);
+  border-radius: 0.5rem;
+  background: var(--surface-secondary, #f9fafb);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-height: 60px;
+}
+
+.uploadArea:hover {
+  border-color: var(--color-accent, #2563eb);
+  background: var(--surface-hover, #f3f4f6);
+}
+
+.uploadArea.hasFile {
+  border-color: var(--color-success, #10b981);
+  background: var(--color-success-bg, #ecfdf5);
+  border-style: solid;
+}
+
+.uploadIcon {
+  width: 1.5rem;
+  height: 1.5rem;
+  color: var(--color-accent, #2563eb);
+  flex-shrink: 0;
+}
+
+.uploadContent {
+  flex: 1;
+  min-width: 0;
+}
+
+.uploadPrompt {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.uploadTitle {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-primary, #111827);
+}
+
+.uploadSubtitle {
+  font-size: 0.75rem;
+  color: var(--text-secondary, #6b7280);
+  line-height: 1.3;
+}
+
+/* File Info */
+.fileInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.fileName {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-primary, #111827);
+  truncate: true;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.fileSize {
+  font-size: 0.75rem;
+  color: var(--text-secondary, #6b7280);
+}
+
+/* Status Indicator */
+.statusIndicator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  flex-shrink: 0;
+}
+
+.successIcon {
+  width: 1.25rem;
+  height: 1.25rem;
+  color: var(--color-success, #10b981);
+}
+
+.errorIcon {
+  width: 1.25rem;
+  height: 1.25rem;
+  color: var(--color-error, #ef4444);
+}
+
+/* Right Controls */
+.rightControls {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.uploadButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  background: var(--color-accent, #2563eb);
+  color: white;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.uploadButton:hover:not(:disabled) {
+  background: var(--color-accent-hover, #1d4ed8);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(37, 99, 235, 0.3);
+}
+
+.uploadButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.uploadButtonIcon {
+  width: 1rem;
+  height: 1rem;
+}
+
+/* Loading Spinner */
+.loadingSpinner {
+  width: 1rem;
+  height: 1rem;
+  border: 2px solid transparent;
+  border-top: 2px solid currentColor;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Tooltip */
+.tooltipContainer {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  cursor: pointer;
+}
+
+.helpIcon {
+  width: 1rem;
+  height: 1rem;
+  color: var(--text-tertiary, #9ca3af);
+  transition: color 0.2s ease;
+}
+
+.helpIcon:hover {
+  color: var(--text-secondary, #6b7280);
+}
+
+.tooltip {
+  position: absolute;
+  bottom: 100%;
+  right: 0;
+  margin-bottom: 0.5rem;
+  z-index: 50;
+  min-width: 280px;
+}
+
+.tooltipContent {
+  background: var(--surface-elevated, #ffffff);
+  border: 1px solid var(--border-color, #e5e7eb);
+  border-radius: 0.5rem;
+  padding: 1rem;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  font-size: 0.875rem;
+}
+
+.tooltipTitle {
+  font-weight: 600;
+  color: var(--text-primary, #111827);
+  margin-bottom: 0.75rem;
+}
+
+.tooltipList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.tooltipItem {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.tooltipLabel {
+  font-weight: 500;
+  color: var(--text-primary, #111827);
+  min-width: 60px;
+}
+
+.tooltipText {
+  color: var(--text-secondary, #6b7280);
+}
+
+.tooltipExample {
+  font-size: 0.75rem;
+  color: var(--text-secondary, #6b7280);
+  margin: 0;
+}
+
+.tooltipLink {
+  color: var(--color-accent, #2563eb);
+  text-decoration: none;
+}
+
+.tooltipLink:hover {
+  text-decoration: underline;
+}
+
+/* Status Messages */
+.statusMessage {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  margin-top: 0.75rem;
+  background: var(--color-success-bg, #ecfdf5);
+  border: 1px solid var(--color-success-border, #d1fae5);
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  color: var(--color-success-text, #065f46);
+}
+
+.statusMessage.errorMessage {
+  background: var(--color-error-bg, #fef2f2);
+  border-color: var(--color-error-border, #fecaca);
+  color: var(--color-error-text, #991b1b);
+}
+
+.statusIcon {
+  width: 1rem;
+  height: 1rem;
+  flex-shrink: 0;
+}
+
+.retryButton {
+  background: transparent;
+  border: 1px solid currentColor;
+  color: inherit;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-left: auto;
+}
+
+.retryButton:hover {
+  background: currentColor;
+  color: white;
+}
+
+/* Responsive Design */
+@media (max-width: 640px) {
+  .uploadInputContainer {
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 0.75rem;
+  }
+  
+  .uploadArea {
+    padding: 0.75rem;
+    gap: 0.75rem;
+  }
+  
+  .uploadTitle {
+    font-size: 0.8125rem;
+  }
+  
+  .uploadSubtitle {
+    font-size: 0.6875rem;
+  }
+  
+  .rightControls {
+    align-self: stretch;
+    gap: 0.75rem;
+  }
+  
+  .uploadButton {
+    flex: 1;
+    height: 2.25rem;
+  }
+  
+  .tooltip {
+    right: -1rem;
+    min-width: 260px;
+  }
+}
+
+/* Dark mode */
+[data-theme="dark"] .uploadInputContainer {
+  background: var(--surface-elevated-dark, #1f2937);
+  border-color: var(--border-color-dark, #374151);
+}
+
+[data-theme="dark"] .uploadInputContainer:hover {
+  border-color: var(--color-accent-dark, #3b82f6);
+}
+
+[data-theme="dark"] .uploadArea {
+  background: var(--surface-secondary-dark, #111827);
+  border-color: var(--border-secondary-dark, #4b5563);
+}
+
+[data-theme="dark"] .uploadArea:hover {
+  background: var(--surface-hover-dark, #0f172a);
+  border-color: var(--color-accent-dark, #3b82f6);
+}
+
+[data-theme="dark"] .uploadArea.hasFile {
+  background: var(--color-success-bg-dark, #064e3b);
+  border-color: var(--color-success-dark, #10b981);
+}
+
+[data-theme="dark"] .uploadTitle {
+  color: var(--text-primary-dark, #f9fafb);
+}
+
+[data-theme="dark"] .uploadSubtitle {
+  color: var(--text-secondary-dark, #d1d5db);
+}
+
+[data-theme="dark"] .fileName {
+  color: var(--text-primary-dark, #f9fafb);
+}
+
+[data-theme="dark"] .fileSize {
+  color: var(--text-secondary-dark, #d1d5db);
+}
+
+[data-theme="dark"] .tooltipContent {
+  background: var(--surface-elevated-dark, #1f2937);
+  border-color: var(--border-color-dark, #374151);
+}
+
+[data-theme="dark"] .tooltipTitle {
+  color: var(--text-primary-dark, #f9fafb);
+}
+
+[data-theme="dark"] .tooltipLabel {
+  color: var(--text-primary-dark, #f9fafb);
+}
+
+[data-theme="dark"] .tooltipText {
+  color: var(--text-secondary-dark, #d1d5db);
+}
+
+[data-theme="dark"] .tooltipExample {
+  color: var(--text-secondary-dark, #d1d5db);
+}
+
+[data-theme="dark"] .statusMessage {
+  background: var(--color-success-bg-dark, #064e3b);
+  border-color: var(--color-success-border-dark, #065f46);
+  color: var(--color-success-text-dark, #10b981);
+}
+
+[data-theme="dark"] .statusMessage.errorMessage {
+  background: var(--color-error-bg-dark, #7f1d1d);
+  border-color: var(--color-error-border-dark, #991b1b);
+  color: var(--color-error-text-dark, #ef4444);
+}

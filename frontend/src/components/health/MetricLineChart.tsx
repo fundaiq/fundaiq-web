@@ -61,11 +61,7 @@ export const MetricLineChart = ({ label, data, labels, percent = false }: Props)
         labelColor: computedStyle.getPropertyValue(`--chart-label-${suffix}`).trim(),
       };
 
-      console.log('=== LINE CHART DEBUG ===');
-      console.log('Theme detected:', suffix);
-      console.log('isDark:', isDark);
-      console.log('CSS Colors:', newColors);
-      console.log('Y-axis tick color:', newColors.tickColor);
+      
       
       setColors(newColors);
     };
@@ -82,12 +78,51 @@ export const MetricLineChart = ({ label, data, labels, percent = false }: Props)
     return () => observer.disconnect();
   }, []);
 
+  // Multi-layer conditional formatting for scaling (skip scaling for percentage data)
+  const getScalingInfo = (data: number[]) => {
+    // Don't scale percentage data
+    if (percent) {
+      return {
+        scaleFactor: 1,
+        unitLabel: '',
+        shouldScale: false
+      };
+    }
+    
+    const maxAbsValue = Math.max(...data.map(value => Math.abs(value)));
+    
+    if (maxAbsValue >= 1000) {
+      return {
+        scaleFactor: 1000,
+        unitLabel: '(₹ 1000 Cr)',
+        shouldScale: true
+      };
+    } else if (maxAbsValue >= 100) {
+      return {
+        scaleFactor: 100,
+        unitLabel: '(₹ 100 Cr)',
+        shouldScale: true
+      };
+    } else {
+      return {
+        scaleFactor: 1,
+        unitLabel: '',
+        shouldScale: false
+      };
+    }
+  };
+
+  const { scaleFactor, unitLabel, shouldScale } = getScalingInfo(data);
+
+  // Scale down data if needed
+  const scaledData = shouldScale ? data.map(value => value / scaleFactor) : data;
+
   const chartData = {
     labels,
     datasets: [
       {
         label,
-        data,
+        data: scaledData,
         fill: false,
         borderColor: colors.lineColor || 'rgba(34, 197, 94, 1)',
         backgroundColor: colors.backgroundColor || 'rgba(34, 197, 94, 0.1)',
@@ -145,7 +180,7 @@ export const MetricLineChart = ({ label, data, labels, percent = false }: Props)
           drawTicks: false,
         },
         beginAtZero: true,
-        suggestedMax: Math.max(...data) * 1.15,
+        suggestedMax: Math.max(...scaledData) * 1.15,
       },
     },
     plugins: {
@@ -158,7 +193,12 @@ export const MetricLineChart = ({ label, data, labels, percent = false }: Props)
 
   return (
     <div className="w-full">
-      <h5 className="text-xs font-medium mb-1 text-tertiary">{label}</h5>
+      <div className="flex items-center justify-between mb-1">
+        <h5 className="text-xs font-medium text-tertiary">{label}</h5>
+        {unitLabel && (
+          <span className="text-xs font-medium text-gray-500">{unitLabel}</span>
+        )}
+      </div>
       <div className={`relative w-full h-[200px] ${styles.chartContainer}`}>
         <Line data={chartData} options={options} />
       </div>

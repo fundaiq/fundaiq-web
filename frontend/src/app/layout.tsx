@@ -4,7 +4,7 @@ import { ReactNode } from 'react';
 import { Analytics } from "@vercel/analytics/react";
 import TopNav from '@/components/ui/TopNav';
 import MobileBottomSearch from '@/components/ui/MobileBottomSearch';
-import SessionBootstrap from '@/components/auth/SessionBootstrap';
+import GlobalStatusToast from '@/components/ui/GlobalStatusToast';
 import { ThemeProvider } from '@/components/ThemeProvider';
 import { 
   SEBIComplianceNotice, 
@@ -20,13 +20,13 @@ const OG_IMAGE = `${SITE_URL}/og-image.png`;
 
 export const metadata: Metadata = {
   title: {
-    default: 'Funda-IQ | Educational Stock Analysis & Valuation Tools',
+    default: 'Funda-IQ | Educational Excel-Based Financial Analysis Tools',
     template: '%s | Funda-IQ'
   },
-  description: 'Professional stock valuation and analysis tools for Indian retail investors. Educational DCF models, EPS projections, and portfolio analytics.',
+  description: 'Professional financial analysis tools for Excel data. Upload your financial statements to get DCF models, EPS projections, and portfolio analytics.',
   openGraph: {
-    title: 'Funda-IQ | Educational Stock Analysis & Valuation Tools',
-    description: 'Professional stock valuation and analysis made simple with DCF models, EPS projections and portfolio analytics for Indian retail investors.',
+    title: 'Funda-IQ | Educational Excel-Based Financial Analysis Tools',
+    description: 'Professional financial analysis made simple with Excel upload. Get DCF models, EPS projections and portfolio analytics for your company data.',
     url: SITE_URL,
     siteName: 'Funda-IQ',
     images: [{ url: OG_IMAGE, width: 1200, height: 630, alt: 'Funda-IQ' }],
@@ -36,7 +36,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'Funda-IQ | Educational Investment Analysis',
-    description: 'Stock valuation & analysis made simple with DCF, EPS and portfolio analytics.',
+    description: 'Excel-based financial analysis with DCF, EPS and portfolio analytics.',
     images: [OG_IMAGE],
     creator: '@fundaiq',
     site: '@fundaiq',
@@ -66,8 +66,6 @@ export default function RootLayout({ children }: RootLayoutProps) {
           enableSystem
           disableTransitionOnChange={false}
         >
-          <SessionBootstrap />
-
           <div className="min-h-screen flex flex-col">
             {/* TopNav handles its own positioning */}
             <TopNav />
@@ -84,6 +82,9 @@ export default function RootLayout({ children }: RootLayoutProps) {
             </div>
           </div>
 
+          {/* Global Status Toast for upload feedback */}
+          <GlobalStatusToast />
+          
           <SEBIComplianceNotice />
           <GlobalLoadingIndicator />
           <ScrollToTopButton />

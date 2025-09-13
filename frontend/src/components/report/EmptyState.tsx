@@ -1,94 +1,132 @@
+// src/components/report/EmptyState.tsx - Updated to use HeroSection component
 'use client';
 
-import { Search, TrendingUp, BarChart3, Calculator, ArrowUp, Sparkles } from 'lucide-react';
+import React from 'react';
+import HeroSection from '@/components/ui/HeroSection';
+import { 
+  Download, 
+  Upload, 
+  BarChart3, 
+  Calculator, 
+  TrendingUp, 
+  FileSpreadsheet
+} from 'lucide-react';
 import styles from '@/styles/emptyState.module.css';
 
 export default function EmptyState() {
-  const features = [
-    {
-      icon: Calculator,
-      title: "DCF Valuation",
-      description: "Advanced discounted cash flow analysis with multiple scenarios and sensitivity testing"
-    },
-    {
-      icon: BarChart3,
-      title: "Financial Health",
-      description: "Comprehensive financial metrics analysis including profitability, liquidity, and solvency ratios"
-    },
-    {
-      icon: TrendingUp,
-      title: "Stock Performance",
-      description: "Real-time price charts, historical performance data, and market trend analysis"
-    }
-  ];
-
-  const scrollToSearch = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-    // Focus on search input after scroll
-    setTimeout(() => {
-      const searchInput = document.querySelector('input[placeholder*="Find a stock"]') as HTMLInputElement;
-      if (searchInput) {
-        searchInput.focus();
-      }
-    }, 500);
-  };
-
   return (
     <div className={styles.emptyStateContainer}>
-      {/* Main Illustration */}
-      <div className={styles.illustrationContainer}>
-        <div className={styles.logoWrapper}>
-          <div className={styles.logoCircle}>
-            <img 
-              src="/icon.png" 
-              alt="Funda-IQ" 
-              className={styles.logo}
-            />
+      {/* Reusable Hero Section with process steps */}
+      <HeroSection 
+        variant="empty-state" 
+        showProcessSteps={true}
+      />
+
+      {/* Quick Process Overview */}
+      <div className={styles.processSection}>
+        <h2 className={styles.processTitle}>How It Works</h2>
+        <div className={styles.processGrid}>
+          {[
+            {
+              step: 1,
+              icon: <Download size={20} />,
+              title: "Download from Screener.in",
+              description: "Get financial data in Excel format"
+            },
+            {
+              step: 2,
+              icon: <Upload size={20} />,
+              title: "Upload Excel File",
+              description: "Drag & drop your file here"
+            },
+            {
+              step: 3,
+              icon: <BarChart3 size={20} />,
+              title: "Analyze Trends",
+              description: "View interactive charts"
+            },
+            {
+              step: 4,
+              icon: <Calculator size={20} />,
+              title: "DCF Analysis",
+              description: "Get fair value calculations"
+            },
+            {
+              step: 5,
+              icon: <TrendingUp size={20} />,
+              title: "EPS Projections",
+              description: "See sensitivity analysis"
+            }
+          ].map((item, index) => (
+            <div key={index} className={styles.processCard}>
+              <div className={styles.stepNumber}>{item.step}</div>
+              <div className={styles.processIcon}>
+                {item.icon}
+              </div>
+              <h3 className={styles.processCardTitle}>{item.title}</h3>
+              <p className={styles.processCardDescription}>{item.description}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Features Grid */}
+      <div className={styles.featuresSection}>
+        <h2 className={styles.featuresTitle}>Why Choose FundaIQ?</h2>
+        <div className={styles.featuresGrid}>
+          <div className={styles.featureCard}>
+            <div className={styles.featureIcon}>⚡</div>
+            <h3 className={styles.featureTitle}>Minutes, Not Hours</h3>
+            <p className={styles.featureDescription}>
+              Get comprehensive analysis in minutes instead of hours
+            </p>
           </div>
-          <div className={styles.statusBadge}>
-            <Sparkles className={styles.statusIcon} />
+
+          <div className={styles.featureCard}>
+            <div className={styles.featureIcon}>🎯</div>
+            <h3 className={styles.featureTitle}>Professional Grade</h3>
+            <p className={styles.featureDescription}>
+              Institutional-quality DCF models and EPS projections
+            </p>
+          </div>
+
+          <div className={styles.featureCard}>
+            <div className={styles.featureIcon}>🔧</div>
+            <h3 className={styles.featureTitle}>Controllable Assumptions</h3>
+            <p className={styles.featureDescription}>
+              Adjust assumptions and see real-time sensitivity analysis
+            </p>
+          </div>
+
+          <div className={styles.featureCard}>
+            <div className={styles.featureIcon}>✅</div>
+            <h3 className={styles.featureTitle}>Decision Ready</h3>
+            <p className={styles.featureDescription}>
+              Clear indicators to support your investment decisions
+            </p>
           </div>
         </div>
       </div>
 
-      {/* Main Content */}
-      <div className={styles.contentSection}>
-        <h1 className={styles.title}>
-          Ready to Analyze Your Next Investment?
-        </h1>
-        
-        <p className={styles.subtitle}>
-          Get comprehensive financial analysis, valuation models, and investment insights 
-          for any stock. Start by searching for a company above.
+      {/* Call to Action */}
+      <div className={styles.ctaSection}>
+        <h2 className={styles.ctaTitle}>Ready to Start?</h2>
+        <p className={styles.ctaDescription}>
+          Upload your Excel file now and get professional-grade financial analysis
         </p>
-        
-        <button 
-          onClick={scrollToSearch}
-          className={styles.ctaButton}
-          aria-label="Go to search"
-        >
-          <Search className={styles.ctaIcon} />
-          Find a Stock to Analyze
+        <button className={styles.ctaButton}>
+          <FileSpreadsheet size={18} />
+          Choose Excel File
         </button>
       </div>
 
-      {/* Features Grid */}
-      <div className={styles.featuresGrid}>
-        {features.map((feature, index) => (
-          <div key={index} className={styles.featureCard}>
-            <div className={styles.featureIcon}>
-              <feature.icon size={24} />
-            </div>
-            <h3 className={styles.featureTitle}>{feature.title}</h3>
-            <p className={styles.featureDescription}>{feature.description}</p>
-          </div>
-        ))}
-      </div>
-
-      {/* Additional CTA */}
-      <div className={styles.contentSection}>
-        <p className={styles.additionalInfo}>
-          ✨ Professional-grade financial analysis • 📊 Real-time data • 🎯 Investment insights
+      {/* Additional Info */}
+      <div className={styles.additionalInfo}>
+        <p>
+          <strong>Secure & Private:</strong> Your data is processed in real-time and never stored permanently.
+        </p>
+        <p>
+          <strong>Educational Tool:</strong> For analysis purposes only, not investment advice.
         </p>
       </div>
     </div>

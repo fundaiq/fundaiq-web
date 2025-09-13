@@ -1,7 +1,6 @@
 // frontend/src/components/report/CompanyHeader.tsx
 'use client';
 
-import SimpleReportButton from './SimpleReportButton';
 import { useGlobalStore } from '@/store/globalStore';
 import styles from '@/styles/CompanyHeader.module.css'; // ✅ New dedicated CSS module
 
@@ -30,7 +29,7 @@ export default function CompanyHeader() {
           {/* Company details */}
           <div className={styles.companyDetails}>
             <h1 className={styles.companyName}>
-              {companyInfo?.name || 'FundaIQ Analysis'}
+              {companyInfo || 'FundaIQ Analysis'}
             </h1>
             
             {currentPrice !== undefined && (

@@ -1,22 +1,24 @@
-// MetricBarChart.tsx - SIMPLIFIED with CSS Custom Properties
+// MetricLineChart.tsx - SIMPLIFIED with CSS Custom Properties
 'use client';
 
 import {
   Chart as ChartJS,
-  BarElement,
+  LineElement,
+  PointElement,
   LinearScale,
   CategoryScale,
   Tooltip,
   Legend,
   ChartOptions,
 } from 'chart.js';
-import { Bar } from 'react-chartjs-2';
+import { Line } from 'react-chartjs-2';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { useEffect, useState } from 'react';
 import styles from '@/styles/FinancialHealthSection.module.css';
 
 ChartJS.register(
-  BarElement,
+  LineElement,
+  PointElement,
   LinearScale,
   CategoryScale,
   Tooltip,
@@ -31,11 +33,13 @@ interface Props {
   percent?: boolean;
 }
 
-export const MetricBarChart = ({ label, data, labels, percent = false }: Props) => {
+export const MetricLineChart = ({ label, data, labels, percent = false }: Props) => {
   const [colors, setColors] = useState({
     gridColor: '',
     tickColor: '',
+    lineColor: '',
     backgroundColor: '',
+    pointColor: '',
     labelColor: '',
   });
 
@@ -51,11 +55,17 @@ export const MetricBarChart = ({ label, data, labels, percent = false }: Props) 
       const newColors = {
         gridColor: computedStyle.getPropertyValue(`--chart-grid-${suffix}`).trim(),
         tickColor: computedStyle.getPropertyValue(`--chart-tick-${suffix}`).trim(),
-        backgroundColor: computedStyle.getPropertyValue(`--chart-bar-bg-${suffix}`).trim(),
+        lineColor: computedStyle.getPropertyValue(`--chart-line-${suffix}`).trim(),
+        backgroundColor: computedStyle.getPropertyValue(`--chart-bg-${suffix}`).trim(),
+        pointColor: computedStyle.getPropertyValue(`--chart-point-${suffix}`).trim(),
         labelColor: computedStyle.getPropertyValue(`--chart-label-${suffix}`).trim(),
       };
 
-      
+      console.log('=== LINE CHART DEBUG ===');
+      console.log('Theme detected:', suffix);
+      console.log('isDark:', isDark);
+      console.log('CSS Colors:', newColors);
+      console.log('Y-axis tick color:', newColors.tickColor);
       
       setColors(newColors);
     };
@@ -72,48 +82,25 @@ export const MetricBarChart = ({ label, data, labels, percent = false }: Props) 
     return () => observer.disconnect();
   }, []);
 
-  // Multi-layer conditional formatting for scaling
-  const getScalingInfo = (data: number[]) => {
-    const maxAbsValue = Math.max(...data.map(value => Math.abs(value)));
-    
-    if (maxAbsValue >= 1000) {
-      return {
-        scaleFactor: 1000,
-        unitLabel: '(₹ 1000 Cr)',
-        shouldScale: true
-      };
-    } else if (maxAbsValue >= 100) {
-      return {
-        scaleFactor: 100,
-        unitLabel: '(₹ 100 Cr)',
-        shouldScale: true
-      };
-    } else {
-      return {
-        scaleFactor: 1,
-        unitLabel: '',
-        shouldScale: false
-      };
-    }
-  };
-
-  const { scaleFactor, unitLabel, shouldScale } = getScalingInfo(data);
-
-  // Scale down data if needed
-  const scaledData = shouldScale ? data.map(value => value / scaleFactor) : data;
-
   const chartData = {
     labels,
     datasets: [
       {
         label,
-        data: scaledData,
-        backgroundColor: colors.backgroundColor || 'rgba(59, 130, 246, 0.6)',
-        borderRadius: 4,
+        data,
+        fill: false,
+        borderColor: colors.lineColor || 'rgba(34, 197, 94, 1)',
+        backgroundColor: colors.backgroundColor || 'rgba(34, 197, 94, 0.1)',
+        pointBackgroundColor: colors.pointColor || 'rgba(34, 197, 94, 1)',
+        pointBorderColor: colors.pointColor || 'rgba(34, 197, 94, 1)',
+        borderWidth: 2.5,
+        pointRadius: 3,
+        pointHoverRadius: 5,
+        tension: 0.3,
         datalabels: {
+          align: 'top',
           anchor: 'end',
-          align: (ctx: any) => (ctx.dataset.data[ctx.dataIndex] < 0 ? 'bottom' : 'top'),
-          offset: 4,
+          offset: 6,
           font: {
             size: 10,
             weight: 'bold',
@@ -126,13 +113,15 @@ export const MetricBarChart = ({ label, data, labels, percent = false }: Props) 
     ],
   };
 
-  const options: ChartOptions<'bar'> = {
+  const options: ChartOptions<'line'> = {
     responsive: true,
     maintainAspectRatio: false,
     scales: {
       x: {
-        ticks: { 
+        ticks: {
           color: colors.tickColor || '#6B7280',
+          autoSkip: false,
+          maxRotation: 45,
           font: { size: 11 }
         },
         grid: { 
@@ -156,25 +145,22 @@ export const MetricBarChart = ({ label, data, labels, percent = false }: Props) 
           drawTicks: false,
         },
         beginAtZero: true,
-        suggestedMax: Math.max(...scaledData) * 1.15,
-      }
+        suggestedMax: Math.max(...data) * 1.15,
+      },
     },
     plugins: {
       legend: { display: false },
-      datalabels: { display: true },
+      datalabels: {
+        display: true,
+      },
     },
   };
 
   return (
     <div className="w-full">
-      <div className="flex items-center justify-between mb-1">
-        <h5 className="text-xs font-medium text-tertiary">{label}</h5>
-        {unitLabel && (
-          <span className="text-xs font-medium text-gray-500">{unitLabel}</span>
-        )}
-      </div>
-      <div className={`h-[200px] ${styles.chartContainer}`}>
-        <Bar data={chartData} options={options} />
+      <h5 className="text-xs font-medium mb-1 text-tertiary">{label}</h5>
+      <div className={`relative w-full h-[200px] ${styles.chartContainer}`}>
+        <Line data={chartData} options={options} />
       </div>
     </div>
   );

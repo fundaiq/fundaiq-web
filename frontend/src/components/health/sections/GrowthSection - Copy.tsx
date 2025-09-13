@@ -7,14 +7,14 @@ import styles from '@/styles/FinancialHealthSection.module.css';
 
 interface Props {
   metrics: Record<string, number[]>;
-  years_with_ttm: string[];
+  years: string[];
 }
 
-export const GrowthSection = ({ metrics, years_with_ttm }: Props) => {
+export const GrowthSection = ({ metrics, years }: Props) => {
   const items = [
-    { key: 'revenue_with_ttm', label: 'Revenue' },
-    { key: 'ebitda_with_ttm', label: 'EBITDA' },
-    { key: 'net_profit_with_ttm', label: 'Net Profit' },
+    { key: 'revenue', label: 'Revenue' },
+    { key: 'ebitda', label: 'EBITDA' },
+    { key: 'net_profit', label: 'Net Profit' },
   ];
 
   return (
@@ -30,7 +30,7 @@ export const GrowthSection = ({ metrics, years_with_ttm }: Props) => {
           const validData = Array.isArray(data) ? data.map((n) => Number(n)).filter((n) => !isNaN(n)) : [];
 
           // Test fallback chart if data is missing
-          if (label === 'Revenue' && (!validData.length || !years_with_ttm.length)) {
+          if (label === 'Revenue' && (!validData.length || !years.length)) {
             console.warn(`🔍 Showing test fallback chart for ${label}`);
             return (
               <div key="test" className={styles.metricCard}>
@@ -46,11 +46,11 @@ export const GrowthSection = ({ metrics, years_with_ttm }: Props) => {
             );
           }
 
-          if (!validData.length || !years_with_ttm.length) return null;
+          if (!validData.length || !years.length) return null;
 
-          const minLen = Math.min(validData.length, years_with_ttm.length);
+          const minLen = Math.min(validData.length, years.length);
           const alignedData = validData.slice(-minLen);
-          const alignedYears = years_with_ttm.slice(-minLen);
+          const alignedYears = years.slice(-minLen);
           const trend = getTrendSummaryLine(alignedData);
           
           return (

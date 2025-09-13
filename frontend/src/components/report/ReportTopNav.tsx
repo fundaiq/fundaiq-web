@@ -1,16 +1,16 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import { useGlobalStore } from '@/store/globalStore';
 
 const sections = [
-  { id: 'pricechart', label: 'Price Chart', icon: '📈' },
   { id: 'stockmetrics', label: 'Key Metrics', icon: '📊' },
   { id: 'health', label: 'Financial Health', icon: '💊' },
   { id: 'valuation', label: 'Valuation Output', icon: '🎯' },
   { id: 'assumptions', label: 'Valuation Assumptions', icon: '⚙️' },
   { id: 'dcf', label: 'DCF Projection', icon: '🔮' },
   { id: 'eps', label: 'EPS Projection', icon: '💰' },
-  { id: 'info', label: 'Company Info', icon: '🏢' },
+  
 ];
 
 interface ReportTopNavProps {
@@ -22,7 +22,8 @@ interface ReportTopNavProps {
 export default function ReportTopNav({ scrollTo, showSections, onReset }: ReportTopNavProps) {
   const [active, setActive] = useState('import');
   const navRef = useRef<HTMLDivElement>(null);
-
+  const companyInfo = useGlobalStore((s) => s.companyInfo);
+  
   useEffect(() => {
     const handleScroll = () => {
       const scrollPos = window.scrollY + 120; // Account for nav height
@@ -47,7 +48,10 @@ export default function ReportTopNav({ scrollTo, showSections, onReset }: Report
           <div 
             ref={navRef}
             className="flex gap-2 overflow-x-auto scroll-smooth pb-1"
+            
           >
+            
+
             <div className="flex gap-2 min-w-max">
               {sections.map((section) => (
                 <button
