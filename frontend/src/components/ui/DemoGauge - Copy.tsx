@@ -28,14 +28,13 @@ function ValuationGauge({ fairValue, currentPrice, epsValue }: { fairValue: numb
     { name: 'Above', value: 33.34, color: '#EF4444' }     // Red
   ];
 
-  // Updated function to center the pointer for current demo values
+  // Determine current position for needle (0-100 scale, converted to 0-180 degrees)
   const getGaugePosition = () => {
-    // For a semicircle from 180° (left) to 0° (right), center is 90°
-    // But for CSS rotation, we need to adjust: 180° becomes -90°, center becomes 0°, 0° becomes 90°
-    if (margin >= 25) return -75;     // Deep undervalued - far left (green zone)
-    if (margin >= 5) return 0;        // Fair value - center (yellow zone) - THIS IS WHERE +12% WILL GO
-    if (margin >= -25) return 45;     // Overvalued - right side (red zone)
-    return 75;                        // Deep overvalued - far right (red zone)
+    if (margin >= 50) return 15;      // Deep undervalued - far left
+    if (margin >= 10) return 45;      // Undervalued - left side
+    if (margin >= -10) return 90;     // Fair value - center
+    if (margin >= -50) return 135;    // Overvalued - right side
+    return 165;                       // Deep overvalued - far right
   };
 
   const needleAngle = getGaugePosition();
@@ -73,16 +72,16 @@ function ValuationGauge({ fairValue, currentPrice, epsValue }: { fairValue: numb
         <div 
           style={{
             position: 'absolute',
-            bottom: '0px',
+            bottom: '0px', /* Position at bottom of chart */
             left: '50%',
             width: '3px',
-            height: '30px',
-            background: 'var(--text-primary, #1f2937)',
+            height: '30px', /* Shorter needle */
+            background: 'var(--text-primary, #1f2937)', /* Use CSS variable with fallback */
             transformOrigin: 'bottom center',
             transform: `translate(-50%, 0) rotate(${needleAngle}deg)`,
             pointerEvents: 'none',
             zIndex: 10,
-            filter: 'drop-shadow(0 1px 2px rgba(0,0,0,0.3))',
+            filter: 'drop-shadow(0 1px 2px rgba(0,0,0,0.3))', /* Add shadow for visibility */
           }}
         >
           <div style={{
@@ -127,18 +126,22 @@ export default function DemoGauge({ fairValue, currentPrice, epsValue }: DemoGau
   const margin = currentPriceValue > 0 ? ((dcfFairValue - currentPriceValue) / currentPriceValue) * 100 : 0;
   
   const getValuationStatus = () => {
-    // Updated thresholds to match the new gauge positioning
-    if (margin >= 25) return { 
+    if (margin >= 50) return { 
       status: 'Analysis: Significantly Below Models', 
       style: styles.statusGreen,
       icon: CheckCircle 
     };
-    if (margin >= 5) return { 
+    if (margin >= 10) return { 
+      status: 'Analysis: Below Model Values', 
+      style: styles.statusGreen,
+      icon: TrendingUp 
+    };
+    if (margin >= -10) return { 
       status: 'Analysis: Near Model Values', 
       style: styles.statusYellow,
       icon: Target 
     };
-    if (margin >= -25) return { 
+    if (margin >= -50) return { 
       status: 'Analysis: Above Model Values', 
       style: styles.statusRed,
       icon: AlertTriangle 
