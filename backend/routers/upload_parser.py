@@ -84,15 +84,30 @@ def parse_excel(file_bytes):
 
     company_name = ws["B1"].value or "Unknown Company"
     meta = extract_meta(df_all)
+    #print(f"ℹ️ [BACKEND DEBUG] Meta data: {meta}")
 
     pnl, pnl_years = extract_table(df_all, "PROFIT & LOSS", 1)
+    ##print(f"ℹ️ [BACKEND DEBUG] Meta data: {pnl_years}")
+    ##print(f"ℹ️ [BACKEND DEBUG] Meta data: {pnl}")
+
     bs, bs_years = extract_table(df_all, "BALANCE SHEET", 1)
+    ##print(f"ℹ️ [BACKEND DEBUG] Meta data: {bs_years}")
+    ##print(f"ℹ️ [BACKEND DEBUG] Meta data: {bs}")
+
     cf, cf_years = extract_table(df_all, "CASH FLOW:", 1)
-    quarters = extract_quarters(df_all)
+    ##print(f"ℹ️ [BACKEND DEBUG] Meta data: {cf_years}")
+    ##print(f"ℹ️ [BACKEND DEBUG] Meta data: {cf}")
+
+    quarters, quarters_years = extract_table(df_all, "Quarters", 1)
+    
+    
 
     pnl = normalize_table(pnl)
     bs = normalize_table(bs)
     cf = normalize_table(cf)
+    quarters = normalize_table(quarters)
+    #print(f"ℹ️ [BACKEND DEBUG] Parser PnL : {pnl}")
+    #print(f"ℹ️ [BACKEND DEBUG] Parser Quarters : {quarters}")
 
     return make_json_safe({
         "company_name": company_name,
@@ -101,5 +116,6 @@ def parse_excel(file_bytes):
         "balance_sheet": bs,
         "cashflow": cf,
         "quarters": quarters,
-        "years": [y for y in pnl_years if y in bs_years and y in cf_years]
+        "years": [y for y in pnl_years if y in bs_years and y in cf_years],
+        "qtrs": [y for y in quarters_years]
     })

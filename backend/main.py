@@ -6,17 +6,13 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from core.config import settings
-#from routers.enhanced_pdf_generator import router as pdf_router
 from routers import (
     dcf,
     sensitivity,
     upload,
     eps,
     yahoo_fetcher,
-    auth,
-    portfolios,
-    transactions,
-    prices_series,  
+    
 )
 
 app = FastAPI(title="FundaIQ API")
@@ -31,7 +27,8 @@ KNOWN_ORIGINS = {
     settings.FRONTEND_BASE_URL,
     "https://fundaiq.com",
     "https://www.fundaiq.com",
-    "https://fundaiq-web.vercel.app",    
+    "https://fundaiq-web.vercel.app",
+    "http://localhost:3000",
 }
 # Remove any Nones
 ALLOWED_ORIGINS = [o for o in KNOWN_ORIGINS if o]
@@ -40,7 +37,7 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=ALLOWED_ORIGINS,
     allow_origin_regex=r"http://192\.168\.\d{1,3}\.\d{1,3}:\d{2,5}",
-    allow_credentials=True,          # required because frontend uses credentials: 'include'
+    allow_credentials=False,  # Changed to False since no authentication needed
     allow_methods=["*"],
     allow_headers=["*"],
 )
@@ -60,11 +57,3 @@ app.include_router(dcf.router, prefix="/api")
 app.include_router(sensitivity.router, prefix="/api")
 app.include_router(eps.router, prefix="/api")
 app.include_router(yahoo_fetcher.router, prefix="/api")
-app.include_router(auth.router, prefix="/api")
-app.include_router(portfolios.router, prefix="/api")
-app.include_router(transactions.router, prefix="/api")
-#app.include_router(auth_debug.router, prefix="/api")
-#app.include_router(analysis_reports.router, prefix="/api")
-#app.include_router(executive_summary.router, prefix="/api")  # ✅ Add this line
-#app.include_router(pdf_router, prefix="/api")
-app.include_router(prices_series.router, prefix="/api")

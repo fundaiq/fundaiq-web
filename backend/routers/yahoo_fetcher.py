@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Body
-from services.yahoo_financials import fetch_yahoo_financials
+from services.yahoo_financials import fetch_yahoo_financials  
 from services.yahoo_utils import make_json_safe
 from metrics.metrics_input_mapper import extract_inputs
 from metrics.metrics_calculator import calculate_metrics
@@ -28,8 +28,10 @@ def get_yahoo_profile(data: dict = Body(...)):
         years = result.get("years", [])
         yahoo_info = result.get("info", {})
         company_info = result.get("company_info", {})
-
+        reporting_currency= result.get("reporting_currency",{})
+        original_currency= result.get("original_currency",{})
         source = "yahoo"
+        
         metrics = calculate_metrics(pnl, bs, cf, years, source=source, yahoo_info=yahoo_info)[0]
 
         # Derive assumptions from metrics
@@ -50,7 +52,8 @@ def get_yahoo_profile(data: dict = Body(...)):
             "growth_y": metrics["growth_y"],
             "growth_terminal": metrics["growth_terminal"],
             "base_year": metrics["base_year"],
-            "interest_exp_pct": metrics["interest_exp_pct"]
+            "interest_exp_pct": metrics["interest_exp_pct"],
+            
         }
         # Run DCF and Sensitivity
         

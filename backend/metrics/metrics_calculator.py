@@ -7,105 +7,325 @@ def safe_divide(numerator, denominator):
 def safe_last(lst):
     return lst[-1] if lst and len(lst) else 0
 
-def calculate_metrics(pnl, bs, cf, years, source="excel", yahoo_info=None):
+def calculate_metrics(pnl, bs, cf, qtr_results, years, qtrs, meta, source="excel", yahoo_info=None,):
+    #print(f"ℹ️ [Backend Metric Calculator] Calculation Starts !!!!!!!!!!!")
+
     def get_values(table, label):
         return table.get(label, [0] * len(years))[:len(years)]
-
-    # ✅ Yahoo-based metrics (optional overrides)
-    ttm_pe = yahoo_info.get("trailingPE") if yahoo_info else None
-    div_yield = round((yahoo_info.get("dividendYield") or 0), 2) if yahoo_info else None
-    book_value = yahoo_info.get("bookValue") if yahoo_info else None
-    high_52w = yahoo_info.get("fiftyTwoWeekHigh") if yahoo_info else None
-    low_52w = yahoo_info.get("fiftyTwoWeekLow") if yahoo_info else None
-    market_cap = round(yahoo_info.get("marketCap")/10**7,2) if yahoo_info else None
-    ttm_pb = yahoo_info.get("priceToBook") if yahoo_info else None
-    roe_yahoo = round((yahoo_info.get("returnOnEquity") or 0) * 100, 2) if yahoo_info else None
-    current_price = yahoo_info.get("currentPrice") if yahoo_info else None
-    revenue = get_values(pnl, "Sales")
-    latest_revenue = revenue[-1] if revenue else 0
     
+    def sum_last_4(lst):
+        if not lst:
+            return 0
+        if len(lst) < 4:
+            return sum(lst)  # Sum all elements if less than 4
+        return sum(lst[-4:])
+
+    def calculate_growth(series):
+        result = []
+        for prev, curr in zip(series[:-1], series[1:]):
+            if prev == 0 or prev is None:
+                result.append(0.0)
+            elif (prev < 0 < curr) or (prev > 0 > curr):
+                # Sign change: calculate as improvement/deterioration from baseline
+                growth = ((curr - prev) / abs(prev)) * 100
+                result.append(round(growth, 2))
+            else:
+                # Same sign: normal percentage calculation
+                growth = ((curr / prev) - 1) * 100
+                result.append(round(growth, 2))
+        return result
+
+    #************* Get Meta Data ******************************************    
+    
+    market_cap = float(meta.get("Market Capitalization", 0))
+    #print(f"ℹ️ [Backend Metric Calculator] market_cap : {market_cap} ")
+
+    current_price = float(meta.get("Current Price", 0))
+    #print(f"ℹ️ [Backend Metric Calculator] current_price : {current_price} ")
+    
+    #************* Get P&L Data ******************************************    
+    
+    revenue = get_values(pnl, "Sales")
+    #print(f"ℹ️ [Backend Metric Calculator] revenue : {revenue} ")
+
+    latest_revenue = revenue[-1] if revenue else 0
+    #print(f"ℹ️ [Backend Metric Calculator] latest_revenue : {latest_revenue} ")
+
     raw_material_cost = get_values(pnl, "Raw Material Cost")
+    #print(f"ℹ️ [Backend Metric Calculator] raw_material_cost : {raw_material_cost} ")
+
     change_in_inventory = get_values(pnl, "Change in Inventory")
+    #print(f"ℹ️ [Backend Metric Calculator] change_in_inventory : {change_in_inventory} ")
+
     power_fule = get_values(pnl, "Power and Fuel")
+    #print(f"ℹ️ [Backend Metric Calculator] power_fule : {power_fule} ")
+
     other_mfr_exp = get_values(pnl, "Other Mfr. Exp")
+    #print(f"ℹ️ [Backend Metric Calculator] other_mfr_exp : {other_mfr_exp} ")
+
     emp_cost = get_values(pnl, "Employee Cost")
+    #print(f"ℹ️ [Backend Metric Calculator] emp_cost : {emp_cost} ")
+
     selling_admin = get_values(pnl, "Selling and admin")
+    #print(f"ℹ️ [Backend Metric Calculator] selling_admin : {selling_admin} ")
+
     other_exp = get_values(pnl, "Other Expenses")
+    #print(f"ℹ️ [Backend Metric Calculator] other_exp : {other_exp} ")
+    
     other_income = get_values(pnl, "Other Income")[:len(revenue)]
+    #print(f"ℹ️ [Backend Metric Calculator] other_income : {other_income} ")
+
     net_profit = get_values(pnl, "Net profit")
+    #print(f"ℹ️ [Backend Metric Calculator] net_profit : {net_profit} ")
+    
     interest = get_values(pnl, "Interest")
+    #print(f"ℹ️ [Backend Metric Calculator] interest : {interest} ")
+
     depreciation = get_values(pnl, "Depreciation")
-    reserves = get_values(bs, "Reserves")
-    equity_capital = get_values(bs, "Equity Share Capital")
-    debt = get_values(bs, "Borrowings")
-    cash = get_values(bs, "Cash & Bank")
-    investments = get_values(bs, "Investments")
-    capex = get_values(bs, "Capital Work in Progress")
-    net_block = get_values(bs, "Net Block")[:len(revenue)]
+    #print(f"ℹ️ [Backend Metric Calculator] depreciation : {depreciation} ")
+
+    div_amount = get_values(pnl, "Dividend Amount")
+    #print(f"ℹ️ [Backend Metric Calculator] div_amount : {div_amount} ")
+    
     tax_values = get_values(pnl, "Tax")
-    shares =get_values(bs, "No. of Equity Shares")
+    #print(f"ℹ️ [Backend Metric Calculator] tax_values : {tax_values} ")
+
+    #************* Get Balancesheet Data ******************************************    
+    
+    reserves = get_values(bs, "Reserves")
+    #print(f"ℹ️ [Backend Metric Calculator] reserves : {reserves} ")
+
+    equity_capital = get_values(bs, "Equity Share Capital")
+    #print(f"ℹ️ [Backend Metric Calculator] equity_capital : {equity_capital} ")
+
+    debt = get_values(bs, "Borrowings")
+    #print(f"ℹ️ [Backend Metric Calculator] debt : {debt} ")
+
+    cash = get_values(bs, "Cash & Bank")
+    #print(f"ℹ️ [Backend Metric Calculator] cash : {cash} ")
+
+    investments = get_values(bs, "Investments")
+    #print(f"ℹ️ [Backend Metric Calculator] investments : {investments} ")
+
+    capex = get_values(bs, "Capital Work in Progress")
+    #print(f"ℹ️ [Backend Metric Calculator] capex : {capex} ")
+
+    net_block = get_values(bs, "Net Block")[:len(revenue)]
+    #print(f"ℹ️ [Backend Metric Calculator] net_block : {net_block} ")
+
+    
+    shares = get_values(bs, "No. of Equity Shares")
+    shares = [round(safe_divide(share, 10000000), 2) for share in shares]
+    #print(f"ℹ️ [Backend Metric Calculator] shares : {shares} ")
     if shares and shares[-1] == 0 and len(shares) > 1:
         shares[-1] = shares[-2]
 
-    cash_and_investments = [round((c or 0) + (i or 0),2) for c, i in zip(cash, investments)]
-    net_debt = [round(d-c,2) for d, c in zip(debt, cash_and_investments)]
-    latest_net_debt =round(net_debt[-1],2) if net_debt else 0
+    #************* Minimum length of chart series ******************************************    
+    
     min_len = min(len(revenue), len(net_profit), len(depreciation))
-
+    #print(f"ℹ️ [Backend Metric Calculator] min_len : {min_len} ")
+    
+    #************* Get Quarterly Data ******************************************    
+    #print(f"ℹ️ [Backend Metric Calculator - ttm calc] ttm Calculation Starts !!!!!!!!!!!")    
+    q_sales  = get_values(qtr_results, "Sales")
+    #print(f"ℹ️ [Backend Metric Calculator - ttm calc] q_sales : {q_sales} ")     
+    
+    q_expenses = get_values(qtr_results, "Expenses")      
+    #print(f"ℹ️ [Backend Metric Calculator - ttm calc] q_expenses : {q_expenses} ")     
+    
+    q_other_income = get_values(qtr_results, "Other Income")       
+    q_depreciation = get_values(qtr_results, "Depreciation") 
+    q_interest = get_values(qtr_results, "Interest") 
+    q_pbt = get_values(qtr_results, "Profit before tax")  
+    q_tax = get_values(qtr_results, "Tax")   
+    q_np = get_values(qtr_results, "Net profit")    
+    #print(f"ℹ️ [Backend Metric Calculator - ttm calc] q_np : {q_np} ")     
+    
+    q_op = get_values(qtr_results, "Operating Profit")     
+    #print(f"ℹ️ [Backend Metric Calculator - ttm calc] q_op : {q_op} ")     
+    
+    q_ebit = [round(e + oi - d,2) for e, oi, d in zip(q_op, q_other_income, q_depreciation)]
+    #print(f"ℹ️ [Backend Metric Calculator] q_ebit : {q_ebit} ")
+    
+    #********** Get Chart Series ***************************************
+    
+    #Past Growth
+     
+    net_debt = [round(d-c-i,2) for d, c,i in zip(debt, cash, investments)]
+    #print(f"ℹ️ [Backend Metric Calculator] net_debt : {net_debt} ")
+    cash_and_investments =[round(c+i,2) for c,i in zip( cash, investments)]
     if source == "excel":
-        ebitda = [r - rmc + cii - pf - ome - ec - sa - oe for r, rmc, cii, pf, ome, ec, sa, oe in zip(
+        ebitda = [round(r - rmc + cii - pf - ome - ec - sa - oe,2) for r, rmc, cii, pf, ome, ec, sa, oe in zip(
         revenue, raw_material_cost, change_in_inventory, power_fule, other_mfr_exp, emp_cost, selling_admin, other_exp[:min_len])]
-        ebit = [e - d for e, oi, d in zip(ebitda, other_income, depreciation)]
-        equity = [e + r for e, r in zip(equity_capital, reserves)]
-    else:
-        ebitda = get_values(pnl, "EBITDA")
-        ebit = get_values(pnl, "EBIT") 
-        equity = equity_capital
+        #print(f"ℹ️ [Backend Metric Calculator] ebitda : {ebitda} ")
 
+        ebit = [round(e + oi - d,2) for e, oi, d in zip(ebitda, other_income, depreciation)]
+        #print(f"ℹ️ [Backend Metric Calculator] ebit : {ebit} ")
+        
+        equity = [round(e + r,2) for e, r in zip(equity_capital, reserves)]
+        #print(f"ℹ️ [Backend Metric Calculator] equity : {equity} ")
+    
+        revenue_growth = calculate_growth(revenue)
+    #print(f"ℹ️ [Backend Metric Calculator] revenue_growth : {revenue_growth} ")
 
+    ebitda_growth = calculate_growth(ebitda)
+    #print(f"ℹ️ [Backend Metric Calculator] ebitda_growth : {ebitda_growth} ")
+
+    net_profit_growth = calculate_growth(net_profit)
+    #print(f"ℹ️ [Backend Metric Calculator] net_profit_growth : {net_profit_growth} ")
+
+    
     ebitda_margin = [round(safe_divide(e, r) * 100,2) for e, r in zip(ebitda, revenue[:min_len])]
+    #print(f"ℹ️ [Backend Metric Calculator] ebitda_margin : {ebitda_margin} ")
 
     net_profit_margin = [round(safe_divide(n, r) * 100,2) for n, r in zip(net_profit[:min_len], revenue[:min_len])]
-
+    #print(f"ℹ️ [Backend Metric Calculator] net_profit_margin : {net_profit_margin} ")
+    
     roce = [round(safe_divide(e, (eq + d)) * 100,2) for e, eq, d in zip(ebit, equity[:min_len], debt[:min_len])]
-    
+    #print(f"ℹ️ [Backend Metric Calculator] roce : {roce} ")
+
     roe = [round(safe_divide(n, eq) * 100,2) for n, eq in zip(net_profit[:min_len], equity[:min_len])]
+    #print(f"ℹ️ [Backend Metric Calculator] roe : {roe} ")
+
     interest_coverage = [round(safe_divide(e, i),2) for e, i in zip(ebit, interest[:min_len])]
+    #print(f"ℹ️ [Backend Metric Calculator] interest_coverage : {interest_coverage} ")
+
     debt_to_equity = [round(safe_divide(d, eq),2) for d, eq in zip(debt[:min_len], equity[:min_len])]
-    fcf = [round(safe_divide(n + d - c, 1),2) for n, d, c in zip(net_profit[:min_len], depreciation[:min_len], capex[:min_len])]
-    fcf_margin = [round(safe_divide(f, r) * 100,2) for f, r in zip(fcf, revenue[:min_len])]
-
-    def calculate_growth(series):
-        return [
-            round(((curr / prev) - 1) * 100, 2) if prev not in (0, None) else 0.0
-            for prev, curr in zip(series[:-1], series[1:])
-        ]
-
-    revenue_growth = calculate_growth(revenue)
-    ebitda_growth = calculate_growth(ebitda)
-    net_profit_growth = calculate_growth(net_profit)
-
-    peg_ratio = safe_divide(ttm_pe, safe_last(revenue_growth))
+    #print(f"ℹ️ [Backend Metric Calculator] debt_to_equity : {debt_to_equity} ")
     
+    book_values = [round(safe_divide(e, s),2) for e, s in zip(equity, shares)]
+    #print(f"ℹ️ [Backend Metric Calculator] book_value : {book_values} ")
+
+
+    #*********** Get latest values what ever is required ***********************************
+
+    div_amount_last = safe_last(div_amount)/safe_last(shares)
+    #print(f"ℹ️ [Backend Metric Calculator] div_amount_last : {div_amount_last} ")
+
+    latest_net_debt =round(net_debt[-1],2) if net_debt else 0
+    #print(f"ℹ️ [Backend Metric Calculator] latest_net_debt : {latest_net_debt} ")
+    
+
+    #***Calculate Stock Price Summary Data and Ratios **********************************************************
+    
+    ev = round(market_cap + latest_net_debt, 2)
+    
+    div_yield = round(safe_divide(div_amount_last, current_price)*100,2)
+    #print(f"ℹ️ [Backend Metric Calculator] div_yield : {div_yield} ")
+
+    book_value = round(safe_last(book_values),2)
+    #print(f"ℹ️ [Backend Metric Calculator] book_value : {book_value} ")
+
+    ttm_pb = round(safe_divide(current_price, book_value),2)
+    #print(f"ℹ️ [Backend Metric Calculator] ttm_pb : {ttm_pb} ")
+
+    eps_values = [round(safe_divide(n, e),2) for n, e in zip(net_profit, shares)]
+    #print(f"ℹ️ [Backend Metric Calculator] eps_values : {eps_values} ")
+
+    eps_cagr_3y = calculate_cagr(eps_values)
+    #print(f"ℹ️ [Backend Metric Calculator] eps_cagr_3y : {eps_cagr_3y} ")
+
+    eps = safe_last(eps_values)
+    #print(f"ℹ️ [Backend Metric Calculator] eps : {eps} ")
+
+    pe = round(safe_divide(current_price, eps),2)
+    #print(f"ℹ️ [Backend Metric Calculator] pe : {pe} ")
+    
+    revenue_growth_last = round(safe_last(revenue_growth),2)
+    #print(f"ℹ️ [Backend Metric Calculator] revenue_growth_last : {revenue_growth_last} ")
+
+    peg_ratio = round(safe_divide(pe, revenue_growth_last),2)
+    #print(f"ℹ️ [Backend Metric Calculator] peg_ratio : {peg_ratio} ")
     
     tax_rate = round(safe_divide(safe_last(tax_values), safe_last(ebit)) * 100,2) if ebit else 0
-    capex_pct = round(safe_divide(safe_last(capex), safe_last(revenue)) * 100,2) if capex and revenue else 2.0
-    revenue_cagr_3y = calculate_cagr(revenue)
-    interest_exp_pct = safe_last(interest)/safe_last(ebit)*100 if ebit else 0
-    eps_values = [safe_divide(n, e) for n, e in zip(net_profit, shares)]
-    eps_cagr_3y = calculate_cagr(eps_values)
-    ev = round(market_cap + latest_net_debt, 2)
-    ev_to_ebit = round(safe_divide((market_cap + latest_net_debt), safe_last(ebit)), 2)
-    price_to_sales = round(safe_divide(market_cap, latest_revenue), 2)
+    #capex_pct = round(safe_divide(safe_last(capex), safe_last(revenue)) * 100,2) if capex and revenue else 2.0
+    
+    capex_pct_list = [round(safe_divide(c, r)*100,2) for c, r in zip(capex[:min_len], revenue[:min_len])]
+    #print(f"ℹ️ [Backend Metric Calculator] capex_pct_list : {capex_pct_list} ")
+
+    capex_pct = round(sum_last_4(capex_pct_list)/4,2)
+    #print(f"ℹ️ [Backend Metric Calculator] capex_pct : {capex_pct} ")
+
+    revenue_cagr_3y = round(calculate_cagr(revenue),2)
+    interest_exp_pct = round(safe_last(interest)/safe_last(ebit)*100,2) if ebit else 0
+    
+    
     current_ratio = 0
     quick_ratio = 0
 
+    fcf = [round(safe_divide(n + d - c, 1),2) for n, d, c in zip(net_profit[:min_len], depreciation[:min_len], capex[:min_len])]
+    #print(f"ℹ️ [Backend Metric Calculator] fcf : {fcf} ")
+
+    fcf_margin = [round(safe_divide(f, r) * 100,2) for f, r in zip(fcf, revenue[:min_len])]
+    #print(f"ℹ️ [Backend Metric Calculator] fcf_margin : {fcf_margin} ")
+
+    
+    
+    #******************* Analyse Quarterly Data **********************
+    q_sales_growth = calculate_growth(q_sales)
+    #print(f"ℹ️ [Backend Metric Calculator] q_sales_growth : {q_sales_growth} ")
+
+    q_ebitda_margin = [round(safe_divide(e, r) * 100,2) for e, r in zip(q_op, q_sales)]
+
+    q_net_profit_growth = calculate_growth(q_np)
+    #print(f"ℹ️ [Backend Metric Calculator] q_net_profit_growth : {q_net_profit_growth} ")
+
+    #****************Calculate TTM Numbers**************************** 
+    ttm_sales = round(sum_last_4(q_sales),2)
+    #print(f"ℹ️ [Backend Metric Calculator - ttm calc] ttm_sales : {ttm_sales}" )
+    
+    ttm_op = round(sum_last_4(q_op),2)
+    #print(f"ℹ️ [Backend Metric Calculator - ttm calc] ttm_op : {ttm_op}" )
+    
+    ttm_np = round(sum_last_4(q_np),2)
+    #print(f"ℹ️ [Backend Metric Calculator - ttm calc] ttm_np : {ttm_np}" )
+
+    ttm_ebit = round(sum_last_4(q_ebit),2)
+    #print(f"ℹ️ [Backend Metric Calculator] ttm_ebit : {ttm_ebit} ")
+    
+    ttm_roce  = round(safe_divide(ttm_ebit, (safe_last(equity) + safe_last(debt))) * 100,2)
+    #print(f"ℹ️ [Backend Metric Calculator] ttm_roce : {ttm_roce} ")
+    
+    ttm_roe = round(safe_divide(ttm_np, safe_last(equity)) * 100,2)
+    #print(f"ℹ️ [Backend Metric Calculator] ttm_roe : {ttm_roe} ")
+    
+    ttm_interest= round(sum_last_4(q_interest),2)
+    ttm_interest_coverage = round(safe_divide(ttm_ebit, ttm_interest),2)
+    #print(f"ℹ️ [Backend Metric Calculator] ttm_interest_coverage : {ttm_interest_coverage} ")
+    
+    ttm_interest_exp_pct = round(ttm_interest/ttm_ebit*100,2) if ebit else 0
+
+    price_to_sales = round(safe_divide(market_cap, ttm_sales), 2)
+    ev_to_ebit = round(safe_divide((market_cap + latest_net_debt), ttm_ebit), 2)
+    
+    #print(f"ℹ️ [Backend Metric Calculator] ttm Calculation End !!!!!!!!!!!")    
+    
+    ttm_eps = round(safe_divide(ttm_np,shares[-1]),2)
+    
+
+    revenue_with_ttm = revenue + [ttm_sales]
+    ebitda_with_ttm = ebitda + [ttm_op]
+    net_profit_with_ttm  = net_profit + [ttm_np]
+    years_with_ttm = years +["TTM"] 
+
+    ttm_pe = round(safe_divide(market_cap,ttm_np),2)
+    
+    #print(f"ℹ️ [Backend Metric Calculator - ttm calc] revenue_with_ttm : {revenue_with_ttm}" )
+    #print(f"ℹ️ [Backend Metric Calculator - ttm calc] ebitda_with_ttm : {ebitda_with_ttm}" )
+    #print(f"ℹ️ [Backend Metric Calculator - ttm calc] net_profit_with_ttm : {net_profit_with_ttm}" )
+    #print(f"ℹ️ [Backend Metric Calculator - ttm calc] years_with_ttm : {years_with_ttm}" )
+
+    #print(f"ℹ️ [Backend Metric Calculator] Calculation Ends !!!!!!!!!!!")
+
     calculated_metrics = {
         "revenue": revenue,
+        "revenue_with_ttm" : revenue_with_ttm,
         "current_price": current_price,
         "net_profit": net_profit,
+        "net_profit_with_ttm" : net_profit_with_ttm,
         "ebit": ebit,
         "ebitda": ebitda,
+        "ebitda_with_ttm": ebitda_with_ttm,
         "net_block": net_block,
         "cwip": capex,
         "equity": equity,
@@ -116,52 +336,59 @@ def calculate_metrics(pnl, bs, cf, years, source="excel", yahoo_info=None):
         "net_profit_growth": net_profit_growth,
         "ebitda_margin": ebitda_margin,
         "net_profit_margin": net_profit_margin,
+        "ttm_roce": ttm_roce,
+        "ttm_roe": ttm_roe,
         "roce": roce,
         "roe": roe,
         "interest_coverage": interest_coverage,
+        "ttm_interest_coverage": ttm_interest_coverage,
         "debt_to_equity": debt_to_equity,
         "fcf": fcf,
         "fcf_margin": fcf_margin,
         "tax_rate": tax_rate,
         "wacc": 12.0,
-        "terminal_growth_rate": 5.0,
+        "terminal_growth_rate": 3.0,
         "years": years,
+        "years_with_ttm": years_with_ttm,
         "ttm_pe": ttm_pe,
         "market_cap": market_cap,
-        "ttm_pb": ttm_pb,
-        "roe_yahoo": roe_yahoo,
+        "ttm_pb": ttm_pb if ttm_pb is not None else 0,
         "book_value": round(book_value, 2) if book_value is not None else 0,
         "peg_ratio": round(peg_ratio, 2) if peg_ratio is not None else 0,
         "revenue_cagr_3y": round(revenue_cagr_3y,2),
         "eps_cagr_3y": round(eps_cagr_3y, 2) if eps_cagr_3y is not None else 0, 
-        "high_52w": high_52w,
-        "low_52w": low_52w,
+        "div_amount": div_amount,
+        "div_amount_last": round(div_amount_last,2),
         "div_yield": round(div_yield, 2)if div_yield is not None else 0,
         "price_to_sales":price_to_sales,
-        "current_ratio":current_ratio,
-        "quick_ratio":quick_ratio,
-        "latest_revenue": latest_revenue,
+        "latest_revenue": ttm_sales,
         "ev":ev,
         "ev_to_ebit":ev_to_ebit,
         "latest_net_debt": latest_net_debt,
-        "ebit_margin": round(safe_divide(safe_last(ebit), safe_last(revenue)) * 100, 2) if ebit and revenue else 0,
+        "ebit_margin": round(safe_divide(ttm_ebit, ttm_sales) * 100, 2) if ttm_ebit and ttm_sales else 0,
         "depreciation_pct": round(safe_divide(safe_last(depreciation), safe_last(revenue)) * 100, 2) if depreciation and revenue else 0,
-        "wc_change_pct": 1.0,
-        "interest_pct": 11.0,
-        "interest_exp": safe_last(interest),
-        "interest_exp_pct": round(interest_exp_pct,2),
+        "wc_change_pct": 2,
+        "interest_pct": 13.0,
+        "interest_exp": ttm_interest,
+        "interest_exp_pct": ttm_interest_exp_pct,
         "base_year": safe_last(years),
-        "wacc": 11,
-        "growth_x": 15,
-        "growth_y": 10,
+        "wacc": 13,
+        "growth_x": 12,
+        "growth_y": 9,
         "period_x": 5,
         "period_y": 15,
-        "growth_terminal": 2,
-        "capex_pct": 1, # capex_pct,
-        "shares_outstanding": shares[-1]
-
+        "growth_terminal": 3,
+        "capex_pct": capex_pct if capex_pct else 0,
+        "shares_outstanding": shares[-1],
+        "qtrs": qtrs,
+        "q_sales" : q_sales,
+        "q_op" : q_op,
+        "q_np":q_np,
+        "q_sales_growth": q_sales_growth,
+        "q_net_profit_growth": q_net_profit_growth,
+        "q_ebitda_margin": q_ebitda_margin        
     }
-
+    
     return calculated_metrics,
 
 
@@ -199,5 +426,5 @@ def make_json_safe(data):
     try:
         return json.loads(json.dumps(data, default=safe_convert))
     except Exception as e:
-        print("❌ JSON serialization error:", e)
+        #print("❌ JSON serialization error:", e)
         raise
