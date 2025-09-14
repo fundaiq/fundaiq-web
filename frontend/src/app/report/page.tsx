@@ -53,9 +53,9 @@ export default function CompanyReportPage() {
     setShowSections(hasValidData);
     
     // Debug logs to help troubleshoot
-    console.log('CompanyInfo:', companyInfo);
-    console.log('CompanyInfo type:', typeof companyInfo);
-    console.log('ShowSections:', hasValidData);
+    // console.log('CompanyInfo:', companyInfo);
+    // console.log('CompanyInfo type:', typeof companyInfo);
+    // console.log('ShowSections:', hasValidData);
   }, [companyInfo]);
 
 

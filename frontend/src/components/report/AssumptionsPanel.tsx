@@ -47,6 +47,7 @@ export default function AssumptionsPanel() {
   // Manual calculate to ensure DCF + EPS (and sensitivities) run with the latest assumptions
   const handleCalculate = () => {
     if (!assumptions || Object.keys(assumptions).length === 0) return;
+    // console.log('input assumptions:', assumptions);
     triggerCalculation(assumptions); // DCF/EPS sections will read this and re-run using current store values
   };
 
@@ -123,6 +124,7 @@ const fields = [
   { label: 'Growth Rate (Years 1–3) (%)', name: 'growth_x' },
   { label: 'Growth Rate (Years 4–10) (%)', name: 'growth_y' },
   { label: 'Terminal Growth Rate (%)', name: 'growth_terminal' },
+  { label: '3yrs Projected Fair Value PE ', name: 'fairvalue_pe' },
 ];
 
 function Input({ label, name, value, defaultValue, onChange }) {

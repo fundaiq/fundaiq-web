@@ -27,6 +27,7 @@ export default function EPSValuationSection() {
     shares_outstanding: metrics?.shares_outstanding ?? 1,
     current_price: metrics?.current_price ?? 0,
     base_year: metrics?.base_year ?? 'FY25',
+    fairvalue_pe:assumptions?.fairvalue_pe,
   };
 
   const run_eps = async () => {

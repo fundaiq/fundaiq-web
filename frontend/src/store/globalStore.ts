@@ -163,6 +163,7 @@ export const useGlobalStore = create<GlobalState>()(
             shares_outstanding: Number(metrics?.shares_outstanding ?? 1),
             current_price: Number(metrics?.current_price ?? 0),
             base_year: metrics?.base_year ?? 'FY25',
+            fairvalue_pe: Number(a.fairvalue_pe ?? 20),
           };
 
           // sequential fetches
