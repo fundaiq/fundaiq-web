@@ -61,7 +61,7 @@ async def upload_excel(file: UploadFile = File(...)):
         
         calculated_metrics = calculate_metrics(pnl, bs, cf, qtr_results, years, qtrs, meta, source="excel")[0]
         
-        #print(f"ℹ️ [BACKEND DEBUG]  calculated_metrics: {calculated_metrics}")
+        print(f"ℹ️ [BACKEND DEBUG]  calculated_metrics: {calculated_metrics}")
 
          # Derive assumptions from metrics
         assumptions = {
