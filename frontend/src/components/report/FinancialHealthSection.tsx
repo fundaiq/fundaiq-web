@@ -8,6 +8,7 @@ import { ProfitabilitySection } from '@/components/health/sections/Profitability
 import { LeverageSection } from '@/components/health/sections/LeverageSection';
 import { BalanceSheetSection } from '@/components/health/sections/BalanceSheetSection';
 import { QuarterlySection } from '@/components/health/sections/QuarterlySection';
+import { CashflowSection } from '@/components/health/sections/CashflowSection';
 import { QuarterlyGrowthRateSection } from '@/components/health/sections/QuarterlyGrowthRateSection';
 import { SummaryBox } from '@/components/health/SummaryBox';
 import { Activity } from 'lucide-react';
@@ -74,7 +75,10 @@ export default function FinancialHealthSection() {
         <div className={styles.subsection}>
           <LeverageSection metrics={metrics} years={years} />
         </div>
-
+        
+        <div className={styles.subsection}>
+          <CashflowSection metrics={metrics} years={years} />
+        </div>
         {/* Summary Box - Special Styling */}
         {/* <div className={styles.summaryCard}>
           <SummaryBox metrics={metrics} />

@@ -14,6 +14,8 @@ export const LeverageSection = ({ metrics, years }: Props) => {
     { key: 'debt_to_equity', label: 'Debt to Equity (x)' },
     { key: 'interest_coverage', label: 'Interest Coverage (x)' },
     { key: 'cash_and_bank', label: 'Cash & Bank (₹ Cr)' },
+    { key: 'div_amount_per_share', label: 'Divindend Amount Per Share' },
+    { key: 'net_asset_values_per_share', label: 'Net Asset Value Per Share' },
   ];
 
   return (
@@ -52,7 +54,16 @@ export const LeverageSection = ({ metrics, years }: Props) => {
             // More cash is generally better
             const previousValue = alignedData[alignedData.length - 2] || 0;
             trendClass = latestValue > previousValue ? styles.trendPositive : styles.trendNegative;
+          } else if (key === 'div_amount_per_share') {
+            // More cash is generally better
+            const previousValue = alignedData[alignedData.length - 2] || 0;
+            trendClass = latestValue > previousValue ? styles.trendPositive : styles.trendNegative;
+          } else if (key === 'net_asset_values_per_share') {
+            // More cash is generally better
+            const previousValue = alignedData[alignedData.length - 2] || 0;
+            trendClass = latestValue > previousValue ? styles.trendPositive : styles.trendNegative;
           }
+
 
           return (
             <div key={key} className={styles.metricCard}>

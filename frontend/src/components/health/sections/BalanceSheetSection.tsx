@@ -15,6 +15,7 @@ export const BalanceSheetSection = ({ metrics, years }: Props) => {
     { key: 'net_debt', label: 'Net Debt (₹ Cr)' },
     { key: 'net_block', label: 'Net Block (₹ Cr)' },
     { key: 'cwip', label: 'Capital WIP (₹ Cr)' },
+    
   ];
 
   return (
@@ -55,7 +56,7 @@ export const BalanceSheetSection = ({ metrics, years }: Props) => {
           } else if (key === 'cwip') {
             // CWIP growth can be positive (expansion) but should be monitored
             trendClass = growthRate > 0 ? styles.trendPositive : styles.trendNeutral;
-          }
+          } 
 
           return (
             <div key={key} className={styles.metricCard}>

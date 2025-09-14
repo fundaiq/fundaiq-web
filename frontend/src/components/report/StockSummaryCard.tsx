@@ -140,19 +140,43 @@ export default function StockSummaryCard() {
 
   const flatMetrics = [
     { 
-      label: 'Enterprise Value (Cr)', 
-      value: formatCurrency(metrics?.ev),
-      showBadge: false
-    },
-    { 
       label: 'Market Cap (Cr)', 
       value: formatCurrency(metrics?.market_cap),
       showBadge: true,
       customBadge: marketCapCategory
     },
     { 
+      label: 'Enterprise Value (Cr)', 
+      value: formatCurrency(metrics?.ev),
+      showBadge: false
+    },
+    { 
       label: 'Book Value', 
       value: formatCurrency(metrics?.book_value),
+      showBadge: false
+    },
+    { 
+      label: 'TTM P/B', 
+      value: format(metrics?.ttm_pb),
+      metric: 'TTM_PB', 
+      rawValue: metrics?.ttm_pb,
+      showBadge: true
+    },
+    { 
+      label: 'NAV Per Share', 
+      value: format(metrics?.net_asset_values_per_share_last),
+      metric: 'net_asset_values_per_share_last', 
+      rawValue: metrics?.net_asset_values_per_share_last,
+      showBadge: true
+    },
+    { 
+      label: 'EV to EBIDTA', 
+      value: format(metrics?.ev_to_ebitda, 2),
+      showBadge: false
+    },
+    { 
+      label: 'EV to EBIT', 
+      value: format(metrics?.ev_to_ebit, 2),
       showBadge: false
     },
     { 
@@ -163,11 +187,9 @@ export default function StockSummaryCard() {
       showBadge: true
     },
     { 
-      label: 'TTM P/B', 
-      value: format(metrics?.ttm_pb),
-      metric: 'TTM_PB', 
-      rawValue: metrics?.ttm_pb,
-      showBadge: true
+      label: 'Price to Sales', 
+      value: format(metrics?.price_to_sales, 2),
+      showBadge: false
     },
     { 
       label: 'PEG Ratio', 
@@ -217,26 +239,6 @@ export default function StockSummaryCard() {
       metric: 'InterestCoverage', 
       rawValue: metrics?.ttm_interest_coverage,
       showBadge: true
-    },
-    // { 
-    //   label: 'Current Ratio', 
-    //   value: format(metrics?.current_ratio, 2),
-    //   showBadge: false
-    // },
-    // { 
-    //   label: 'Quick Ratio', 
-    //   value: format(metrics?.quick_ratio, 2),
-    //   showBadge: false
-    // },
-    { 
-      label: 'Price to Sales', 
-      value: format(metrics?.price_to_sales, 2),
-      showBadge: false
-    },
-    { 
-      label: 'EV to EBIT', 
-      value: format(metrics?.ev_to_ebit, 2),
-      showBadge: false
     },
     { 
       label: 'Dividend Yield', 
