@@ -136,6 +136,12 @@ def calculate_metrics(pnl, bs, cf, qtr_results, years, qtrs, meta, source="excel
     min_len = min(len(revenue), len(net_profit), len(depreciation))
     #print(f"ℹ️ [Backend Metric Calculator] min_len : {min_len} ")
     
+    #************* Get Cashflow Data ******************************************    
+    
+    cf_opa = get_values(cf, "Cash from Operating Activity")
+    cf_inva = get_values(cf, "Cash from Investing Activity")
+    cf_fina = get_values(cf, "Cash from Financing Activity")
+    cf_net = get_values(cf, "Net Cash Flow")
     #************* Get Quarterly Data ******************************************    
     #print(f"ℹ️ [Backend Metric Calculator - ttm calc] ttm Calculation Starts !!!!!!!!!!!")
     
@@ -401,7 +407,11 @@ def calculate_metrics(pnl, bs, cf, qtr_results, years, qtrs, meta, source="excel
         "q_np":q_np,
         "q_sales_growth": q_sales_growth,
         "q_net_profit_growth": q_net_profit_growth,
-        "q_ebitda_margin": q_ebitda_margin        
+        "q_ebitda_margin": q_ebitda_margin,
+        "cf_opa": cf_opa,
+        "cf_inva": cf_inva,
+        "cf_fina":cf_fina,
+        "cf_net":cf_net
     }
     
     return calculated_metrics,
