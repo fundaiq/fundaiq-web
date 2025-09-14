@@ -82,6 +82,7 @@ async def upload_excel(file: UploadFile = File(...)):
             "growth_terminal": calculated_metrics["growth_terminal"],
             "base_year": calculated_metrics["base_year"],
             "interest_exp_pct": calculated_metrics["interest_exp_pct"],
+            "fairvalue_pe":calculated_metrics["fairvalue_pe"],
         }
         #print(f"ℹ️ [BACKEND DEBUG] assumptions: {assumptions}")
         # Run DCF and Sensitivity
@@ -101,6 +102,7 @@ async def upload_excel(file: UploadFile = File(...)):
             "shares_outstanding": assumptions["shares_outstanding"],
             "current_price": assumptions["current_price"],
             "base_year": assumptions["base_year"],
+            "fairvalue_pe":assumptions["fairvalue_pe"],
         }
         #print(f"ℹ️ [BACKEND DEBUG] eps_input: {eps_input}")
         eps_result = run_eps(
@@ -113,7 +115,7 @@ async def upload_excel(file: UploadFile = File(...)):
             eps_input["shares_outstanding"],
             eps_input["current_price"],
             eps_input["base_year"],
-            
+            eps_input["fairvalue_pe"],                        
         )
         #print(f"ℹ️ [BACKEND DEBUG] eps_result: {eps_result}")
         return make_json_safe({

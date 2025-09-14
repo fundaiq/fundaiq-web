@@ -9,7 +9,8 @@ def project_eps(
     tax_rate: float,
     shares_outstanding: float,
     current_price: float,
-    base_year: str  # may arrive as str or int
+    base_year: str,  # may arrive as str or int
+    fairvalue_pe: float, 
 ):
     # ✅ Normalize base_year
     import re
@@ -61,7 +62,7 @@ def project_eps(
         eps = net_profit / shares_outstanding if shares_outstanding else 0
         pe = current_price / eps if eps > 0 else None
         if i == 3 :
-            eps_fair_value = round(max(eps,0) * 20,2)
+            eps_fair_value = round(max(eps,0) * fairvalue_pe,2)
         else:
             eps_fair_value = 0
         

@@ -411,7 +411,8 @@ def calculate_metrics(pnl, bs, cf, qtr_results, years, qtrs, meta, source="excel
         "cf_opa": cf_opa,
         "cf_inva": cf_inva,
         "cf_fina":cf_fina,
-        "cf_net":cf_net
+        "cf_net":cf_net,
+        "fairvalue_pe":20,
     }
     
     return calculated_metrics,

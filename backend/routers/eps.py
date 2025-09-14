@@ -17,6 +17,7 @@ class EPSProjectionRequest(BaseModel):
     shares_outstanding: float
     current_price: float
     base_year : str
+    fairvalue_pe : float
 
 @router.post("/project-eps")
 def calculate_eps_projection(data: EPSProjectionRequest):
@@ -30,7 +31,8 @@ def calculate_eps_projection(data: EPSProjectionRequest):
             tax_rate=data.tax_rate,
             shares_outstanding=data.shares_outstanding,
             current_price=data.current_price,
-            base_year = data.base_year
+            base_year = data.base_year,
+            fairvalue_pe = data.fairvalue_pe
         )
         return result
     except Exception as e:
