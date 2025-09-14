@@ -26,7 +26,7 @@ def calculate_dcf(input: DCFInput):
     fcf_table = []
     revenue = input.base_revenue
     fcf_results = []
-
+    #print(f"ℹ️ [Backend CDF Calculator - ] Inputs : {input}" )
     for year in range(1, input.y_years + 1):
         if year <= input.x_years:
             growth = input.growth_x / 100

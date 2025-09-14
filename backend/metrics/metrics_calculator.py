@@ -7,44 +7,29 @@ def safe_divide(numerator, denominator):
 def safe_last(lst):
     return lst[-1] if lst and len(lst) else 0
 
-def safe_get_values(table, label, default_len=10):
-    """
-    Safely get values from table with better error handling
-    """
-    if not table or label not in table:
-        print(f"⚠️ [Backend Metric Calculator] Warning: '{label}' not found in data")
-        return [0] * default_len
-    
-    values = table[label][:default_len] if isinstance(table[label], list) else [0] * default_len
-    
-    # Clean the values - convert 'NaT', None, and non-numeric values to 0
-    cleaned_values = []
-    for val in values:
-        if val == 'NaT' or val is None or val == '' or str(val).lower() == 'nan':
-            cleaned_values.append(0)
-        else:
-            try:
-                cleaned_values.append(float(val))
-            except:
-                cleaned_values.append(0)
-    
-    print(f"ℹ️ [Backend Metric Calculator] {label} (cleaned): {cleaned_values}")
-    return cleaned_values
-
 def calculate_metrics(pnl, bs, cf, qtr_results, years, qtrs, meta, source="excel", yahoo_info=None,):
-    print(f"ℹ️ [Backend Metric Calculator] Calculation Starts !!!!!!!!!!!")
+    #print(f"ℹ️ [Backend Metric Calculator] Calculation Starts !!!!!!!!!!!")
 
     def get_values(table, label):
-        return safe_get_values(table, label, len(years))
+        values = table.get(label, [0] * len(years))[:len(years)]
+        # Clean values - convert 'NaT', None, empty strings, and non-numeric to 0
+        cleaned_values = []
+        for val in values:
+            if val == 'NaT' or val is None or val == '' or str(val).lower() == 'nan':
+                cleaned_values.append(0)
+            else:
+                try:
+                    cleaned_values.append(float(val))
+                except:
+                    cleaned_values.append(0)
+        return cleaned_values
     
     def sum_last_4(lst):
         if not lst:
             return 0
-        # Filter out non-numeric values before summing
-        numeric_values = [x for x in lst if isinstance(x, (int, float)) and x != 0]
-        if len(numeric_values) < 4:
-            return sum(numeric_values)  # Sum all elements if less than 4
-        return sum(numeric_values[-4:])
+        if len(lst) < 4:
+            return sum(lst)  # Sum all elements if less than 4
+        return sum(lst[-4:])
 
     def calculate_growth(series):
         result = []
@@ -53,164 +38,177 @@ def calculate_metrics(pnl, bs, cf, qtr_results, years, qtrs, meta, source="excel
                 result.append(0.0)
             elif (prev < 0 < curr) or (prev > 0 > curr):
                 # Sign change: calculate as improvement/deterioration from baseline
-                growth = ((curr - prev) / abs(prev)) * 100
+                growth = safe_divide(curr - prev, abs(prev)) * 100
                 result.append(round(growth, 2))
             else:
                 # Same sign: normal percentage calculation
-                growth = ((curr / prev) - 1) * 100
+                growth = (safe_divide(curr , prev) - 1) * 100
                 result.append(round(growth, 2))
         return result
 
     #************* Get Meta Data ******************************************    
     
     market_cap = float(meta.get("Market Capitalization", 0))
-    print(f"ℹ️ [Backend Metric Calculator] market_cap : {market_cap} ")
+    #print(f"ℹ️ [Backend Metric Calculator] market_cap : {market_cap} ")
 
     current_price = float(meta.get("Current Price", 0))
-    print(f"ℹ️ [Backend Metric Calculator] current_price : {current_price} ")
+    #print(f"ℹ️ [Backend Metric Calculator] current_price : {current_price} ")
     
     #************* Get P&L Data ******************************************    
     
     revenue = get_values(pnl, "Sales")
+    #print(f"ℹ️ [Backend Metric Calculator] revenue : {revenue} ")
+
     latest_revenue = revenue[-1] if revenue else 0
-    print(f"ℹ️ [Backend Metric Calculator] latest_revenue : {latest_revenue} ")
+    #print(f"ℹ️ [Backend Metric Calculator] latest_revenue : {latest_revenue} ")
 
     raw_material_cost = get_values(pnl, "Raw Material Cost")
+    #print(f"ℹ️ [Backend Metric Calculator] raw_material_cost : {raw_material_cost} ")
+
     change_in_inventory = get_values(pnl, "Change in Inventory")
+    #print(f"ℹ️ [Backend Metric Calculator] change_in_inventory : {change_in_inventory} ")
+
     power_fule = get_values(pnl, "Power and Fuel")
+    #print(f"ℹ️ [Backend Metric Calculator] power_fule : {power_fule} ")
+
     other_mfr_exp = get_values(pnl, "Other Mfr. Exp")
+    #print(f"ℹ️ [Backend Metric Calculator] other_mfr_exp : {other_mfr_exp} ")
+
     emp_cost = get_values(pnl, "Employee Cost")
+    #print(f"ℹ️ [Backend Metric Calculator] emp_cost : {emp_cost} ")
+
     selling_admin = get_values(pnl, "Selling and admin")
+    #print(f"ℹ️ [Backend Metric Calculator] selling_admin : {selling_admin} ")
+
     other_exp = get_values(pnl, "Other Expenses")
+    #print(f"ℹ️ [Backend Metric Calculator] other_exp : {other_exp} ")
+    
     other_income = get_values(pnl, "Other Income")[:len(revenue)]
+    #print(f"ℹ️ [Backend Metric Calculator] other_income : {other_income} ")
+
     net_profit = get_values(pnl, "Net profit")
+    #print(f"ℹ️ [Backend Metric Calculator] net_profit : {net_profit} ")
+    
     interest = get_values(pnl, "Interest")
+    #print(f"ℹ️ [Backend Metric Calculator] interest : {interest} ")
+
     depreciation = get_values(pnl, "Depreciation")
+    #print(f"ℹ️ [Backend Metric Calculator] depreciation : {depreciation} ")
+
     div_amount = get_values(pnl, "Dividend Amount")
+    #print(f"ℹ️ [Backend Metric Calculator] div_amount : {div_amount} ")
+    
     tax_values = get_values(pnl, "Tax")
+    #print(f"ℹ️ [Backend Metric Calculator] tax_values : {tax_values} ")
 
     #************* Get Balancesheet Data ******************************************    
     
     reserves = get_values(bs, "Reserves")
+    #print(f"ℹ️ [Backend Metric Calculator] reserves : {reserves} ")
+
     equity_capital = get_values(bs, "Equity Share Capital")
+    #print(f"ℹ️ [Backend Metric Calculator] equity_capital : {equity_capital} ")
+
     debt = get_values(bs, "Borrowings")
+    #print(f"ℹ️ [Backend Metric Calculator] debt : {debt} ")
+
     cash = get_values(bs, "Cash & Bank")
+    #print(f"ℹ️ [Backend Metric Calculator] cash : {cash} ")
+
     investments = get_values(bs, "Investments")
+    #print(f"ℹ️ [Backend Metric Calculator] investments : {investments} ")
+
     capex = get_values(bs, "Capital Work in Progress")
+    #print(f"ℹ️ [Backend Metric Calculator] capex : {capex} ")
+
     net_block = get_values(bs, "Net Block")[:len(revenue)]
+    #print(f"ℹ️ [Backend Metric Calculator] net_block : {net_block} ")
+
     
     shares = get_values(bs, "No. of Equity Shares")
     shares = [round(safe_divide(share, 10000000), 2) for share in shares]
-    print(f"ℹ️ [Backend Metric Calculator] shares : {shares} ")
+    #print(f"ℹ️ [Backend Metric Calculator] shares : {shares} ")
     if shares and shares[-1] == 0 and len(shares) > 1:
         shares[-1] = shares[-2]
 
     #************* Minimum length of chart series ******************************************    
     
     min_len = min(len(revenue), len(net_profit), len(depreciation))
-    print(f"ℹ️ [Backend Metric Calculator] min_len : {min_len} ")
+    #print(f"ℹ️ [Backend Metric Calculator] min_len : {min_len} ")
     
     #************* Get Quarterly Data ******************************************    
-    print(f"ℹ️ [Backend Metric Calculator - ttm calc] ttm Calculation Starts !!!!!!!!!!!")
+    #print(f"ℹ️ [Backend Metric Calculator - ttm calc] ttm Calculation Starts !!!!!!!!!!!")
     
-    # Debug: Print available columns in qtr_results
-    if qtr_results:
-        print(f"ℹ️ [Backend Metric Calculator] Available quarterly columns: {list(qtr_results.keys())}")
-    else:
-        print(f"⚠️ [Backend Metric Calculator] qtr_results is empty or None")
+    q_sales  = get_values(qtr_results, "Sales")
+    #print(f"ℹ️ [Backend Metric Calculator - ttm calc] q_sales : {q_sales} ")     
     
-    # Try different possible column names for quarterly data
-    possible_sales_names = ["Sales", "Revenue", "Total Revenue", "Quarterly Sales"]
-    possible_expenses_names = ["Expenses", "Total Expenses", "Operating Expenses"]
-    possible_np_names = ["Net profit", "Net Profit", "Net Income", "PAT"]
-    possible_op_names = ["Operating Profit", "EBITDA", "Operating Income"]
+    q_expenses = get_values(qtr_results, "Expenses")      
+    #print(f"ℹ️ [Backend Metric Calculator - ttm calc] q_expenses : {q_expenses} ")     
     
-    def find_column(table, possible_names, default_len=10):
-        for name in possible_names:
-            if table and name in table:
-                return safe_get_values(table, name, default_len)
-        print(f"⚠️ [Backend Metric Calculator] No matching column found for {possible_names}")
-        return [0] * default_len
+    q_other_income = get_values(qtr_results, "Other Income")       
+    q_depreciation = get_values(qtr_results, "Depreciation") 
+    q_interest = get_values(qtr_results, "Interest") 
+    q_pbt = get_values(qtr_results, "Profit before tax")  
+    q_tax = get_values(qtr_results, "Tax")   
+    q_np = get_values(qtr_results, "Net profit")    
+    #print(f"ℹ️ [Backend Metric Calculator - ttm calc] q_np : {q_np} ")     
     
-    q_sales = find_column(qtr_results, possible_sales_names, len(qtrs))
-    q_expenses = find_column(qtr_results, possible_expenses_names, len(qtrs))  
-    q_np = find_column(qtr_results, possible_np_names, len(qtrs))
-    q_op = find_column(qtr_results, possible_op_names, len(qtrs))
-    
-    # If quarterly data is still empty, fall back to annual data divided by 4
-    if sum(q_sales) == 0 and revenue:
-        print("ℹ️ [Backend Metric Calculator] Falling back to annual data for TTM calculations")
-        q_sales = [r/4 for r in revenue[-4:]] if len(revenue) >= 4 else revenue + [0] * (4 - len(revenue))
-        q_np = [n/4 for n in net_profit[-4:]] if len(net_profit) >= 4 else net_profit + [0] * (4 - len(net_profit))
-        
-        # Calculate approximate quarterly operating profit
-        if source == "excel":
-            ebitda = [round(r - rmc + cii - pf - ome - ec - sa - oe,2) for r, rmc, cii, pf, ome, ec, sa, oe in zip(
-                revenue[-4:], raw_material_cost[-4:], change_in_inventory[-4:], power_fule[-4:], 
-                other_mfr_exp[-4:], emp_cost[-4:], selling_admin[-4:], other_exp[-4:])]
-            q_op = [e/4 for e in ebitda] if ebitda else [0] * 4
-        else:
-            q_op = [0] * 4
-    
-    q_other_income = get_values(qtr_results, "Other Income") if qtr_results else [0] * len(qtrs)
-    q_depreciation = get_values(qtr_results, "Depreciation") if qtr_results else [0] * len(qtrs)
-    q_interest = get_values(qtr_results, "Interest") if qtr_results else [0] * len(qtrs) 
-    q_pbt = get_values(qtr_results, "Profit before tax") if qtr_results else [0] * len(qtrs)
-    q_tax = get_values(qtr_results, "Tax") if qtr_results else [0] * len(qtrs)
+    q_op = get_values(qtr_results, "Operating Profit")     
+    #print(f"ℹ️ [Backend Metric Calculator - ttm calc] q_op : {q_op} ")     
     
     q_ebit = [round(e + oi - d,2) for e, oi, d in zip(q_op, q_other_income, q_depreciation)]
-    print(f"ℹ️ [Backend Metric Calculator] q_ebit : {q_ebit} ")
+    #print(f"ℹ️ [Backend Metric Calculator] q_ebit : {q_ebit} ")
     
     #********** Get Chart Series ***************************************
     
     #Past Growth
      
     net_debt = [round(d-c-i,2) for d, c,i in zip(debt, cash, investments)]
-    print(f"ℹ️ [Backend Metric Calculator] net_debt : {net_debt} ")
+    #print(f"ℹ️ [Backend Metric Calculator] net_debt : {net_debt} ")
     
     cash_and_investments =[round(c+i,2) for c,i in zip( cash, investments)]
     
     if source == "excel":
         ebitda = [round(r - rmc + cii - pf - ome - ec - sa - oe,2) for r, rmc, cii, pf, ome, ec, sa, oe in zip(
         revenue, raw_material_cost, change_in_inventory, power_fule, other_mfr_exp, emp_cost, selling_admin, other_exp[:min_len])]
-        print(f"ℹ️ [Backend Metric Calculator] ebitda : {ebitda} ")
+        #print(f"ℹ️ [Backend Metric Calculator] ebitda : {ebitda} ")
 
         ebit = [round(e + oi - d,2) for e, oi, d in zip(ebitda, other_income, depreciation)]
-        print(f"ℹ️ [Backend Metric Calculator] ebit : {ebit} ")
+        #print(f"ℹ️ [Backend Metric Calculator] ebit : {ebit} ")
         
         equity = [round(e + r,2) for e, r in zip(equity_capital, reserves)]
-        print(f"ℹ️ [Backend Metric Calculator] equity : {equity} ")
+        #print(f"ℹ️ [Backend Metric Calculator] equity : {equity} ")
     
     revenue_growth = calculate_growth(revenue)
-    print(f"ℹ️ [Backend Metric Calculator] revenue_growth : {revenue_growth} ")
+    #print(f"ℹ️ [Backend Metric Calculator] revenue_growth : {revenue_growth} ")
 
     ebitda_growth = calculate_growth(ebitda)
-    print(f"ℹ️ [Backend Metric Calculator] ebitda_growth : {ebitda_growth} ")
+    #print(f"ℹ️ [Backend Metric Calculator] ebitda_growth : {ebitda_growth} ")
 
     net_profit_growth = calculate_growth(net_profit)
-    print(f"ℹ️ [Backend Metric Calculator] net_profit_growth : {net_profit_growth} ")
+    #print(f"ℹ️ [Backend Metric Calculator] net_profit_growth : {net_profit_growth} ")
 
     
     ebitda_margin = [round(safe_divide(e, r) * 100,2) for e, r in zip(ebitda, revenue[:min_len])]
-    print(f"ℹ️ [Backend Metric Calculator] ebitda_margin : {ebitda_margin} ")
+    #print(f"ℹ️ [Backend Metric Calculator] ebitda_margin : {ebitda_margin} ")
 
     net_profit_margin = [round(safe_divide(n, r) * 100,2) for n, r in zip(net_profit[:min_len], revenue[:min_len])]
-    print(f"ℹ️ [Backend Metric Calculator] net_profit_margin : {net_profit_margin} ")
+    #print(f"ℹ️ [Backend Metric Calculator] net_profit_margin : {net_profit_margin} ")
     
     roce = [round(safe_divide(e, (eq + d)) * 100,2) for e, eq, d in zip(ebit, equity[:min_len], debt[:min_len])]
-    print(f"ℹ️ [Backend Metric Calculator] roce : {roce} ")
+    #print(f"ℹ️ [Backend Metric Calculator] roce : {roce} ")
 
     roe = [round(safe_divide(n, eq) * 100,2) for n, eq in zip(net_profit[:min_len], equity[:min_len])]
-    print(f"ℹ️ [Backend Metric Calculator] roe : {roe} ")
+    #print(f"ℹ️ [Backend Metric Calculator] roe : {roe} ")
 
     interest_coverage = [round(safe_divide(e, i),2) for e, i in zip(ebit, interest[:min_len])]
-    print(f"ℹ️ [Backend Metric Calculator] interest_coverage : {interest_coverage} ")
+    #print(f"ℹ️ [Backend Metric Calculator] interest_coverage : {interest_coverage} ")
 
     debt_to_equity = [round(safe_divide(d, eq),2) for d, eq in zip(debt[:min_len], equity[:min_len])]
-    print(f"ℹ️ [Backend Metric Calculator] debt_to_equity : {debt_to_equity} ")
+    #print(f"ℹ️ [Backend Metric Calculator] debt_to_equity : {debt_to_equity} ")
     
     book_values = [round(safe_divide(e, s),2) for e, s in zip(equity, shares)]
-    print(f"ℹ️ [Backend Metric Calculator] book_value : {book_values} ")
+    #print(f"ℹ️ [Backend Metric Calculator] book_value : {book_values} ")
 
     div_amount_per_share = [round(safe_divide(d, s),2) for d, s in zip(div_amount, shares)]
     
@@ -221,16 +219,18 @@ def calculate_metrics(pnl, bs, cf, qtr_results, years, qtrs, meta, source="excel
     #*********** Get latest values what ever is required ***********************************
 
     div_amount_last = safe_last(div_amount_per_share)
-    print(f"ℹ️ [Backend Metric Calculator] div_amount_last : {div_amount_last} ")
+    #print(f"ℹ️ [Backend Metric Calculator] div_amount_last : {div_amount_last} ")
 
     latest_net_debt =round(net_debt[-1],2) if net_debt else 0
-    print(f"ℹ️ [Backend Metric Calculator] latest_net_debt : {latest_net_debt} ")
+    #print(f"ℹ️ [Backend Metric Calculator] latest_net_debt : {latest_net_debt} ")
+    
 
     eps_values = [safe_divide(n, e) for n, e in zip(net_profit, shares)]
     eps_cagr_3y = calculate_cagr(eps_values)
     eps = safe_last(eps_values)
     pe = safe_divide(current_price, eps)
     peg_ratio = safe_divide(pe, safe_last(revenue_growth)) if revenue_growth else 0
+    
     
     tax_rate = round(safe_divide(safe_last(tax_values), safe_last(ebit)) * 100,2) if ebit else 0
     capex_pct = round(safe_divide(safe_last(capex), safe_last(revenue)) * 100,2) if capex and revenue else 2.0
@@ -242,43 +242,60 @@ def calculate_metrics(pnl, bs, cf, qtr_results, years, qtrs, meta, source="excel
     
     # Free cash flow calculation
     fcf = [round(n + d - c,2) for n, d, c in zip(net_profit[:min_len], depreciation[:min_len], capex[:min_len])]
-    print(f"ℹ️ [Backend Metric Calculator] fcf : {fcf} ")
+    #print(f"ℹ️ [Backend Metric Calculator] fcf : {fcf} ")
 
     fcf_margin = [round(safe_divide(f, r) * 100,2) for f, r in zip(fcf, revenue[:min_len])]
-    print(f"ℹ️ [Backend Metric Calculator] fcf_margin : {fcf_margin} ")
+    #print(f"ℹ️ [Backend Metric Calculator] fcf_margin : {fcf_margin} ")
 
+    
     
     #******************* Analyse Quarterly Data **********************
     q_sales_growth = calculate_growth(q_sales)
-    print(f"ℹ️ [Backend Metric Calculator] q_sales_growth : {q_sales_growth} ")
+    #print(f"ℹ️ [Backend Metric Calculator] q_sales_growth : {q_sales_growth} ")
 
     q_ebitda_margin = [round(safe_divide(e, r) * 100,2) for e, r in zip(q_op, q_sales)]
-
+     
+    
     q_net_profit_growth = calculate_growth(q_np)
-    print(f"ℹ️ [Backend Metric Calculator] q_net_profit_growth : {q_net_profit_growth} ")
+    #print(f"ℹ️ [Backend Metric Calculator] q_net_profit_growth : {q_net_profit_growth} ")
 
     #****************Calculate TTM Numbers**************************** 
     ttm_sales = round(sum_last_4(q_sales),2)
-    print(f"ℹ️ [Backend Metric Calculator - ttm calc] ttm_sales : {ttm_sales}" )
+    if ttm_sales == 0:
+        ttm_sales = revenue[-1]
+
+    #print(f"ℹ️ [Backend Metric Calculator - ttm calc] ttm_sales : {ttm_sales}" )
     
     ttm_op = round(sum_last_4(q_op),2)
-    print(f"ℹ️ [Backend Metric Calculator - ttm calc] ttm_op : {ttm_op}" )
+    if ttm_op==0:
+        ttm_op = safe_last(ebitda)
+
+    #print(f"ℹ️ [Backend Metric Calculator - ttm calc] ttm_op : {ttm_op}" )
     
     ttm_np = round(sum_last_4(q_np),2)
-    print(f"ℹ️ [Backend Metric Calculator - ttm calc] ttm_np : {ttm_np}" )
+    if ttm_np ==0:
+        ttm_np = safe_last(net_profit)
+    #print(f"ℹ️ [Backend Metric Calculator - ttm calc] ttm_np : {ttm_np}" )
 
     ttm_ebit = round(sum_last_4(q_ebit),2)
-    print(f"ℹ️ [Backend Metric Calculator] ttm_ebit : {ttm_ebit} ")
+    
+    if ttm_ebit == 0:
+        ttm_ebit = safe_last(ebit)
+    #print(f"ℹ️ [Backend Metric Calculator] ttm_ebit : {ttm_ebit} ")
+    
+    ebit_margin = round(safe_divide(ttm_ebit, ttm_sales) * 100,2)
+
+    #print(f"ℹ️ [Backend Metric Calculator] ebit_margin : {ebit_margin} ")
     
     ttm_roce  = round(safe_divide(ttm_ebit, (safe_last(equity) + safe_last(debt))) * 100,2)
-    print(f"ℹ️ [Backend Metric Calculator] ttm_roce : {ttm_roce} ")
+    #print(f"ℹ️ [Backend Metric Calculator] ttm_roce : {ttm_roce} ")
     
     ttm_roe = round(safe_divide(ttm_np, safe_last(equity)) * 100,2)
-    print(f"ℹ️ [Backend Metric Calculator] ttm_roe : {ttm_roe} ")
+    #print(f"ℹ️ [Backend Metric Calculator] ttm_roe : {ttm_roe} ")
     
     ttm_interest= round(sum_last_4(q_interest),2)
     ttm_interest_coverage = round(safe_divide(ttm_ebit, ttm_interest),2)
-    print(f"ℹ️ [Backend Metric Calculator] ttm_interest_coverage : {ttm_interest_coverage} ")
+    #print(f"ℹ️ [Backend Metric Calculator] ttm_interest_coverage : {ttm_interest_coverage} ")
     
     ttm_interest_exp_pct = round(safe_divide(ttm_interest, ttm_ebit) * 100,2) if ttm_ebit else 0
 
@@ -286,7 +303,7 @@ def calculate_metrics(pnl, bs, cf, qtr_results, years, qtrs, meta, source="excel
     ev_to_ebit = round(safe_divide(ev, ttm_ebit), 2)
     ev_to_ebitda = round(safe_divide(ev, ttm_op), 2)
 
-    print(f"ℹ️ [Backend Metric Calculator] ttm Calculation End !!!!!!!!!!!")    
+    #print(f"ℹ️ [Backend Metric Calculator] ttm Calculation End !!!!!!!!!!!")    
     
     ttm_eps = round(safe_divide(ttm_np, shares[-1]),2)
     
@@ -298,14 +315,14 @@ def calculate_metrics(pnl, bs, cf, qtr_results, years, qtrs, meta, source="excel
 
     ttm_pe = round(safe_divide(market_cap, ttm_np),2)
     
-    print(f"ℹ️ [Backend Metric Calculator - ttm calc] revenue_with_ttm : {revenue_with_ttm}" )
-    print(f"ℹ️ [Backend Metric Calculator - ttm calc] ebitda_with_ttm : {ebitda_with_ttm}" )
-    print(f"ℹ️ [Backend Metric Calculator - ttm calc] net_profit_with_ttm : {net_profit_with_ttm}" )
-    print(f"ℹ️ [Backend Metric Calculator - ttm calc] years_with_ttm : {years_with_ttm}" )
+    #print(f"ℹ️ [Backend Metric Calculator - ttm calc] revenue_with_ttm : {revenue_with_ttm}" )
+    #print(f"ℹ️ [Backend Metric Calculator - ttm calc] ebitda_with_ttm : {ebitda_with_ttm}" )
+    #print(f"ℹ️ [Backend Metric Calculator - ttm calc] net_profit_with_ttm : {net_profit_with_ttm}" )
+    #print(f"ℹ️ [Backend Metric Calculator - ttm calc] years_with_ttm : {years_with_ttm}" )
 
-    print(f"ℹ️ [Backend Metric Calculator] Calculation Ends !!!!!!!!!!!")
+    #print(f"ℹ️ [Backend Metric Calculator] Calculation Ends !!!!!!!!!!!")
 
-    # Additional calculations for missing variables
+    # Calculate missing variables
     book_value = safe_last(book_values)
     ttm_pb = round(safe_divide(current_price, safe_last(book_values)), 2)
     net_asset_values_per_share_last = safe_last(net_asset_values_per_share)
@@ -363,7 +380,7 @@ def calculate_metrics(pnl, bs, cf, qtr_results, years, qtrs, meta, source="excel
         "ev_to_ebit":ev_to_ebit,
         "ev_to_ebitda":ev_to_ebitda,
         "latest_net_debt": latest_net_debt,
-        "ebit_margin": round(safe_divide(ttm_ebit, ttm_sales) * 100, 2) if ttm_ebit and ttm_sales else 0,
+        "ebit_margin": ebit_margin,
         "depreciation_pct": round(safe_divide(safe_last(depreciation), safe_last(revenue)) * 100, 2) if depreciation and revenue else 0,
         "wc_change_pct": 2,
         "interest_pct": 13.0,
@@ -393,7 +410,7 @@ def calculate_metrics(pnl, bs, cf, qtr_results, years, qtrs, meta, source="excel
 def calculate_cagr(values):
     try:
         if len(values) >= 4 and values[-4] > 0:
-            return round(((values[-1] / values[-4]) ** (1/3) - 1) * 100, 2)
+            return round((safe_divide(values[-1], values[-4]) ** (1/3) - 1) * 100, 2)
         else:
             return 0.0
     except:
