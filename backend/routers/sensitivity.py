@@ -61,7 +61,9 @@ def dcf_sensitivity(input: SensitivityInput):
         for growth in growth_values:
             row.append(calculate_dcf(ebit, growth))
         fair_values.append(row)
-
+    #print(f"ℹ️ [Backend DCF Sensitivity  - ] ebit_values : {ebit_values}" )
+    #print(f"ℹ️ [Backend DCF Sensitivity - ] growth_values  : {growth_values}" )
+    #print(f"ℹ️ [Backend DCF Sensitivity - ] fair_values: {fair_values}" )
     return {
         "ebit_values": ebit_values,
         "growth_values": growth_values,

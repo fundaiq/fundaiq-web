@@ -34,6 +34,8 @@ def calculate_eps_projection(data: EPSProjectionRequest):
             base_year = data.base_year,
             fairvalue_pe = data.fairvalue_pe
         )
+        #print(f"ℹ️ [Backend EPS  Calculator - ] EPS result : {result}" )
+        
         return result
     except Exception as e:
         import traceback

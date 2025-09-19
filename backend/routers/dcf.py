@@ -26,11 +26,11 @@ def calculate_dcf(input: DCFInput):
     fcf_table = []
     revenue = input.base_revenue
     fcf_results = []
-    #print(f"ℹ️ [Backend CDF Calculator - ] Inputs : {input}" )
+    # print(f"ℹ️ [Backend CDF Calculator - ] Inputs : {input}" )
     for year in range(1, input.y_years + 1):
         if year <= input.x_years:
             growth = input.growth_x / 100
-        elif year < input.y_years:
+        elif year <= input.y_years:
             growth = input.growth_y / 100
         else:
             growth = input.growth_terminal / 100
@@ -71,8 +71,27 @@ def calculate_dcf(input: DCFInput):
     fair_value_per_share = equity_value / input.shares_outstanding
 
     terminal_weight = (pv_terminal / enterprise_value) * 100
+    phase0_pv = -1*input.latest_net_debt
     phase1_pv = sum(fcf_results[:input.x_years])
     phase2_pv = sum(fcf_results[input.x_years:])
+    
+
+    # print(f"ℹ️ [Backend DCF Calculator - ] fcf_table : {fcf_table}" )
+    # print(f"ℹ️ [Backend DCF Calculator - ] fair_value_per_share : {fair_value_per_share}" )
+    # print(f"ℹ️ [Backend DCF Calculator - ] enterprise_value : {enterprise_value}" )
+    # print(f"ℹ️ [Backend DCF Calculator - ] equity_value : {equity_value}" )
+    # print(f"ℹ️ [Backend DCF Calculator - ] latest_net_debt : {input.latest_net_debt}" )
+    # print(f"ℹ️ [Backend DCF Calculator - ] shares_outstanding : {input.shares_outstanding}" )
+    # print(f"ℹ️ [Backend DCF Calculator - ] pv_terminal : {pv_terminal}" )
+    # print(f"ℹ️ [Backend DCF Calculator - ] terminal_weight : {terminal_weight}" )
+    # print(f"ℹ️ [Backend DCF Calculator - ] phase0_pv : {round(phase0_pv, 2)}" )
+    # print(f"ℹ️ [Backend DCF Calculator - ] phase1_pv : {round(phase1_pv, 2)}" )
+    # print(f"ℹ️ [Backend DCF Calculator - ] phase2_pv : {round(phase2_pv, 2)}" )
+    # print(f"ℹ️ [Backend DCF Calculator - ] fv_phase0_per_share : {round(phase0_pv / input.shares_outstanding, 2)}" )
+    # print(f"ℹ️ [Backend DCF Calculator - ] fv_phase1_per_share : {round(phase1_pv / input.shares_outstanding, 2)}" )
+    # print(f"ℹ️ [Backend DCF Calculator - ] fv_phase2_per_share : {round(phase2_pv / input.shares_outstanding, 2)}" )
+    # print(f"ℹ️ [Backend DCF Calculator - ] terminal_value_per_share : {round(pv_terminal / input.shares_outstanding, 2)}" )
+    
 
     return {
     "fcf_table": fcf_table,
@@ -83,8 +102,10 @@ def calculate_dcf(input: DCFInput):
     "shares_outstanding": round(input.shares_outstanding, 2),
     "terminal_value_pv": round(pv_terminal, 2),
     "terminal_weight": round(terminal_weight, 2),
+    "phase0_pv": round(phase0_pv, 2),
     "phase1_pv": round(phase1_pv, 2),
     "phase2_pv": round(phase2_pv, 2),
+    "fv_phase0_per_share": round(phase0_pv / input.shares_outstanding, 2),
     "fv_phase1_per_share": round(phase1_pv / input.shares_outstanding, 2),
     "fv_phase2_per_share": round(phase2_pv / input.shares_outstanding, 2),
     "terminal_value_per_share": round(pv_terminal / input.shares_outstanding, 2)
