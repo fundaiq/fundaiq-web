@@ -40,59 +40,8 @@ export default function DCFValuationSection() {
     growth_terminal: assumptions?.growth_terminal ?? 2,
   };
 
-  const runValuation = async () => {
-    // 🔑 always read the latest from the store at call time
-    const st = useGlobalStore.getState();
-    const rawMetrics = st.metrics;
-    const metrics = Array.isArray(rawMetrics) ? rawMetrics[0] : rawMetrics;
-    const a = st.assumptions || {};
-
-    const form = {
-      current_price: Number(metrics?.current_price ?? 0),
-      base_revenue: Number(a.base_revenue ?? 0),
-      latest_net_debt: Number(a.latest_net_debt ?? 0),
-      shares_outstanding: Number(metrics?.shares_outstanding ?? 1),
-
-      ebit_margin: Number(a.ebit_margin ?? 0),
-      depreciation_pct: Number(a.depreciation_pct ?? 0),
-      capex_pct: Number(a.capex_pct ?? 0),
-      wc_change_pct: Number(a.wc_change_pct ?? 0),
-
-      tax_rate: Number(a.tax_rate ?? 25),
-      interest_pct: Number(a.interest_pct ?? 0),
-
-      // fixed horizons per your app
-      x_years: 3,
-      growth_x: Number(a.growth_x ?? 0),
-      y_years: 10,
-      growth_y: Number(a.growth_y ?? 0),
-      growth_terminal: Number(a.growth_terminal ?? 2),
-    };
-
-    if (!form.base_revenue) return;
-
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE}/dcf`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(form),
-    });
-    const raw = await res.json();
-    const data = Array.isArray(raw) ? raw[0] : raw;
-
-    setValuationResults((prev) => ({
-      ...prev,
-      dcf: { ...data },
-      dcf_sensitivity: { ...(data?.sensitivity_table || {}) },
-    }));
-
-    resetCalculation();
-  };
-
-  useEffect(() => {
-    runValuation();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [calcToken]);
-
+  
+  
   return (
     <section className={styles.container} id="dcf-valuation">
       {/* Header */}
@@ -139,11 +88,11 @@ export default function DCFValuationSection() {
               <h3 className={styles.sectionTitle}>Sensitivity Analysis</h3>
             </div>
             <SensitivityTable
-              valuationResult={valuationResult}
-              current_price={metrics?.current_price || ''}
-              form={form}
-              setSensitivityData={setSensitivityData}
-              sensitivityData={sensitivityData}
+              // valuationResult={valuationResult}
+              // current_price={metrics?.current_price || ''}
+              // form={form}
+              // setSensitivityData={setSensitivityData}
+              // sensitivityData={sensitivityData}
             />
           </div>
         </div>

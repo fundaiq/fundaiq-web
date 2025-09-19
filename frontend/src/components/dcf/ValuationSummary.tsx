@@ -15,6 +15,7 @@ export default function ValuationSummary() {
   const safe = (v: any) => (typeof v === 'number' && isFinite(v) ? v : 0);
 
   const dcf_fair_value = safe(results?.dcf?.dcf_fair_value);
+  const fv_phase0_per_share = safe(results?.dcf?.fv_phase0_per_share);
   const fv_phase1_per_share = safe(results?.dcf?.fv_phase1_per_share);
   const fv_phase2_per_share = safe(results?.dcf?.fv_phase2_per_share);
   const terminal_value_per_share = safe(results?.dcf?.terminal_value_per_share);
@@ -183,6 +184,7 @@ export default function ValuationSummary() {
       {/* Chart */}
       <div className={styles.chartSection}>
         <PhaseSplitChart
+          phase0={fv_phase0_per_share}
           phase1={fv_phase1_per_share}
           phase2={fv_phase2_per_share}
           phase3={terminal_value_per_share}

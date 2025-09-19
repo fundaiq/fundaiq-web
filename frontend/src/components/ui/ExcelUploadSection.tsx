@@ -34,11 +34,11 @@ export default function ExcelUploadSection({ className = "" }: ExcelUploadSectio
     try {
       setUploadStatus('idle');
       
-      console.log('📁 [COMPONENT] Starting upload for file:', file.name);
+      //console.log('📁 [COMPONENT] Starting upload for file:', file.name);
       
       await uploadExcel(file);
       
-      console.log('✅ [COMPONENT] Upload successful, setting success status');
+      //console.log('✅ [COMPONENT] Upload successful, setting success status');
       setUploadStatus('success');
       
       // **REMOVED: router.push('/report') - now handled in the hook**

@@ -43,13 +43,14 @@ export const useUploadExcel = (setLoading: (val: boolean) => void) => {
       setCompanyInfo(data.company_info);
       setMetrics(data.metrics);
       setAssumptions(data.assumptions);
-      // console.log('[useUploadExcel hook]assumptions from backend :', data.assumptions);
+      //console.log('[useUploadExcel hook]assumptions from backend :', data.assumptions);
       setDefaultAssumptions(data.assumptions);
-            
+
       setValuationResults(data.valuationResults);
       const a = useGlobalStore.getState().assumptions;
       const d = useGlobalStore.getState().defaultAssumptions;
-      
+      //console.log('[useUploadExcel hook]Valuation Results from backend :', data.valuationResults);
+
       setRawYahooData({
         pnl: data.pnl,
         balance_sheet: data.balance_sheet,

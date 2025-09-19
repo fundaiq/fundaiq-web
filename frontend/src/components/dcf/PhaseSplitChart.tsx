@@ -1,13 +1,15 @@
 'use client';
-import { TrendingUp, Clock, Infinity } from 'lucide-react';
+import {DollarSign, TrendingUp, Clock, Infinity } from 'lucide-react';
 import styles from '@/styles/PhaseSplitChart.module.css';
 
 export default function PhaseSplitChart({
+  phase0 = 0,
   phase1 = 0,
   phase2 = 0,
   phase3 = 0,
   total = 1
 }: {
+  phase0?: number;
   phase1?: number;
   phase2?: number;
   phase3?: number;
@@ -20,6 +22,7 @@ export default function PhaseSplitChart({
     `₹${safeValue(v).toFixed(1)}`;
 
   // Calculate percentages for bar widths
+  const p0Percent = parseFloat(percent(phase0));
   const p1Percent = parseFloat(percent(phase1));
   const p2Percent = parseFloat(percent(phase2));
   const p3Percent = parseFloat(percent(phase3));
@@ -38,6 +41,10 @@ export default function PhaseSplitChart({
       {/* Enhanced Visual Bar */}
       <div className={styles.visualBar}>
         <div 
+          className={styles.phase0Segment}
+          style={{ width: `${p0Percent}%` }}
+        />
+        <div 
           className={styles.phase1Segment}
           style={{ width: `${p1Percent}%` }}
         />
@@ -53,6 +60,25 @@ export default function PhaseSplitChart({
 
       {/* Enhanced Phase Cards */}
       <div className={styles.phaseCards}>
+        {/* Phase 0 Card */}
+        <div className={styles.phaseCard}>
+          <div className={styles.phaseCardHeader}>
+            <div className={`${styles.phaseIcon} ${styles.phase0Icon}`}>
+              <DollarSign size={14} />
+            </div>
+            <div className={styles.phaseInfo}>
+              <div className={styles.phaseTitle}>Phase 0</div>
+              <div className={styles.phaseSubtitle}>Debt/Cash as of Today</div>
+            </div>
+          </div>
+          <div className={styles.phaseMetrics}>
+            <div className={styles.phaseValue}>{format(phase0)}</div>
+            <div className={`${styles.phasePercent} ${styles.phase0Percent}`}>
+              {percent(phase0)}%
+            </div>
+          </div>
+        </div>
+
         {/* Phase 1 Card */}
         <div className={styles.phaseCard}>
           <div className={styles.phaseCardHeader}>

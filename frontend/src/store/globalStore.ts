@@ -174,6 +174,14 @@ export const useGlobalStore = create<GlobalState>()(
           });
           const dcfRaw = await dcfRes.json();
           const dcfData = Array.isArray(dcfRaw) ? dcfRaw[0] : dcfRaw;
+          
+          const dcfSensRes = await fetch(`${process.env.NEXT_PUBLIC_API_BASE}/dcf/sensitivity`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(dcfForm),
+          });
+          const dcfSensRaw = await dcfSensRes.json();
+          const dcfSensData = Array.isArray(dcfSensRaw) ? dcfSensRaw[0] : dcfSensRaw;
 
           const epsRes = await fetch(`${process.env.NEXT_PUBLIC_API_BASE}/project-eps`, {
             method: 'POST',
@@ -187,7 +195,7 @@ export const useGlobalStore = create<GlobalState>()(
             valuationResults: {
               ...s.valuationResults,
               dcf: { ...dcfData },
-              dcf_sensitivity: { ...(dcfData?.sensitivity_table || {}) },
+              dcf_sensitivity: { ...dcfSensData },
               eps: { ...epsData },
             },
             calculationTriggered: false,

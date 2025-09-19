@@ -68,6 +68,11 @@
   border: 1px solid var(--border-default);
 }
 
+.phase0Segment {
+  background: linear-gradient(135deg, #c7e243, #efc128);
+  transition: all var(--transition-normal) ease;
+}
+
 .phase1Segment {
   background: linear-gradient(135deg, #3b82f6, #1d4ed8);
   transition: all var(--transition-normal) ease;
@@ -82,7 +87,7 @@
   background: linear-gradient(135deg, #22c55e, #16a34a);
   transition: all var(--transition-normal) ease;
 }
-
+.visualBar:hover .phase0Segment,
 .visualBar:hover .phase1Segment,
 .visualBar:hover .phase2Segment,
 .visualBar:hover .phase3Segment {
@@ -125,6 +130,11 @@
   height: 28px;
   border-radius: var(--radius-md);
   flex-shrink: 0;
+}
+
+.phase0Icon {
+  background: rgba(156, 235, 65, 0.1);
+  color: #83d833;
 }
 
 .phase1Icon {
@@ -179,6 +189,12 @@
   min-width: 45px;
   text-align: center;
 }
+
+.phase0Percent {
+  background: rgba(161, 230, 64, 0.1);
+  color: #326605;
+}
+
 
 .phase1Percent {
   background: rgba(59, 130, 246, 0.1);
