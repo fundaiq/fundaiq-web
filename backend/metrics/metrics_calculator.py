@@ -10,6 +10,20 @@ def safe_last(lst):
 def calculate_metrics(pnl, bs, cf, qtr_results, years, qtrs, meta, source="excel", yahoo_info=None,):
     #print(f"ℹ️ [Backend Metric Calculator] Calculation Starts !!!!!!!!!!!")
 
+    def get_values_qtr(table, label):
+        values = table.get(label, [0] * len(qtrs))[:len(qtrs)]
+        # Clean values - convert 'NaT', None, empty strings, and non-numeric to 0
+        cleaned_values = []
+        for val in values:
+            if val == 'NaT' or val is None or val == '' or str(val).lower() == 'nan':
+                cleaned_values.append(0)
+            else:
+                try:
+                    cleaned_values.append(float(val))
+                except:
+                    cleaned_values.append(0)
+        return cleaned_values
+
     def get_values(table, label):
         values = table.get(label, [0] * len(years))[:len(years)]
         # Clean values - convert 'NaT', None, empty strings, and non-numeric to 0
@@ -145,21 +159,21 @@ def calculate_metrics(pnl, bs, cf, qtr_results, years, qtrs, meta, source="excel
     #************* Get Quarterly Data ******************************************    
     #print(f"ℹ️ [Backend Metric Calculator - ttm calc] ttm Calculation Starts !!!!!!!!!!!")
     
-    q_sales  = get_values(qtr_results, "Sales")
+    q_sales  = get_values_qtr(qtr_results, "Sales")
     #print(f"ℹ️ [Backend Metric Calculator - ttm calc] q_sales : {q_sales} ")     
     
-    q_expenses = get_values(qtr_results, "Expenses")      
+    q_expenses = get_values_qtr(qtr_results, "Expenses")      
     #print(f"ℹ️ [Backend Metric Calculator - ttm calc] q_expenses : {q_expenses} ")     
     
-    q_other_income = get_values(qtr_results, "Other Income")       
-    q_depreciation = get_values(qtr_results, "Depreciation") 
-    q_interest = get_values(qtr_results, "Interest") 
-    q_pbt = get_values(qtr_results, "Profit before tax")  
-    q_tax = get_values(qtr_results, "Tax")   
-    q_np = get_values(qtr_results, "Net profit")    
+    q_other_income = get_values_qtr(qtr_results, "Other Income")       
+    q_depreciation = get_values_qtr(qtr_results, "Depreciation") 
+    q_interest = get_values_qtr(qtr_results, "Interest") 
+    q_pbt = get_values_qtr(qtr_results, "Profit before tax")  
+    q_tax = get_values_qtr(qtr_results, "Tax")   
+    q_np = get_values_qtr(qtr_results, "Net profit")    
     #print(f"ℹ️ [Backend Metric Calculator - ttm calc] q_np : {q_np} ")     
     
-    q_op = get_values(qtr_results, "Operating Profit")     
+    q_op = get_values_qtr(qtr_results, "Operating Profit")     
     #print(f"ℹ️ [Backend Metric Calculator - ttm calc] q_op : {q_op} ")     
     
     q_ebit = [round(e + oi - d,2) for e, oi, d in zip(q_op, q_other_income, q_depreciation)]
